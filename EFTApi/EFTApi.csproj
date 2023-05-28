@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EFTApiPlugin.cs" />
-    <Compile Include="EFTConfigurationPluginAttributes.cs" />
+    <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />
     <Compile Include="EFTGlobal.cs" />
     <Compile Include="EFTHelpers.cs" />
     <Compile Include="EFTVersion.cs" />

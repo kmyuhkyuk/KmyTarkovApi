@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using EFTApi.Attributes;
 using EFTApi.Patches;
 
 namespace EFTApi

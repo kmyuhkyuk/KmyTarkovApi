@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFTApi
+namespace EFTApi.Attributes
 {
     /// <summary>
     /// You can copy this file to any project and bind Attribute to Plugin
@@ -9,7 +9,7 @@ namespace EFTApi
     /// <see cref="EFTConfigurationPlugin"/> will auto search Attribute by name and fields
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class EFTConfigurationPluginAttributes : Attribute
+    internal sealed class EFTConfigurationPluginAttributes : Attribute
     {
         /// <summary>
         /// Your Mod Url From Aki Hub Mod page

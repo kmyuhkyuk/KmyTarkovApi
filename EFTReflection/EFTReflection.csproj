@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />
     <Compile Include="EFTReflectionPlugin.cs" />
     <Compile Include="Patching\BaseModulePatch.cs" />
     <Compile Include="Patching\ModulePatchs.cs" />
@@ -77,5 +78,6 @@
   <ItemGroup>
     <None Include="kmyuhkyuk.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

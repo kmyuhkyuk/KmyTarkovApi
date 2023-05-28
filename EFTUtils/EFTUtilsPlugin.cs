@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using EFTUtils.Attributes;
 
 namespace EFTUtils
 {

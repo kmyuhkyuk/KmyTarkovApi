@@ -1,0 +1,315 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EFTConfiguration.Helpers;
+using EFTConfiguration.UI;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace EFTConfiguration
+{
+    public class EFTConfiguration : MonoBehaviour
+    {
+        private readonly Dictionary<PluginInfo, Config> _configuration = new Dictionary<PluginInfo, Config>();
+
+        private KeyValuePair<PluginInfo, Config> _currentConfiguration;
+
+        private string CurrentModName => _currentConfiguration.Key.modName;
+
+        [SerializeField]
+        private Transform pluginInfosRoot;
+
+        [SerializeField]
+        private Transform configsRoot;
+
+        [SerializeField]
+        private TMP_Text modName;
+
+        [SerializeField]
+        private Button closeButton;
+
+        [SerializeField] 
+        private ToggleGroup pluginInfosToggleGroup;
+
+        [SerializeField]
+        private ScrollRect scrollRect;
+
+        [SerializeField]
+        private Transform windowRoot;
+
+        [SerializeField] 
+        private TMP_InputField search;
+
+        [SerializeField] 
+        private TMP_Text advancedName;
+
+        [SerializeField]
+        private Toggle advanced;
+
+        [SerializeField]
+        private Button searchButton;
+
+        private Transform _searchPanelTransform;
+
+        private RectTransform _windowRect;
+
+        private bool State
+        {
+            get => windowRoot.gameObject.activeSelf;
+            set
+            {
+#if !UNITY_EDITOR
+                if (value)
+                {
+                    _windowRect.anchoredPosition = EFTConfigurationPlugin.SetData.KeyDefaultPosition.Value;
+                }
+
+                Filter(advanced.isOn, search.text);
+#endif
+
+                windowRoot.gameObject.SetActive(value);
+            }
+        }
+
+        internal static Action<PluginInfo> SwitchPluginInfo;
+
+#if !UNITY_EDITOR
+        private EFTConfigurationPlugin.ConfigurationData[] _configurationsData;
+
+        private void Start()
+        {
+            _windowRect = windowRoot.GetComponent<RectTransform>();
+
+            _searchPanelTransform = search.transform.parent;
+
+            EFTConfigurationPlugin.UISwitch = SwitchState;
+            EFTConfigurationPlugin.ShowUI = CreateUI;
+
+            search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
+            advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
+
+            EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) => search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
+            EFTConfigurationPlugin.SetData.KeyAdvanced.SettingChanged += (value1, value2) => advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
+
+            search.onValueChanged.AddListener(value =>
+            {
+                EFTConfigurationPlugin.SetData.KeySearch.Value = value;
+                Filter(advanced.isOn, value);
+            });
+
+            advanced.onValueChanged.AddListener(value =>
+            {
+                EFTConfigurationPlugin.SetData.KeyAdvanced.Value = value;
+                Filter(value, search.text);
+            });
+
+            searchButton.onClick.AddListener(() =>
+            {
+                var searchPanel = _searchPanelTransform.gameObject;
+
+                searchPanel.SetActive(!searchPanel.activeSelf);
+            });
+
+            closeButton.onClick.AddListener(() => State = false);
+
+            SwitchPluginInfo = SwitchConfiguration;
+
+            CustomLocalizedHelper.LanguageChange += UpdateLocalized;
+        }
+
+        private void CreateUI(EFTConfigurationPlugin.ConfigurationData[] configurationsData)
+        {
+            _configurationsData = configurationsData;
+
+            foreach (var configuration in configurationsData)
+            {
+                var pluginInfo = Instantiate(EFTConfigurationPlugin.PrefabManager.pluginInfo, pluginInfosRoot).GetComponent<PluginInfo>();
+
+                pluginInfo.isCore = configuration.IsCore;
+                pluginInfo.modName = configuration.ModName;
+
+                var modUrl = configuration.ConfigurationPluginAttributes.ModUrl;
+
+                var hasUrl = Uri.IsWellFormedUriString(modUrl, UriKind.Absolute);
+
+                pluginInfo.hasModUrl = hasUrl;
+                pluginInfo.modUrl = modUrl;
+                pluginInfo.toggleGroup = pluginInfosToggleGroup;
+
+                pluginInfo.Init(configuration.ModVersion);
+
+                if (hasUrl && modUrl.StartsWith("https://hub.sp-tarkov.com/files/file"))
+                {
+                    BindWeb(modUrl, pluginInfo.BindWeb);
+                }
+
+                var config = Instantiate(EFTConfigurationPlugin.PrefabManager.config, configsRoot).GetComponent<Config>();
+
+                config.Init(configuration);
+
+                _configuration.Add(pluginInfo, config);
+            }
+
+            _currentConfiguration = _configuration.First(x => !x.Key.isCore);
+
+            _currentConfiguration.Key.fistPluginInfo = true;
+
+            _currentConfiguration.Value.State = true;
+
+            UpdateLocalized();
+        }
+
+        private static async void BindWeb(string modUrl, Action<Sprite, string, int, Version> action)
+        {
+            var doc = await CrawlerHelper.CreateHtmlDocument(modUrl);
+
+            var downloadUrl = CrawlerHelper.GetModDownloadUrl(doc);
+
+            var downloads = CrawlerHelper.GetModDownloads(doc);
+
+            var version = CrawlerHelper.GetModVersion(doc);
+
+            var icon = await CrawlerHelper.GetModIcon(doc);
+
+            action?.Invoke(icon, downloadUrl, downloads, version);
+        }
+
+        private void SwitchConfiguration(PluginInfo pluginInfo)
+        {
+            SwitchConfiguration(_configuration.Single(x => x.Key == pluginInfo), false);
+        }
+
+        private void SwitchConfiguration(KeyValuePair<PluginInfo, Config> keyValuePair, bool changeIsOn)
+        {
+            scrollRect.verticalNormalizedPosition = 1;
+
+            _currentConfiguration.Value.State = false;
+
+            _currentConfiguration = keyValuePair;
+
+            if (changeIsOn)
+            {
+                keyValuePair.Key.IsOn = true;
+            }
+
+            keyValuePair.Value.State = true;
+
+            keyValuePair.Value.Filter(advanced.isOn, search.text);
+
+            UpdateLocalized();
+        }
+
+        private void UpdateLocalized()
+        {
+            modName.text = CustomLocalizedHelper.Localized(CurrentModName); 
+            
+            ((TMP_Text)search.placeholder).text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "EnterText");
+
+            advancedName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "Advanced");
+        }
+
+        private void SwitchState()
+        {
+            State = !State;
+        }
+
+        private void Filter(bool isAdvanced, string searchName)
+        {
+            CheckPluginInfo(isAdvanced);
+            _currentConfiguration.Value.Filter(isAdvanced, searchName);
+        }
+
+        private void CheckPluginInfo(bool isAdvanced)
+        {
+            var configurations = _configuration.ToArray();
+
+            var changes = new List<(int Index, bool Active)>();
+
+            for (var i = 0; i < _configurationsData.Length; i++)
+            {
+                var configurationData = _configurationsData[i];
+
+                var attributes = configurationData.ConfigurationPluginAttributes;
+
+                var show = !(attributes.HidePlugin || !attributes.AlwaysDisplay && configurationData.ConfigCount == 0);
+
+                if (configurationData.Configs.All(x => x.ConfigurationAttributes.HideSetting || !isAdvanced && x.ConfigurationAttributes.Advanced))
+                    show = false;
+
+                changes.Add((i, show));
+            }
+
+            var changesArray = changes.ToArray();
+
+            foreach (var change in changesArray)
+            {
+                var configuration = configurations[change.Index];
+
+                if (!change.Active && configuration.Key == _currentConfiguration.Key)
+                {
+                    if (change.Index == 0)
+                    {
+                        for (var i = 0; i < changesArray.Length; i++)
+                        {
+                            var changeValue = changesArray[i];
+
+                            if (changeValue.Active)
+                            {
+                                SwitchConfiguration(configurations[i], true);
+                                break;
+                            }
+                        }
+                    }
+                    else if (change.Index == changesArray.Length - 1)
+                    {
+                        for (var i = change.Index; i >= 0; i--)
+                        {
+                            var changeActive = changesArray[i].Active;
+
+                            if (changeActive)
+                            {
+                                SwitchConfiguration(configurations[i], true);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var hasChange = false;
+
+                        for (var i = change.Index; i < changesArray.Length; i++)
+                        {
+                            var changeValue = changesArray[i];
+
+                            if (changeValue.Active)
+                            {
+                                hasChange = true;
+
+                                SwitchConfiguration(configurations[i], true);
+                                break;
+                            }
+                        }
+
+                        if (!hasChange)
+                        {
+                            for (var i = change.Index; i >= 0; i--)
+                            {
+                                var changeActive = changesArray[i].Active;
+
+                                if (changeActive)
+                                {
+                                    SwitchConfiguration(configurations[i], true);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                configuration.Key.gameObject.SetActive(change.Active);
+            }
+        }
+#endif
+    }
+}

@@ -4,8 +4,8 @@ using EFTApi.Patches;
 namespace EFTApi
 {
     [BepInPlugin("com.kmyuhkyuk.EFTApi", "kmyuhkyuk-EFTApi", "1.0.0")]
-    [BepInDependency("com.kmyuhkyuk.EFTUtils")]
     [BepInDependency("com.kmyuhkyuk.EFTReflection")]
+    [EFTConfigurationPluginAttributes("")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
         private void Start()

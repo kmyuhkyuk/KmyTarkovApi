@@ -20,7 +20,7 @@ using PluginInfo = BepInEx.PluginInfo;
 namespace EFTConfiguration
 {
     [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.0.0")]
-    [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/652-game-panel-hud")]
+    [EFTConfigurationPluginAttributes("")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {
         private static Dictionary<string, PluginInfo> PluginInfos => Chainloader.PluginInfos;

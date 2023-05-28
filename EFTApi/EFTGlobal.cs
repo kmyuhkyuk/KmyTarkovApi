@@ -30,7 +30,7 @@ namespace EFTApi
         /// <summary>
         /// Current AllBot
         /// </summary>
-        public static IEnumerable<Player> AllBot => EFTHelpers._GameWorldHelper.AllBot;
+        public static List<Player> AllBot => EFTHelpers._GameWorldHelper.AllBot;
 
         /// <summary>
         /// Current Player

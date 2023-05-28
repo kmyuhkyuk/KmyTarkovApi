@@ -7,8 +7,7 @@ namespace EFTConfiguration.Components.ClassType
 {
     public class ConfigStringAction : ConfigAction, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField]
-        private Image background;
+        [SerializeField] private Image background;
 
         private bool _isPointer;
 

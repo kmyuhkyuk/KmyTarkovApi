@@ -16,12 +16,12 @@ namespace EFTApi.Helpers
         public object BackEndConfig { get; private set; }
 
         /// <summary>
-        /// Traders Helper
+        ///     Traders Helper
         /// </summary>
         public readonly TradersData TradersHelper = new TradersData();
 
         /// <summary>
-        /// Experience Helper
+        ///     Experience Helper
         /// </summary>
         public readonly ExperienceData ExperienceHelper = new ExperienceData();
 
@@ -61,7 +61,8 @@ namespace EFTApi.Helpers
             {
                 private readonly Dictionary<string, object> _avatar = new Dictionary<string, object>();
 
-                private readonly Dictionary<string, Task<Sprite>> _avatarSprites = new Dictionary<string, Task<Sprite>>();
+                private readonly Dictionary<string, Task<Sprite>> _avatarSprites =
+                    new Dictionary<string, Task<Sprite>>();
 
                 internal void Init(object[] traders)
                 {
@@ -132,7 +133,9 @@ namespace EFTApi.Helpers
 
             public ExperienceData()
             {
-                _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(RefTool.GetEftMethod(x => x.GetMethod("GetKillingBonusPercent") != null, RefTool.Public, x => x.Name == "GetKillingBonusPercent"));
+                _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(
+                    RefTool.GetEftMethod(x => x.GetMethod("GetKillingBonusPercent") != null, RefTool.Public,
+                        x => x.Name == "GetKillingBonusPercent"));
             }
 
             public void Init(object backEndConfig)

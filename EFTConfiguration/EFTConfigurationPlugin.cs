@@ -15,7 +15,6 @@ using EFTConfiguration.Helpers;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
-using PluginInfo = BepInEx.PluginInfo;
 
 namespace EFTConfiguration
 {
@@ -25,13 +24,17 @@ namespace EFTConfiguration
     {
         private static Dictionary<string, PluginInfo> PluginInfos => Chainloader.PluginInfos;
 
-        private readonly GameObject _eftConfigurationPublic = new GameObject("EFTConfigurationPublic", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        private readonly GameObject _eftConfigurationPublic = new GameObject("EFTConfigurationPublic", typeof(Canvas),
+            typeof(CanvasScaler), typeof(GraphicRaycaster));
 
-        private readonly PropertyInfo _coreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+        private readonly PropertyInfo _coreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig",
+            BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
-        private readonly FieldInfo[] _eftConfigurationPluginAttributesFields = typeof(EFTConfigurationPluginAttributes).GetFields();
+        private readonly FieldInfo[] _eftConfigurationPluginAttributesFields =
+            typeof(EFTConfigurationPluginAttributes).GetFields();
 
-        private readonly (string, Type)[] _eftConfigurationPluginAttributesFieldsTuple = typeof(EFTConfigurationPluginAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
+        private readonly (string, Type)[] _eftConfigurationPluginAttributesFieldsTuple =
+            typeof(EFTConfigurationPluginAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
 
         internal static readonly SettingsData SetData = new SettingsData();
 
@@ -52,7 +55,9 @@ namespace EFTConfiguration
             _canvas = _eftConfigurationPublic.GetComponent<Canvas>();
 
             _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.Normal | AdditionalCanvasShaderChannels.Tangent;
+            _canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 |
+                                               AdditionalCanvasShaderChannels.Normal |
+                                               AdditionalCanvasShaderChannels.Tangent;
 
             DontDestroyOnLoad(_eftConfigurationPublic);
         }
@@ -61,10 +66,15 @@ namespace EFTConfiguration
         {
             const string mainSettings = "Main Settings";
 
-            SetData.KeyConfigurationShortcut = Config.Bind<KeyboardShortcut>(mainSettings, "Configuration Shortcut", new KeyboardShortcut(KeyCode.Home));
+            SetData.KeyConfigurationShortcut = Config.Bind<KeyboardShortcut>(mainSettings, "Configuration Shortcut",
+                new KeyboardShortcut(KeyCode.Home));
             SetData.KeyDefaultPosition = Config.Bind<Vector2>(mainSettings, "Default Position", Vector2.zero);
-            SetData.KeyDescriptionPositionOffset = Config.Bind<Vector2>(mainSettings, "Description Position Offset", new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
-            SetData.KeyLanguage = Config.Bind<CustomLocalizedHelper.Language>(mainSettings, "Language", CustomLocalizedHelper.Language.En, new ConfigDescription("Preferred language, if not available will tried English, if still not available than return original text"));
+            SetData.KeyDescriptionPositionOffset = Config.Bind<Vector2>(mainSettings, "Description Position Offset",
+                new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
+            SetData.KeyLanguage = Config.Bind<CustomLocalizedHelper.Language>(mainSettings, "Language",
+                CustomLocalizedHelper.Language.En,
+                new ConfigDescription(
+                    "Preferred language, if not available will tried English, if still not available than return original text"));
             SetData.KeySearch = Config.Bind<string>(mainSettings, "Search", string.Empty);
             SetData.KeyAdvanced = Config.Bind<bool>(mainSettings, "Advanced", false);
             SetData.KeySortingOrder = Config.Bind<int>(mainSettings, "Sorting Order", 29999);
@@ -92,10 +102,12 @@ namespace EFTConfiguration
             Config.Bind(testSettings, "Action", string.Empty, new ConfigDescription(string.Empty, null, new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work")}));*/
 
             _canvas.sortingOrder = SetData.KeySortingOrder.Value;
-            SetData.KeySortingOrder.SettingChanged += (value, value2) => _canvas.sortingOrder = SetData.KeySortingOrder.Value;
+            SetData.KeySortingOrder.SettingChanged +=
+                (value, value2) => _canvas.sortingOrder = SetData.KeySortingOrder.Value;
 
             CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
-            SetData.KeyLanguage.SettingChanged += (value, value2) => CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
+            SetData.KeyLanguage.SettingChanged += (value, value2) =>
+                CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
 
             Init();
         }
@@ -125,7 +137,8 @@ namespace EFTConfiguration
             while (PluginInfos.Count == 0)
                 await Task.Yield();
 
-            var configurationList = new List<ConfigurationData> { GetCoreConfigurationData(), GetConfigurationData(Info) };
+            var configurationList = new List<ConfigurationData>
+                { GetCoreConfigurationData(), GetConfigurationData(Info) };
 
             foreach (var pluginInfo in PluginInfos.Values)
             {
@@ -136,8 +149,8 @@ namespace EFTConfiguration
             }
 
             while (ShowUI == null)
-                await Task.Yield(); 
-            
+                await Task.Yield();
+
             ShowUI(configurationList.ToArray());
         }
 
@@ -166,7 +179,8 @@ namespace EFTConfiguration
                 {
                     var attributeFieldInfos = attributeType.GetFields();
 
-                    if (attributeFieldInfos.Select(x => (x.Name, x.FieldType)).SequenceEqual(_eftConfigurationPluginAttributesFieldsTuple))
+                    if (attributeFieldInfos.Select(x => (x.Name, x.FieldType))
+                        .SequenceEqual(_eftConfigurationPluginAttributesFieldsTuple))
                     {
                         hasAttributes = true;
 
@@ -176,7 +190,8 @@ namespace EFTConfiguration
 
                             var attributeFieldInfo = attributeFieldInfos[i];
 
-                            eftConfigurationPluginAttributesField.SetValue(attributes, attributeFieldInfo.GetValue(attribute));
+                            eftConfigurationPluginAttributesField.SetValue(attributes,
+                                attributeFieldInfo.GetValue(attribute));
                         }
 
                         break;
@@ -194,7 +209,8 @@ namespace EFTConfiguration
 
             var metaData = pluginInfo.Metadata;
 
-            CustomLocalizedHelper.LanguageList.Add(metaData.Name, GetLanguageDictionary(pluginInfo, hasAttributes ? attributes.LocalizedPath : string.Empty));
+            CustomLocalizedHelper.LanguageList.Add(metaData.Name,
+                GetLanguageDictionary(pluginInfo, hasAttributes ? attributes.LocalizedPath : string.Empty));
 
             return new ConfigurationData(configFile, metaData, attributes);
         }
@@ -203,12 +219,15 @@ namespace EFTConfiguration
         {
             var configFile = (ConfigFile)_coreConfigInfo.GetValue(null);
 
-            var metaData = new BepInPlugin("BepInEx", "BepInEx", typeof(BaseUnityPlugin).Assembly.GetName().Version.ToString());
+            var metaData = new BepInPlugin("BepInEx", "BepInEx",
+                typeof(BaseUnityPlugin).Assembly.GetName().Version.ToString());
 
-            return new ConfigurationData(configFile, metaData, new EFTConfigurationPluginAttributes(string.Empty), true);
+            return new ConfigurationData(configFile, metaData, new EFTConfigurationPluginAttributes(string.Empty),
+                true);
         }
 
-        private static Dictionary<string, Dictionary<string, string>> GetLanguageDictionary(PluginInfo pluginInfo, string localizedPath)
+        private static Dictionary<string, Dictionary<string, string>> GetLanguageDictionary(PluginInfo pluginInfo,
+            string localizedPath)
         {
             var localizedDictionary = new Dictionary<string, Dictionary<string, string>>();
 
@@ -232,7 +251,8 @@ namespace EFTConfiguration
             {
                 using (var stream = new StreamReader(localized.FullName))
                 {
-                    localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name), JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd()));
+                    localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name),
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd()));
                 }
             }
 
@@ -259,7 +279,8 @@ namespace EFTConfiguration
 
             public ConfigData[] Configs => _configFile.Select(x => new ConfigData(x.Key, x.Value, IsCore)).ToArray();
 
-            public ConfigurationData(ConfigFile configFile, BepInPlugin metadata, EFTConfigurationPluginAttributes configurationPlugin, bool isCore = false)
+            public ConfigurationData(ConfigFile configFile, BepInPlugin metadata,
+                EFTConfigurationPluginAttributes configurationPlugin, bool isCore = false)
             {
                 _configFile = configFile;
                 _metadata = metadata;
@@ -292,13 +313,17 @@ namespace EFTConfiguration
 
             private readonly ConfigEntryBase _configEntryBase;
 
-            private static readonly FieldInfo[] EFTConfigurationAttributesFields = typeof(EFTConfigurationAttributes).GetFields();
+            private static readonly FieldInfo[] EFTConfigurationAttributesFields =
+                typeof(EFTConfigurationAttributes).GetFields();
 
-            private static readonly (string, Type)[] EFTConfigurationAttributesFieldsTuple = typeof(EFTConfigurationAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
+            private static readonly (string, Type)[] EFTConfigurationAttributesFieldsTuple =
+                typeof(EFTConfigurationAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
 
-            private static readonly FieldInfo[] ConfigurationManagerAttributesFields = typeof(ConfigurationManagerAttributes).GetFields();
+            private static readonly FieldInfo[] ConfigurationManagerAttributesFields =
+                typeof(ConfigurationManagerAttributes).GetFields();
 
-            private static readonly (string, Type)[] ConfigurationManagerAttributesFieldsTuple = typeof(ConfigurationManagerAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
+            private static readonly (string, Type)[] ConfigurationManagerAttributesFieldsTuple =
+                typeof(ConfigurationManagerAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
 
             public ConfigData(ConfigDefinition configDefinition, ConfigEntryBase configEntryBase, bool isCore)
             {
@@ -320,7 +345,8 @@ namespace EFTConfiguration
                             {
                                 var tagFieldInfos = tagType.GetFields();
 
-                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType)).SequenceEqual(EFTConfigurationAttributesFieldsTuple))
+                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
+                                    .SequenceEqual(EFTConfigurationAttributesFieldsTuple))
                                 {
                                     hasTag = true;
 
@@ -330,27 +356,45 @@ namespace EFTConfiguration
 
                                         var tagFieldInfo = tagFieldInfos[i];
 
-                                        configurationAttributesFields.SetValue(ConfigurationAttributes, tagFieldInfo.GetValue(tag));
+                                        configurationAttributesFields.SetValue(ConfigurationAttributes,
+                                            tagFieldInfo.GetValue(tag));
                                     }
                                 }
+
                                 break;
                             }
                             case nameof(ConfigurationManagerAttributes):
                             {
                                 var tagFieldInfos = tagType.GetFields();
 
-                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType)).SequenceEqual(ConfigurationManagerAttributesFieldsTuple))
+                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
+                                    .SequenceEqual(ConfigurationManagerAttributesFieldsTuple))
                                 {
                                     hasTag = true;
 
-                                    ConfigurationAttributes.HideSetting = (bool?)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable)).GetValue(tag) ?? false;
-                                    ConfigurationAttributes.HideRest = (bool?)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton)).GetValue(tag) ?? false;
-                                    ConfigurationAttributes.HideRange = (bool?)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent)).GetValue(tag) ?? false;
-                                    ConfigurationAttributes.Advanced = (bool?)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced)).GetValue(tag) ?? false;
-                                    ConfigurationAttributes.ReadOnly = (bool?)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly)).GetValue(tag) ?? false;
-                                    ConfigurationAttributes.CustomToString = (Func<object, string>)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr)).GetValue(tag);
-                                    ConfigurationAttributes.CustomToObject = (Func<string, object>)tagFieldInfos.Single(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj)).GetValue(tag);
+                                    ConfigurationAttributes.HideSetting = (bool?)tagFieldInfos
+                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
+                                        .GetValue(tag) ?? false;
+                                    ConfigurationAttributes.HideRest = (bool?)tagFieldInfos.Single(x =>
+                                            x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
+                                        .GetValue(tag) ?? false;
+                                    ConfigurationAttributes.HideRange = (bool?)tagFieldInfos.Single(x =>
+                                            x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent))
+                                        .GetValue(tag) ?? false;
+                                    ConfigurationAttributes.Advanced = (bool?)tagFieldInfos
+                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced))
+                                        .GetValue(tag) ?? false;
+                                    ConfigurationAttributes.ReadOnly = (bool?)tagFieldInfos
+                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly))
+                                        .GetValue(tag) ?? false;
+                                    ConfigurationAttributes.CustomToString = (Func<object, string>)tagFieldInfos
+                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr))
+                                        .GetValue(tag);
+                                    ConfigurationAttributes.CustomToObject = (Func<string, object>)tagFieldInfos
+                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj))
+                                        .GetValue(tag);
                                 }
+
                                 break;
                             }
                         }

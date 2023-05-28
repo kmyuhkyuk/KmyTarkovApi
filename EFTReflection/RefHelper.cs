@@ -9,12 +9,12 @@ namespace EFTReflection
     public static class RefHelper
     {
         /// <summary>
-        /// Create Object Field GetValue Delegate, It usually used by <see cref="FieldRef{T, F}"/>
+        ///     Create Object Field GetValue Delegate, It usually used by <see cref="FieldRef{T, F}" />
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
         /// <param name="fieldInfo"></param>
-        /// <returns><see cref="Func{T, F}"/> from <paramref name="fieldInfo"/></returns>
+        /// <returns><see cref="Func{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo)
         {
@@ -34,7 +34,8 @@ namespace EFTReflection
 
             var returnNeedBox = delegateReturnType == typeof(object) && fieldInfo.FieldType.IsValueType;
 
-            var dmd = new DynamicMethod($"__get_{declaringType.Name}_fi_{fieldInfo.Name}", delegateReturnType, new[] { delegateInstanceType });
+            var dmd = new DynamicMethod($"__get_{declaringType.Name}_fi_{fieldInfo.Name}", delegateReturnType,
+                new[] { delegateInstanceType });
 
             var ilGen = dmd.GetILGenerator();
 
@@ -75,12 +76,12 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// Create Object Field SetValue Delegate, It usually used by <see cref="FieldRef{T, F}"/>
+        ///     Create Object Field SetValue Delegate, It usually used by <see cref="FieldRef{T, F}" />
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Target</typeparam>
         /// <param name="fieldInfo"></param>
-        /// <returns><see cref="Action{T, F}"/> from <paramref name="fieldInfo"/></returns>
+        /// <returns><see cref="Action{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo)
         {
@@ -103,7 +104,8 @@ namespace EFTReflection
                 throw new ArgumentNullException(nameof(declaringType));
             }
 
-            var dmd = new DynamicMethod($"__set_{declaringType.Name}_fi_{fieldInfo.Name}", null, new[] { delegateInstanceType, delegateParameterType });
+            var dmd = new DynamicMethod($"__set_{declaringType.Name}_fi_{fieldInfo.Name}", null,
+                new[] { delegateInstanceType, delegateParameterType });
 
             var ilGen = dmd.GetILGenerator();
 
@@ -146,21 +148,23 @@ namespace EFTReflection
 
                 ilGen.Emit(OpCodes.Stsfld, fieldInfo);
             }
+
             ilGen.Emit(OpCodes.Ret);
 
             return (Action<T, TF>)dmd.CreateDelegate(typeof(Action<T, TF>));
         }
 
         /// <summary>
-        /// Create Object Method Delegate
-        /// <para>More convenient and fast Invoke Method</para>
+        ///     Create Object Method Delegate
+        ///     <para>More convenient and fast Invoke Method</para>
         /// </summary>
-        /// <remarks>Solve <see cref="AccessTools.MethodDelegate{DelegateType}"/> Cannot create delegate with object parameters</remarks>
+        /// <remarks>Solve <see cref="AccessTools.MethodDelegate{DelegateType}" /> Cannot create delegate with object parameters</remarks>
         /// <typeparam name="TDelegateType"></typeparam>
         /// <param name="method"></param>
-        /// <returns><see cref="Delegate"/> from <paramref name="method"/></returns>
+        /// <returns><see cref="Delegate" /> from <paramref name="method" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static TDelegateType ObjectMethodDelegate<TDelegateType>(MethodInfo method) where TDelegateType : Delegate
+        public static TDelegateType ObjectMethodDelegate<TDelegateType>(MethodInfo method)
+            where TDelegateType : Delegate
         {
             if (method == null)
             {
@@ -181,6 +185,7 @@ namespace EFTReflection
             {
                 throw new ArgumentNullException(nameof(delegateMethod));
             }
+
             var delegateParameters = delegateMethod.GetParameters();
             var delegateParameterTypes = delegateParameters.Select(x => x.ParameterType).ToArray();
 
@@ -188,7 +193,8 @@ namespace EFTReflection
             var delegateReturnType = delegateMethod.ReturnType;
             var returnNeedBox = delegateReturnType == typeof(object) && returnType.IsValueType;
 
-            var dmd = new DynamicMethod("OpenInstanceDelegate_" + method.Name, delegateReturnType, delegateParameterTypes);
+            var dmd = new DynamicMethod("OpenInstanceDelegate_" + method.Name, delegateReturnType,
+                delegateParameterTypes);
 
             var ilGen = dmd.GetILGenerator();
 
@@ -264,10 +270,10 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// A Wrapper Property Delegate Class
-        /// <para>More convenient and fast Get or Set Property Value</para>
-        /// <para>If <typeparamref name="T"/> is object then use <see cref="ObjectMethodDelegate{DelegateType}"/></para>
-        /// <para>else use <see cref="AccessTools.MethodDelegate{DelegateType}"/> Generate Delegate</para>
+        ///     A Wrapper Property Delegate Class
+        ///     <para>More convenient and fast Get or Set Property Value</para>
+        ///     <para>If <typeparamref name="T" /> is object then use <see cref="ObjectMethodDelegate{DelegateType}" /></para>
+        ///     <para>else use <see cref="AccessTools.MethodDelegate{DelegateType}" /> Generate Delegate</para>
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
@@ -341,14 +347,18 @@ namespace EFTReflection
                 {
                     _getMethodInfo = _propertyInfo.GetGetMethod(true);
 
-                    _refGetValue = inIsObject ? ObjectMethodDelegate<Func<T, TF>>(_getMethodInfo) : AccessTools.MethodDelegate<Func<T, TF>>(_getMethodInfo);
+                    _refGetValue = inIsObject
+                        ? ObjectMethodDelegate<Func<T, TF>>(_getMethodInfo)
+                        : AccessTools.MethodDelegate<Func<T, TF>>(_getMethodInfo);
                 }
 
                 if (_propertyInfo.CanWrite)
                 {
                     _setMethodInfo = _propertyInfo.GetSetMethod(true);
 
-                    _refSetValue = inIsObject ? ObjectMethodDelegate<Action<T, TF>>(_setMethodInfo) : AccessTools.MethodDelegate<Action<T, TF>>(_setMethodInfo);
+                    _refSetValue = inIsObject
+                        ? ObjectMethodDelegate<Action<T, TF>>(_setMethodInfo)
+                        : AccessTools.MethodDelegate<Action<T, TF>>(_setMethodInfo);
                 }
             }
 
@@ -357,22 +367,26 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(propertyInfo, instance);
             }
 
-            public static PropertyRef<T, TF> Create(string propertyName, bool declaredOnly = false, object instance = null)
+            public static PropertyRef<T, TF> Create(string propertyName, bool declaredOnly = false,
+                object instance = null)
             {
                 return new PropertyRef<T, TF>(typeof(T), propertyName, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(string[] propertyNames, bool declaredOnly = false, object instance = null)
+            public static PropertyRef<T, TF> Create(string[] propertyNames, bool declaredOnly = false,
+                object instance = null)
             {
                 return new PropertyRef<T, TF>(typeof(T), propertyNames, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(Type type, string propertyName, bool declaredOnly = false, object instance = null)
+            public static PropertyRef<T, TF> Create(Type type, string propertyName, bool declaredOnly = false,
+                object instance = null)
             {
                 return new PropertyRef<T, TF>(type, propertyName, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(Type type, string[] propertyNames, bool declaredOnly = false, object instance = null)
+            public static PropertyRef<T, TF> Create(Type type, string[] propertyNames, bool declaredOnly = false,
+                object instance = null)
             {
                 return new PropertyRef<T, TF>(type, propertyNames, declaredOnly, instance);
             }
@@ -417,10 +431,13 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// A Wrapper Field Delegate Class
-        /// <para>More convenient and fast Get or Set Field Value</para>
-        /// <para>If <typeparamref name="T"/> is object then use <see cref="ObjectFieldGetAccess{T,F}"/> and <see cref="RefHelper.ObjectFieldSetAccess{T,F}"/></para>
-        /// <para>else use <see cref="AccessTools.FieldRefAccess{T, F}(System.Reflection.FieldInfo)"/> Generate Delegate</para>
+        ///     A Wrapper Field Delegate Class
+        ///     <para>More convenient and fast Get or Set Field Value</para>
+        ///     <para>
+        ///         If <typeparamref name="T" /> is object then use <see cref="ObjectFieldGetAccess{T,F}" /> and
+        ///         <see cref="RefHelper.ObjectFieldSetAccess{T,F}" />
+        ///     </para>
+        ///     <para>else use <see cref="AccessTools.FieldRefAccess{T, F}(System.Reflection.FieldInfo)" /> Generate Delegate</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
@@ -495,12 +512,14 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(typeof(T), fieldNames, declaredOnly, instance);
             }
 
-            public static FieldRef<T, TF> Create(Type type, string fieldName, bool declaredOnly = false, object instance = null)
+            public static FieldRef<T, TF> Create(Type type, string fieldName, bool declaredOnly = false,
+                object instance = null)
             {
                 return new FieldRef<T, TF>(type, fieldName, declaredOnly, instance);
             }
 
-            public static FieldRef<T, TF> Create(Type type, string[] fieldNames, bool declaredOnly = false, object instance = null)
+            public static FieldRef<T, TF> Create(Type type, string[] fieldNames, bool declaredOnly = false,
+                object instance = null)
             {
                 return new FieldRef<T, TF>(type, fieldNames, declaredOnly, instance);
             }

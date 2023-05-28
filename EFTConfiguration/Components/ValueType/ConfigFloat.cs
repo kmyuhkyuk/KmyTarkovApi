@@ -7,12 +7,13 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigFloat : ConfigNum<float>
     {
-        [SerializeField]
-        private TMP_InputField floatValue;
+        [SerializeField] private TMP_InputField floatValue;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             floatValue.onEndEdit.AddListener(value =>
             {
@@ -25,9 +26,12 @@ namespace EFTConfiguration.Components.ValueType
             floatValue.interactable = !readOnly;
         }
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue, float min, float max)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue,
+            float min, float max)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue, min, max);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue, min, max);
 
             floatValue.onEndEdit.AddListener(value =>
             {

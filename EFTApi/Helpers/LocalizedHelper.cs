@@ -27,13 +27,15 @@ namespace EFTApi.Helpers
                      && x.GetParameters()[0].ParameterType == typeof(string)
                      && x.GetParameters()[1].ParameterType == typeof(string)));
 
-            _refLocalizedCase = AccessTools.MethodDelegate<Func<string, EStringCase, string>>(RefTool.GetEftMethod(type, flags,
+            _refLocalizedCase = AccessTools.MethodDelegate<Func<string, EStringCase, string>>(RefTool.GetEftMethod(type,
+                flags,
                 x => x.Name == "Localized"
                      && x.GetParameters().Length == 2
                      && x.GetParameters()[0].ParameterType == typeof(string)
                      && x.GetParameters()[1].ParameterType == typeof(EStringCase)));
 
-            _refTransliterate = AccessTools.MethodDelegate<Func<string, string>>(RefTool.GetEftMethod(x => x.GetMethods(flags).Any(t => t.Name == "Transliterate"), flags,
+            _refTransliterate = AccessTools.MethodDelegate<Func<string, string>>(RefTool.GetEftMethod(
+                x => x.GetMethods(flags).Any(t => t.Name == "Transliterate"), flags,
                 x => x.Name == "Transliterate"
                      && x.GetParameters().Length == 1));
         }

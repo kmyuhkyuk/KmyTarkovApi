@@ -6,8 +6,7 @@ namespace EFTConfiguration.UI
 {
     public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler
     {
-        [SerializeField]
-        private RectTransform targetRoot;
+        [SerializeField] private RectTransform targetRoot;
 
         private Vector2 _startPosition;
 

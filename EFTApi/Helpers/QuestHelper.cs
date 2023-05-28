@@ -7,7 +7,8 @@ namespace EFTApi.Helpers
     {
         public event Action<object, object, EQuestStatus, Condition, bool> OnConditionValueChanged;
 
-        internal void Trigger_OnConditionValueChanged(object questController, object quest, EQuestStatus status, Condition condition, bool notify)
+        internal void Trigger_OnConditionValueChanged(object questController, object quest, EQuestStatus status,
+            Condition condition, bool notify)
         {
             OnConditionValueChanged?.Invoke(questController, quest, status, condition, notify);
         }

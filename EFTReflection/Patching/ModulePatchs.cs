@@ -17,13 +17,15 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Get original methods
+        ///     Get original methods
         /// </summary>
-        /// <returns><see cref="IEnumerable{MethodBase}"/></returns>
+        /// <returns>
+        ///     <see cref="IEnumerable{MethodBase}" />
+        /// </returns>
         protected abstract IEnumerable<MethodBase> GetTargetMethods();
 
         /// <summary>
-        /// Apply patchs to target
+        ///     Apply patchs to target
         /// </summary>
         public override void Enable()
         {
@@ -102,7 +104,7 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Remove applied patchs from target
+        ///     Remove applied patchs from target
         /// </summary>
         public override void Disable()
         {

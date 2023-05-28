@@ -15,9 +15,11 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static void PatchPostfix(Player.FirearmController __instance, Player ____player, BulletClass ammo, Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition, int chamberIndex, float overheat)
+        private static void PatchPostfix(Player.FirearmController __instance, Player ____player, BulletClass ammo,
+            Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition, int chamberIndex, float overheat)
         {
-            EFTHelpers._PlayerHelper.FirearmControllerHelper.Trigger_InitiateShot(__instance, ____player, ammo, shotPosition, shotDirection, fireportPosition, chamberIndex, overheat);
+            EFTHelpers._PlayerHelper.FirearmControllerHelper.Trigger_InitiateShot(__instance, ____player, ammo,
+                shotPosition, shotDirection, fireportPosition, chamberIndex, overheat);
         }
     }
 }

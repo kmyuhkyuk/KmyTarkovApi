@@ -6,16 +6,17 @@ namespace EFTConfiguration.Components.Base
 {
     public abstract class ConfigSliderRange<T> : ConfigNum<T> where T : IConvertible
     {
-        [SerializeField]
-        protected Slider slider;
+        [SerializeField] protected Slider slider;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue, T min, T max)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue, T min, T max)
         {
             slider.minValue = min.ToSingle(null);
             slider.maxValue = max.ToSingle(null);
             slider.interactable = !readOnly;
 
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
         }
     }
 }

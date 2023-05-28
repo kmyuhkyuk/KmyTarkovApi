@@ -8,57 +8,58 @@ namespace EFTApi
     public static class EFTGlobal
     {
         /// <summary>
-        /// Current Session
+        ///     Current Session
         /// </summary>
         public static ISession Session => EFTHelpers._SessionHelper.Session;
 
         /// <summary>
-        /// Current GameWorld
+        ///     Current GameWorld
         /// </summary>
         public static GameWorld GameWorld => EFTHelpers._GameWorldHelper.GameWorld;
 
         /// <summary>
-        /// Current LevelSettings
+        ///     Current LevelSettings
         /// </summary>
         public static LevelSettings LevelSettings => EFTHelpers._GameWorldHelper.LevelSettingsHelper.LevelSettings;
 
         /// <summary>
-        /// Current Traders
+        ///     Current Traders
         /// </summary>
         public static object[] Traders => EFTHelpers._SessionHelper.TradersHelper.Traders;
 
         /// <summary>
-        /// Current AllBot
+        ///     Current AllBot
         /// </summary>
         public static List<Player> AllBot => EFTHelpers._GameWorldHelper.AllBot;
 
         /// <summary>
-        /// Current Player
+        ///     Current Player
         /// </summary>
         public static Player Player => EFTHelpers._PlayerHelper.Player;
 
         /// <summary>
-        /// Current FirearmController
+        ///     Current FirearmController
         /// </summary>
-        public static Player.FirearmController FirearmController => EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController;
+        public static Player.FirearmController FirearmController =>
+            EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController;
 
         /// <summary>
-        /// Current Weapon
+        ///     Current Weapon
         /// </summary>
         public static Weapon Weapon => EFTHelpers._PlayerHelper.WeaponHelper.Weapon;
 
         /// <summary>
-        /// Current UnderbarrelWeapon
+        ///     Current UnderbarrelWeapon
         /// </summary>
         public static Item UnderbarrelWeapon => EFTHelpers._PlayerHelper.WeaponHelper.UnderbarrelWeapon;
 
         /// <summary>
-        /// Current MainMenuController
+        ///     Current MainMenuController
         /// </summary>
         public static MainMenuController MainMenuController => EFTHelpers._MainMenuControllerHelper.MainMenuController;
 
         /// <summary>
-        /// Current GameUI
+        ///     Current GameUI
         /// </summary>
         public static GameUI GameUI => EFTHelpers._GameUIHelper.GameUI;
     }

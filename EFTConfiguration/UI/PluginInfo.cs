@@ -13,8 +13,8 @@ namespace EFTConfiguration.UI
         {
             get => toggle.isOn;
             set => toggle.isOn = value;
-        } 
-        
+        }
+
         public bool isCore;
 
         public bool fistPluginInfo;
@@ -29,29 +29,21 @@ namespace EFTConfiguration.UI
 
         private Version _modVersion;
 
-        [SerializeField]
-        private Image background;
+        [SerializeField] private Image background;
 
-        [SerializeField]
-        private Image icon;
+        [SerializeField] private Image icon;
 
-        [SerializeField]
-        private TMP_Text pluginName;
+        [SerializeField] private TMP_Text pluginName;
 
-        [SerializeField]
-        private TMP_Text version;
+        [SerializeField] private TMP_Text version;
 
-        [SerializeField]
-        private TMP_Text downloads;
+        [SerializeField] private TMP_Text downloads;
 
-        [SerializeField] 
-        private Button mod;
+        [SerializeField] private Button mod;
 
-        [SerializeField] 
-        private Button modDownload;
+        [SerializeField] private Button modDownload;
 
-        [SerializeField] 
-        private Toggle toggle;
+        [SerializeField] private Toggle toggle;
 
         private bool _isPointer;
 
@@ -148,7 +140,9 @@ namespace EFTConfiguration.UI
             {
                 toggle.onValueChanged.AddListener(value =>
                 {
-                    version.text = string.Concat("<color=yellow>", _modVersion, "</color>", value ? "<color=black>" : "<color=white>", " < ", "</color>", "<color=green>", modVersion, "</color>");
+                    version.text = string.Concat("<color=yellow>", _modVersion, "</color>",
+                        value ? "<color=black>" : "<color=white>", " < ", "</color>", "<color=green>", modVersion,
+                        "</color>");
                 });
             }
         }

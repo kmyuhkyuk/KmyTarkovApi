@@ -14,9 +14,13 @@ namespace EFTApi.Patches
         {
             var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
 
-            var applicationType = EFTVersion.Is330Up ? RefTool.GetEftType(x => x.Name == "TarkovApplication") : RefTool.GetEftType(x => x.Name == "MainApplication");
+            var applicationType = EFTVersion.Is330Up
+                ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                : RefTool.GetEftType(x => x.Name == "MainApplication");
 
-            return RefTool.GetEftMethod(applicationType, flags, x => x.IsAsync() && x.ReturnType == typeof(Task) && x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
+            return RefTool.GetEftMethod(applicationType, flags,
+                x => x.IsAsync() && x.ReturnType == typeof(Task) &&
+                     x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
         }
 
         [PatchPostfix]

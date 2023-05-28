@@ -7,12 +7,13 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigInt : ConfigNum<int>
     {
-        [SerializeField] 
-        private TMP_InputField intValue;
+        [SerializeField] private TMP_InputField intValue;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, int defaultValue, Action<int> onValueChanged, bool hideRest, Func<int> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, int defaultValue, Action<int> onValueChanged, bool hideRest, Func<int> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             intValue.onEndEdit.AddListener(value =>
             {
@@ -25,9 +26,12 @@ namespace EFTConfiguration.Components.ValueType
             intValue.interactable = !readOnly;
         }
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, int defaultValue, Action<int> onValueChanged, bool hideRest, Func<int> currentValue, int min, int max)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, int defaultValue, Action<int> onValueChanged, bool hideRest, Func<int> currentValue, int min,
+            int max)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue, min, max);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue, min, max);
 
             intValue.onEndEdit.AddListener(value =>
             {

@@ -12,11 +12,13 @@ namespace EFTApi.Patches
         {
             var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
 
-            return RefTool.GetEftType(x => x.GetMethod("OnConditionValueChanged", flags) != null).GetMethod("OnConditionValueChanged", flags);
+            return RefTool.GetEftType(x => x.GetMethod("OnConditionValueChanged", flags) != null)
+                .GetMethod("OnConditionValueChanged", flags);
         }
 
         [PatchPostfix]
-        private static void PatchPostfix(object __instance, object quest, EQuestStatus status, Condition condition, bool notify)
+        private static void PatchPostfix(object __instance, object quest, EQuestStatus status, Condition condition,
+            bool notify)
         {
             EFTHelpers._QuestHelper.Trigger_OnConditionValueChanged(__instance, quest, status, condition, notify);
         }

@@ -6,18 +6,22 @@ namespace EFTConfiguration.Components.Base
     {
         protected Func<T> GetValue;
 
-        public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue)
+        public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue)
         {
-            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest);
+            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest);
 
             GetValue = currentValue;
 
             UpdateCurrentValue();
         }
 
-        public void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue)
+        public void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue)
         {
-            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, (T)defaultValue, value => onValueChanged(value), hideRest, () => (T)currentValue());
+            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, (T)defaultValue,
+                value => onValueChanged(value), hideRest, () => (T)currentValue());
         }
     }
 }

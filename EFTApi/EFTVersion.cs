@@ -6,7 +6,7 @@ namespace EFTApi
     public static class EFTVersion
     {
         /// <summary>
-        /// Current Game File Version 
+        ///     Current Game File Version
         /// </summary>
         public static readonly Version GameVersion;
 
@@ -25,7 +25,8 @@ namespace EFTApi
             {
                 var exeInfo = processModule.FileVersionInfo;
 
-                var gameVersion = new Version(exeInfo.FileMajorPart, exeInfo.ProductMinorPart, exeInfo.ProductBuildPart, exeInfo.FilePrivatePart);
+                var gameVersion = new Version(exeInfo.FileMajorPart, exeInfo.ProductMinorPart, exeInfo.ProductBuildPart,
+                    exeInfo.FilePrivatePart);
 
                 GameVersion = gameVersion;
 
@@ -35,5 +36,5 @@ namespace EFTApi
                 Is350Up = gameVersion > new Version("0.13.0.21734");
             }
         }
-}
+    }
 }

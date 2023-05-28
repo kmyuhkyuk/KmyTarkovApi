@@ -14,11 +14,9 @@ namespace EFTConfiguration.Components.Base
 
         protected string ConfigNameKey;
 
-        [SerializeField]
-        protected TMP_Text configName;
+        [SerializeField] protected TMP_Text configName;
 
-        [SerializeField]
-        protected ConfigDescription description;
+        [SerializeField] protected ConfigDescription description;
 
         protected void Start()
         {

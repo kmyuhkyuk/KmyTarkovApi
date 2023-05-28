@@ -10,13 +10,12 @@ namespace EFTConfiguration.Components.Base
     {
         private const string RestNameKey = "Rest";
 
-        [SerializeField]
-        protected TMP_Text restName;
+        [SerializeField] protected TMP_Text restName;
 
-        [SerializeField]
-        protected Button rest;
+        [SerializeField] protected Button rest;
 
-        public void Init<T>(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest)
+        public void Init<T>(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced);
 

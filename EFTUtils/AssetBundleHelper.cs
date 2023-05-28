@@ -7,7 +7,8 @@ namespace EFTUtils
 {
     public static class AssetBundleHelper
     {
-        private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(AssetBundleHelper));
+        private static readonly ManualLogSource Logger =
+            BepInEx.Logging.Logger.CreateLogSource(nameof(AssetBundleHelper));
 
         public static AssetBundle LoadBundle(string bundlePath)
         {

@@ -17,11 +17,16 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static async void PatchPostfix(Player __instance, Task __result, Quaternion rotation, string layerName, EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController, object statisticsManager, object questController, object filter, Player.EVoipState voipState, bool aiControlled, bool async)
+        private static async void PatchPostfix(Player __instance, Task __result, Quaternion rotation, string layerName,
+            EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController,
+            object statisticsManager, object questController, object filter, Player.EVoipState voipState,
+            bool aiControlled, bool async)
         {
             await __result;
 
-            EFTHelpers._PlayerHelper.Trigger_Init(__instance, rotation, layerName, pointOfView, profile, inventoryController, healthController, statisticsManager, questController, filter, voipState, aiControlled, async);
+            EFTHelpers._PlayerHelper.Trigger_Init(__instance, rotation, layerName, pointOfView, profile,
+                inventoryController, healthController, statisticsManager, questController, filter, voipState,
+                aiControlled, async);
         }
     }
 
@@ -61,9 +66,11 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static void PatchPostfix(Player __instance, DamageInfo damageInfo, EBodyPart bodyPartType, float absorbed, EHeadSegment? headSegment)
+        private static void PatchPostfix(Player __instance, DamageInfo damageInfo, EBodyPart bodyPartType,
+            float absorbed, EHeadSegment? headSegment)
         {
-            EFTHelpers._PlayerHelper.Trigger_ApplyDamageInfo(__instance, damageInfo, bodyPartType, absorbed, headSegment);
+            EFTHelpers._PlayerHelper.Trigger_ApplyDamageInfo(__instance, damageInfo, bodyPartType, absorbed,
+                headSegment);
         }
     }
 
@@ -75,9 +82,11 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static void PatchPostfix(Player __instance, Player aggressor, DamageInfo damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
+        private static void PatchPostfix(Player __instance, Player aggressor, DamageInfo damageInfo, EBodyPart bodyPart,
+            EDamageType lethalDamageType)
         {
-            EFTHelpers._PlayerHelper.Trigger_OnBeenKilledByAggressor(__instance, aggressor, damageInfo, bodyPart, lethalDamageType);
+            EFTHelpers._PlayerHelper.Trigger_OnBeenKilledByAggressor(__instance, aggressor, damageInfo, bodyPart,
+                lethalDamageType);
         }
     }
 }

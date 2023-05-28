@@ -7,14 +7,15 @@ namespace EFTApi.Helpers
     public class AirdropHelper
     {
         /// <summary>
-        /// AirdropBox Helper
+        ///     AirdropBox Helper
         /// </summary>
         public readonly AirdropBoxData AirdropBoxHelper = new AirdropBoxData();
 
         /// <summary>
-        /// AirdropSynchronizableObject Helper
+        ///     AirdropSynchronizableObject Helper
         /// </summary>
-        public readonly AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper = new AirdropSynchronizableObjectData();
+        public readonly AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper =
+            new AirdropSynchronizableObjectData();
 
         public class AirdropBoxData
         {
@@ -29,7 +30,7 @@ namespace EFTApi.Helpers
         public class AirdropSynchronizableObjectData
         {
             /// <summary>
-            /// AirdropSynchronizableObject.AirdropType
+            ///     AirdropSynchronizableObject.AirdropType
             /// </summary>
             public readonly RefHelper.FieldRef<object, int> RefAirdropType;
 
@@ -37,7 +38,9 @@ namespace EFTApi.Helpers
             {
                 if (EFTVersion.Is350Up)
                 {
-                    RefAirdropType = RefHelper.FieldRef<object, int>.Create(RefTool.GetEftType(x => x.Name == "AirdropSynchronizableObject"), "AirdropType");
+                    RefAirdropType =
+                        RefHelper.FieldRef<object, int>.Create(
+                            RefTool.GetEftType(x => x.Name == "AirdropSynchronizableObject"), "AirdropType");
                 }
             }
         }

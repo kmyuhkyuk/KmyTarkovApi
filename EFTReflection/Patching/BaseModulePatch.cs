@@ -37,7 +37,7 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="name">Name</param>
         protected BaseModulePatch(string name = null)
@@ -62,13 +62,13 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Get original method
+        ///     Get original method
         /// </summary>
         /// <returns>Method</returns>
         protected abstract MethodBase GetTargetMethod();
 
         /// <summary>
-        /// Get HarmonyMethod from string
+        ///     Get HarmonyMethod from string
         /// </summary>
         /// <param name="attributeType">Attribute type</param>
         /// <returns>Method</returns>
@@ -77,7 +77,8 @@ namespace EFTReflection.Patching
             var T = GetType();
             var methods = new List<HarmonyMethod>();
 
-            foreach (var method in T.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly))
+            foreach (var method in T.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+                                                BindingFlags.DeclaredOnly))
             {
                 if (method.GetCustomAttribute(attributeType) != null)
                 {
@@ -89,7 +90,7 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Apply patch to target
+        ///     Apply patch to target
         /// </summary>
         public virtual void Enable()
         {
@@ -142,7 +143,7 @@ namespace EFTReflection.Patching
         }
 
         /// <summary>
-        /// Remove applied patch from target
+        ///     Remove applied patch from target
         /// </summary>
         public virtual void Disable()
         {

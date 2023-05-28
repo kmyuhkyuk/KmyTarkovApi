@@ -12,37 +12,41 @@ namespace EFTReflection
     public static class RefTool
     {
         /// <summary>
-        /// <see cref="BindingFlags.NonPublic"/> and <see cref="BindingFlags.Instance"/>
+        ///     <see cref="BindingFlags.NonPublic" /> and <see cref="BindingFlags.Instance" />
         /// </summary>
         public static readonly BindingFlags NonPublic = BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>
-        /// <see cref="BindingFlags.Public"/> and <see cref="BindingFlags.Instance"/>
+        ///     <see cref="BindingFlags.Public" /> and <see cref="BindingFlags.Instance" />
         /// </summary>
         public static readonly BindingFlags Public = BindingFlags.Public | BindingFlags.Instance;
 
         /// <summary>
-        /// <see cref="BindingFlags.DeclaredOnly"/> and <see cref="BindingFlags.Static"/>
+        ///     <see cref="BindingFlags.DeclaredOnly" /> and <see cref="BindingFlags.Static" />
         /// </summary>
         public static readonly BindingFlags DeclaredStatic = BindingFlags.DeclaredOnly | BindingFlags.Static;
 
         /// <summary>
-        /// Find Single Eft Type by Lambda
+        ///     Find Single Eft Type by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
-        /// <returns><see cref="Type"/></returns>
+        /// <returns>
+        ///     <see cref="Type" />
+        /// </returns>
         public static Type GetEftType(Func<Type, bool> typePredicate)
         {
             return PatchConstants.EftTypes.Single(typePredicate);
         }
 
         /// <summary>
-        /// Find Single Eft Method by Lambda
+        ///     Find Single Eft Method by Lambda
         /// </summary>
         /// <param name="type">Type</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
         /// <param name="methodPredicate">MethodInfo Lambda</param>
-        /// <returns><see cref="MethodInfo"/></returns>
+        /// <returns>
+        ///     <see cref="MethodInfo" />
+        /// </returns>
         public static MethodInfo GetEftMethod(Type type, BindingFlags flags, Func<MethodInfo, bool> methodPredicate)
         {
             if (type == null)
@@ -54,22 +58,27 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// Find Single Eft Method by Lambda
+        ///     Find Single Eft Method by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
         /// <param name="methodPredicate">MethodInfo Lambda</param>
-        /// <returns><see cref="MethodInfo"/></returns>
-        public static MethodInfo GetEftMethod(Func<Type, bool> typePredicate, BindingFlags flags, Func<MethodInfo, bool> methodPredicate)
+        /// <returns>
+        ///     <see cref="MethodInfo" />
+        /// </returns>
+        public static MethodInfo GetEftMethod(Func<Type, bool> typePredicate, BindingFlags flags,
+            Func<MethodInfo, bool> methodPredicate)
         {
             return GetEftMethod(GetEftType(typePredicate), flags, methodPredicate);
         }
 
         /// <summary>
-        /// Return Method is Async
+        ///     Return Method is Async
         /// </summary>
         /// <param name="methodInfo">Method</param>
-        /// <returns><see cref="bool"/></returns>
+        /// <returns>
+        ///     <see cref="bool" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool IsAsync(this MethodInfo methodInfo)
         {
@@ -82,10 +91,12 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// Get Async Struct from MethodInfo
+        ///     Get Async Struct from MethodInfo
         /// </summary>
         /// <param name="methodInfo">Async Method</param>
-        /// <returns><see cref="Type"/></returns>
+        /// <returns>
+        ///     <see cref="Type" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
         public static Type GetAsyncStruct(MethodInfo methodInfo)
@@ -107,10 +118,13 @@ namespace EFTReflection
 
         // ReSharper disable once InvalidXmlDocComment
         /// <summary>
-        /// Get Async MoveNext from MethodInfo, Harmony have been added this feature on Newer versions <see cref="AccessTools.AsyncMoveNext"/>
+        ///     Get Async MoveNext from MethodInfo, Harmony have been added this feature on Newer versions
+        ///     <see cref="AccessTools.AsyncMoveNext" />
         /// </summary>
         /// <param name="methodInfo">Async Method</param>
-        /// <returns><see cref="MethodInfo"/></returns>
+        /// <returns>
+        ///     <see cref="MethodInfo" />
+        /// </returns>
         public static MethodInfo GetAsyncMoveNext(MethodInfo methodInfo)
         {
             var asyncStruct = GetAsyncStruct(methodInfo);
@@ -119,10 +133,12 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// Get Async MoveNext from Struct
+        ///     Get Async MoveNext from Struct
         /// </summary>
         /// <param name="type">Async Struct</param>
-        /// <returns><see cref="MethodInfo"/></returns>
+        /// <returns>
+        ///     <see cref="MethodInfo" />
+        /// </returns>
         /// <exception cref="Exception"></exception>
         public static MethodInfo GetAsyncMoveNext(Type type)
         {
@@ -138,14 +154,16 @@ namespace EFTReflection
                 throw new Exception(type.Name + " not have MoveNext Method");
             }
 
-            return method;  
+            return method;
         }
 
         /// <summary>
-        /// Get Nested Methods from MethodInfo
+        ///     Get Nested Methods from MethodInfo
         /// </summary>
         /// <param name="methodInfo">Method</param>
-        /// <returns><see cref="IEnumerable{MethodInfo}"/></returns>
+        /// <returns>
+        ///     <see cref="IEnumerable{MethodInfo}" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IEnumerable<MethodInfo> GetNestedMethods(MethodInfo methodInfo)
         {
@@ -160,16 +178,19 @@ namespace EFTReflection
                 throw new ArgumentNullException(nameof(declaringType));
             }
 
-            return declaringType.GetMethods(DeclaredStatic | NonPublic).Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodInfo.Name}>"));
+            return declaringType.GetMethods(DeclaredStatic | NonPublic)
+                .Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodInfo.Name}>"));
         }
 
         /// <summary>
-        /// Return MethodInfo have this IL
+        ///     Return MethodInfo have this IL
         /// </summary>
         /// <param name="methodInfo">MethodInfo</param>
         /// <param name="opcode">OpCode</param>
         /// <param name="operand">Operand</param>
-        /// <returns><see cref="bool"/></returns>
+        /// <returns>
+        ///     <see cref="bool" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool ContainsIL(this MethodInfo methodInfo, OpCode opcode, object operand = null)
         {

@@ -20,7 +20,7 @@ namespace EFTApi.Helpers
         public readonly SearchableItemClassData SearchableItemClassHelper = new SearchableItemClassData();
 
         /// <summary>
-        /// Zone Helper
+        ///     Zone Helper
         /// </summary>
         public readonly ZoneData ZoneHelper = new ZoneData();
 
@@ -46,7 +46,7 @@ namespace EFTApi.Helpers
         }
 
         /// <summary>
-        /// Init Action
+        ///     Init Action
         /// </summary>
         public event Action<GameWorld> Awake;
 
@@ -130,12 +130,12 @@ namespace EFTApi.Helpers
         public class LootableContainerData
         {
             /// <summary>
-            /// LootableContainer.ItemOwner
+            ///     LootableContainer.ItemOwner
             /// </summary>
             public readonly RefHelper.FieldRef<LootableContainer, object> RefItemOwner;
 
             /// <summary>
-            /// LootableContainer.ItemOwner.RootItem
+            ///     LootableContainer.ItemOwner.RootItem
             /// </summary>
             public readonly RefHelper.PropertyRef<object, Item> RefRootItem;
 
@@ -149,7 +149,7 @@ namespace EFTApi.Helpers
         public class SearchableItemClassData
         {
             /// <summary>
-            /// SearchableItemClass.ItemOwner
+            ///     SearchableItemClass.ItemOwner
             /// </summary>
             public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
 
@@ -157,7 +157,10 @@ namespace EFTApi.Helpers
             {
                 if (EFTVersion.Is350Up)
                 {
-                    RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(RefTool.GetEftType(x => x.GetMethod("AddNewSearcher", BindingFlags.DeclaredOnly | RefTool.Public) != null), "_allSearchersIds");
+                    RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(
+                        RefTool.GetEftType(x =>
+                            x.GetMethod("AddNewSearcher", BindingFlags.DeclaredOnly | RefTool.Public) != null),
+                        "_allSearchersIds");
                 }
             }
         }

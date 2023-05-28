@@ -14,7 +14,8 @@ namespace EFTConfiguration.Helpers
     {
         private static readonly string CachePath = Path.Combine(EFTConfigurationPlugin.ModPath, "cache");
 
-        private static readonly Dictionary<string, Task<Texture2D>> IconCacheFile = new Dictionary<string, Task<Texture2D>>();
+        private static readonly Dictionary<string, Task<Texture2D>> IconCacheFile =
+            new Dictionary<string, Task<Texture2D>>();
 
         private static readonly Dictionary<string, Sprite> IconCache = new Dictionary<string, Sprite>();
 
@@ -54,7 +55,8 @@ namespace EFTConfiguration.Helpers
 
         public static int GetModDownloads(HtmlDocument doc)
         {
-            return Convert.ToInt32(doc.DocumentNode.SelectSingleNode("//header/div[2]/ul/li[5]/meta[2]").GetAttributeValue("content", ""));
+            return Convert.ToInt32(doc.DocumentNode.SelectSingleNode("//header/div[2]/ul/li[5]/meta[2]")
+                .GetAttributeValue("content", ""));
         }
 
         public static string GetModDownloadUrl(HtmlDocument doc)
@@ -91,7 +93,8 @@ namespace EFTConfiguration.Helpers
                     File.WriteAllBytes(Path.Combine(CachePath, fileName + ".png"), texture.EncodeToPNG());
                 }
 
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
 
                 IconCache.Add(fileName, sprite);
 

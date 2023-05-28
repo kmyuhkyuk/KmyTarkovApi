@@ -16,9 +16,12 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static async void PatchPostfix(MainMenuController __instance, Task<MainMenuController> __result, object backEnd, EnvironmentUI environmentUI, MenuUI menuUI, CommonUI commonUI, PreloaderUI preloaderUI, object raidSettings, object hideoutController, Action onLogoutPressed, Action reconnectAction)
+        private static async void PatchPostfix(MainMenuController __instance, Task<MainMenuController> __result,
+            object backEnd, EnvironmentUI environmentUI, MenuUI menuUI, CommonUI commonUI, PreloaderUI preloaderUI,
+            object raidSettings, object hideoutController, Action onLogoutPressed, Action reconnectAction)
         {
-            EFTHelpers._MainMenuControllerHelper.Trigger_Execute(await __result, backEnd, environmentUI, menuUI, commonUI, preloaderUI, raidSettings, hideoutController, onLogoutPressed, reconnectAction);
+            EFTHelpers._MainMenuControllerHelper.Trigger_Execute(await __result, backEnd, environmentUI, menuUI,
+                commonUI, preloaderUI, raidSettings, hideoutController, onLogoutPressed, reconnectAction);
         }
     }
 

@@ -7,21 +7,20 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigQuaternion : ConfigGetValue<Quaternion>
     {
-        [SerializeField] 
-        private TMP_InputField x;
+        [SerializeField] private TMP_InputField x;
 
-        [SerializeField] 
-        private TMP_InputField y;
+        [SerializeField] private TMP_InputField y;
 
-        [SerializeField] 
-        private TMP_InputField z;
+        [SerializeField] private TMP_InputField z;
 
-        [SerializeField] 
-        private TMP_InputField w;
+        [SerializeField] private TMP_InputField w;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, Quaternion defaultValue, Action<Quaternion> onValueChanged, bool hideRest, Func<Quaternion> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, Quaternion defaultValue, Action<Quaternion> onValueChanged, bool hideRest,
+            Func<Quaternion> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             x.onEndEdit.AddListener(value =>
             {

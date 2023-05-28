@@ -7,18 +7,18 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigVector3 : ConfigGetValue<Vector3>
     {
-        [SerializeField]
-        private TMP_InputField x;
+        [SerializeField] private TMP_InputField x;
 
-        [SerializeField]
-        private TMP_InputField y;
+        [SerializeField] private TMP_InputField y;
 
-        [SerializeField]
-        private TMP_InputField z;
+        [SerializeField] private TMP_InputField z;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, Vector3 defaultValue, Action<Vector3> onValueChanged, bool hideRest, Func<Vector3> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, Vector3 defaultValue, Action<Vector3> onValueChanged, bool hideRest,
+            Func<Vector3> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             x.onEndEdit.AddListener(value =>
             {

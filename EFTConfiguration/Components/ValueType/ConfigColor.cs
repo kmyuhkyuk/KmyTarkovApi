@@ -7,24 +7,21 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigColor : ConfigGetValue<Color>
     {
-        [SerializeField]
-        private Slider r;
+        [SerializeField] private Slider r;
 
-        [SerializeField]
-        private Slider g;
+        [SerializeField] private Slider g;
 
-        [SerializeField]
-        private Slider b;
+        [SerializeField] private Slider b;
 
-        [SerializeField]
-        private Slider a;
+        [SerializeField] private Slider a;
 
-        [SerializeField] 
-        private Image colorImage;
+        [SerializeField] private Image colorImage;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, Color defaultValue, Action<Color> onValueChanged, bool hideRest, Func<Color> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, Color defaultValue, Action<Color> onValueChanged, bool hideRest, Func<Color> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             r.onValueChanged.AddListener(value =>
             {

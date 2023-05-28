@@ -26,9 +26,9 @@ namespace EFTApi
             new PlayerOnDeadPatch().Enable();
             new PlayerDisposePatch().Enable();
             new PlayerApplyDamageInfoPatch().Enable();
-            new PlayerOnBeenKilledByAggressorPatch().Enable();  
+            new PlayerOnBeenKilledByAggressorPatch().Enable();
             new FirearmControllerInitiateShotPatch().Enable();
-            new ArmorComponentApplyDurabilityDamagePatch().Enable();    
+            new ArmorComponentApplyDurabilityDamagePatch().Enable();
             new ArmorComponentApplyDamagePatch().Enable();
 
             //Quest

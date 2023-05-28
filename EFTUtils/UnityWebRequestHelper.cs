@@ -8,7 +8,8 @@ namespace EFTUtils
 {
     public static class UnityWebRequestHelper
     {
-        private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(UnityWebRequestHelper));
+        private static readonly ManualLogSource Logger =
+            BepInEx.Logging.Logger.CreateLogSource(nameof(UnityWebRequestHelper));
 
         public static async Task<Texture2D> GetAsyncTexture(string url)
         {

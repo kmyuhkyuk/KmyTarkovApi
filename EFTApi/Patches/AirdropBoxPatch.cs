@@ -12,7 +12,8 @@ namespace EFTApi.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AppDomain.CurrentDomain.GetAssemblies().Single(x => x.ManifestModule.Name == "aki-custom.dll").GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic);
+            return AppDomain.CurrentDomain.GetAssemblies().Single(x => x.ManifestModule.Name == "aki-custom.dll")
+                .GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic);
         }
 
         [PatchPostfix]

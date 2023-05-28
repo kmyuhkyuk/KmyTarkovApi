@@ -21,7 +21,8 @@ namespace EFTConfiguration.UI
             set => gameObject.SetActive(value);
         }
 
-        private readonly Dictionary<string, List<ConfigBase>> _configDictionary = new Dictionary<string, List<ConfigBase>>();
+        private readonly Dictionary<string, List<ConfigBase>> _configDictionary =
+            new Dictionary<string, List<ConfigBase>>();
 
 #if !UNITY_EDITOR
         private ConfigurationData _configurationData;
@@ -47,7 +48,9 @@ namespace EFTConfiguration.UI
 
                 foreach (var configBase in valueList)
                 {
-                    var hasSearchName = hasName && configBase.LocalizedName.IndexOf(searchName, StringComparison.OrdinalIgnoreCase) > -1 || !hasName;
+                    var hasSearchName =
+                        hasName && configBase.LocalizedName.IndexOf(searchName, StringComparison.OrdinalIgnoreCase) >
+                        -1 || !hasName;
 
                     var active = configBase.IsAdvanced ? advanced && hasSearchName : hasSearchName;
 
@@ -100,7 +103,8 @@ namespace EFTConfiguration.UI
 
                 if (!string.IsNullOrEmpty(configData.Key))
                 {
-                    var configHeader = Instantiate(EFTConfigurationPlugin.PrefabManager.header, transform).GetComponent<ConfigHeader>();
+                    var configHeader = Instantiate(EFTConfigurationPlugin.PrefabManager.header, transform)
+                        .GetComponent<ConfigHeader>();
 
                     configHeader.Init(ModName, configData.Key, string.Empty, false);
 
@@ -124,9 +128,12 @@ namespace EFTConfiguration.UI
 
             if (type == typeof(bool))
             {
-                var configToggle = Instantiate(EFTConfigurationPlugin.PrefabManager.toggle, transform).GetComponent<ConfigToggle>();
+                var configToggle = Instantiate(EFTConfigurationPlugin.PrefabManager.toggle, transform)
+                    .GetComponent<ConfigToggle>();
 
-                configToggle.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configToggle.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configToggle);
             }
@@ -136,17 +143,23 @@ namespace EFTConfiguration.UI
 
                 if (acceptableValueRange != null && !attributes.HideRange)
                 {
-                    var configIntSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.intSlider, transform).GetComponent<ConfigIntSlider>();
+                    var configIntSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.intSlider, transform)
+                        .GetComponent<ConfigIntSlider>();
 
-                    configIntSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
+                    configIntSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
 
                     AddConfig(section, configIntSlider);
                 }
                 else
                 {
-                    var configInt = Instantiate(EFTConfigurationPlugin.PrefabManager.@int, transform).GetComponent<ConfigInt>();
+                    var configInt = Instantiate(EFTConfigurationPlugin.PrefabManager.@int, transform)
+                        .GetComponent<ConfigInt>();
 
-                    configInt.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                    configInt.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        configData.GetValue);
 
                     AddConfig(section, configInt);
                 }
@@ -157,17 +170,23 @@ namespace EFTConfiguration.UI
 
                 if (acceptableValueRange != null && !attributes.HideRange)
                 {
-                    var configFloatSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.floatSlider, transform).GetComponent<ConfigFloatSlider>();
+                    var configFloatSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.floatSlider, transform)
+                        .GetComponent<ConfigFloatSlider>();
 
-                    configFloatSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
+                    configFloatSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
 
                     AddConfig(section, configFloatSlider);
                 }
                 else
                 {
-                    var configFloat = Instantiate(EFTConfigurationPlugin.PrefabManager.@float, transform).GetComponent<ConfigFloat>();
+                    var configFloat = Instantiate(EFTConfigurationPlugin.PrefabManager.@float, transform)
+                        .GetComponent<ConfigFloat>();
 
-                    configFloat.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                    configFloat.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        configData.GetValue);
 
                     AddConfig(section, configFloat);
                 }
@@ -176,9 +195,11 @@ namespace EFTConfiguration.UI
             {
                 if (attributes.ButtonAction != null)
                 {
-                    var configStringAction = Instantiate(EFTConfigurationPlugin.PrefabManager.stringAction, transform).GetComponent<ConfigStringAction>();
+                    var configStringAction = Instantiate(EFTConfigurationPlugin.PrefabManager.stringAction, transform)
+                        .GetComponent<ConfigStringAction>();
 
-                    configStringAction.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ButtonAction);
+                    configStringAction.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ButtonAction);
 
                     AddConfig(section, configStringAction);
                 }
@@ -188,17 +209,24 @@ namespace EFTConfiguration.UI
 
                     if (acceptableValueList != null)
                     {
-                        var configStringDropdown = Instantiate(EFTConfigurationPlugin.PrefabManager.stringDropdown, transform).GetComponent<ConfigStringDropdown>();
+                        var configStringDropdown =
+                            Instantiate(EFTConfigurationPlugin.PrefabManager.stringDropdown, transform)
+                                .GetComponent<ConfigStringDropdown>();
 
-                        configStringDropdown.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, acceptableValueList.AcceptableValues);
+                        configStringDropdown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                            configData.GetValue, acceptableValueList.AcceptableValues);
 
                         AddConfig(section, configStringDropdown);
                     }
                     else
                     {
-                        var configString = Instantiate(EFTConfigurationPlugin.PrefabManager.@string, transform).GetComponent<ConfigString>();
+                        var configString = Instantiate(EFTConfigurationPlugin.PrefabManager.@string, transform)
+                            .GetComponent<ConfigString>();
 
-                        configString.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                        configString.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                            configData.GetValue);
 
                         AddConfig(section, configString);
                     }
@@ -206,73 +234,101 @@ namespace EFTConfiguration.UI
             }
             else if (type == typeof(Vector2))
             {
-                var configVector2 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector2, transform).GetComponent<ConfigVector2>();
+                var configVector2 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector2, transform)
+                    .GetComponent<ConfigVector2>();
 
-                configVector2.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configVector2.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configVector2);
             }
             else if (type == typeof(Vector3))
             {
-                var configVector3 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector3, transform).GetComponent<ConfigVector3>();
+                var configVector3 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector3, transform)
+                    .GetComponent<ConfigVector3>();
 
-                configVector3.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configVector3.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configVector3);
             }
             else if (type == typeof(Vector4))
             {
-                var configVector4 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector4, transform).GetComponent<ConfigVector4>();
+                var configVector4 = Instantiate(EFTConfigurationPlugin.PrefabManager.vector4, transform)
+                    .GetComponent<ConfigVector4>();
 
-                configVector4.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configVector4.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configVector4);
             }
             else if (type == typeof(Quaternion))
             {
-                var configQuaternion = Instantiate(EFTConfigurationPlugin.PrefabManager.quaternion, transform).GetComponent<ConfigQuaternion>();
+                var configQuaternion = Instantiate(EFTConfigurationPlugin.PrefabManager.quaternion, transform)
+                    .GetComponent<ConfigQuaternion>();
 
-                configQuaternion.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configQuaternion.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configQuaternion);
             }
             else if (type == typeof(Color))
             {
-                var configColor = Instantiate(EFTConfigurationPlugin.PrefabManager.color, transform).GetComponent<ConfigColor>();
+                var configColor = Instantiate(EFTConfigurationPlugin.PrefabManager.color, transform)
+                    .GetComponent<ConfigColor>();
 
-                configColor.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configColor.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configColor);
             }
             else if (type == typeof(KeyboardShortcut))
             {
-                var configKeyboardShortcut = Instantiate(EFTConfigurationPlugin.PrefabManager.keyboardShortcut, transform).GetComponent<ConfigKeyboardShortcut>();
+                var configKeyboardShortcut =
+                    Instantiate(EFTConfigurationPlugin.PrefabManager.keyboardShortcut, transform)
+                        .GetComponent<ConfigKeyboardShortcut>();
 
-                configKeyboardShortcut.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue);
+                configKeyboardShortcut.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue);
 
                 AddConfig(section, configKeyboardShortcut);
             }
             else if (type.IsEnum)
             {
-                var configEnum = Instantiate(EFTConfigurationPlugin.PrefabManager.@enum, transform).GetComponent<ConfigEnum>();
+                var configEnum = Instantiate(EFTConfigurationPlugin.PrefabManager.@enum, transform)
+                    .GetComponent<ConfigEnum>();
 
-                configEnum.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, Enum.GetValues(type));
+                configEnum.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue, Enum.GetValues(type));
 
                 AddConfig(section, configEnum);
             }
-            else if (typeof(IConvertible).IsAssignableFrom(type))
+            else if (type.IsPrimitive)
             {
-                var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform).GetComponent<ConfigUnknown>();
+                var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform)
+                    .GetComponent<ConfigUnknown>();
 
-                configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, type);
+                configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue, type);
 
                 AddConfig(section, configUnknown);
             }
             else
             {
-                var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform).GetComponent<ConfigUnknown>();
+                var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform)
+                    .GetComponent<ConfigUnknown>();
 
-                configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced, attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest, configData.GetValue, type, attributes.CustomToString, attributes.CustomToObject);
+                configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    configData.GetValue, type, attributes.CustomToString, attributes.CustomToObject);
 
                 AddConfig(section, configUnknown);
             }

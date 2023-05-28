@@ -17,25 +17,25 @@ namespace EFTConfiguration.Components.ValueType
 
         private const string PressNameKey = "Press";
 
-        [SerializeField] 
-        private Button bind;
+        [SerializeField] private Button bind;
 
-        [SerializeField]
-        private TMP_Text bindName;
+        [SerializeField] private TMP_Text bindName;
 
-        [SerializeField]
-        private Button clear;
+        [SerializeField] private Button clear;
 
-        [SerializeField]
-        private TMP_Text clearName;
+        [SerializeField] private TMP_Text clearName;
 
-        private static readonly KeyCode[] AllKeyCodes = KeyboardShortcut.AllKeyCodes.Where(x => x != KeyCode.None && x != KeyCode.Mouse0).ToArray();
+        private static readonly KeyCode[] AllKeyCodes =
+            KeyboardShortcut.AllKeyCodes.Where(x => x != KeyCode.None && x != KeyCode.Mouse0).ToArray();
 
         private CancellationTokenSource _cancellationTokenSource;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, KeyboardShortcut defaultValue, Action<KeyboardShortcut> onValueChanged, bool hideRest, Func<KeyboardShortcut> currentValue)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, KeyboardShortcut defaultValue, Action<KeyboardShortcut> onValueChanged, bool hideRest,
+            Func<KeyboardShortcut> currentValue)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue);
 
             bind.onClick.AddListener(() =>
             {

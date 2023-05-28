@@ -17,38 +17,27 @@ namespace EFTConfiguration
 
         private string CurrentModName => _currentConfiguration.Key.modName;
 
-        [SerializeField]
-        private Transform pluginInfosRoot;
+        [SerializeField] private Transform pluginInfosRoot;
 
-        [SerializeField]
-        private Transform configsRoot;
+        [SerializeField] private Transform configsRoot;
 
-        [SerializeField]
-        private TMP_Text modName;
+        [SerializeField] private TMP_Text modName;
 
-        [SerializeField]
-        private Button closeButton;
+        [SerializeField] private Button closeButton;
 
-        [SerializeField] 
-        private ToggleGroup pluginInfosToggleGroup;
+        [SerializeField] private ToggleGroup pluginInfosToggleGroup;
 
-        [SerializeField]
-        private ScrollRect scrollRect;
+        [SerializeField] private ScrollRect scrollRect;
 
-        [SerializeField]
-        private Transform windowRoot;
+        [SerializeField] private Transform windowRoot;
 
-        [SerializeField] 
-        private TMP_InputField search;
+        [SerializeField] private TMP_InputField search;
 
-        [SerializeField] 
-        private TMP_Text advancedName;
+        [SerializeField] private TMP_Text advancedName;
 
-        [SerializeField]
-        private Toggle advanced;
+        [SerializeField] private Toggle advanced;
 
-        [SerializeField]
-        private Button searchButton;
+        [SerializeField] private Button searchButton;
 
         private Transform _searchPanelTransform;
 
@@ -63,9 +52,9 @@ namespace EFTConfiguration
                 if (value)
                 {
                     _windowRect.anchoredPosition = EFTConfigurationPlugin.SetData.KeyDefaultPosition.Value;
-                }
 
-                Filter(advanced.isOn, search.text);
+                    Filter(advanced.isOn, search.text);
+                }
 #endif
 
                 windowRoot.gameObject.SetActive(value);
@@ -89,8 +78,10 @@ namespace EFTConfiguration
             search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
             advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
 
-            EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) => search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
-            EFTConfigurationPlugin.SetData.KeyAdvanced.SettingChanged += (value1, value2) => advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
+            EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>
+                search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
+            EFTConfigurationPlugin.SetData.KeyAdvanced.SettingChanged += (value1, value2) =>
+                advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
 
             search.onValueChanged.AddListener(value =>
             {
@@ -124,7 +115,8 @@ namespace EFTConfiguration
 
             foreach (var configuration in configurationsData)
             {
-                var pluginInfo = Instantiate(EFTConfigurationPlugin.PrefabManager.pluginInfo, pluginInfosRoot).GetComponent<PluginInfo>();
+                var pluginInfo = Instantiate(EFTConfigurationPlugin.PrefabManager.pluginInfo, pluginInfosRoot)
+                    .GetComponent<PluginInfo>();
 
                 pluginInfo.isCore = configuration.IsCore;
                 pluginInfo.modName = configuration.ModName;
@@ -144,7 +136,8 @@ namespace EFTConfiguration
                     BindWeb(modUrl, pluginInfo.BindWeb);
                 }
 
-                var config = Instantiate(EFTConfigurationPlugin.PrefabManager.config, configsRoot).GetComponent<Config>();
+                var config = Instantiate(EFTConfigurationPlugin.PrefabManager.config, configsRoot)
+                    .GetComponent<Config>();
 
                 config.Init(configuration);
 
@@ -202,9 +195,10 @@ namespace EFTConfiguration
 
         private void UpdateLocalized()
         {
-            modName.text = CustomLocalizedHelper.Localized(CurrentModName); 
-            
-            ((TMP_Text)search.placeholder).text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "EnterText");
+            modName.text = CustomLocalizedHelper.Localized(CurrentModName);
+
+            ((TMP_Text)search.placeholder).text =
+                CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "EnterText");
 
             advancedName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "Advanced");
         }
@@ -234,7 +228,8 @@ namespace EFTConfiguration
 
                 var show = !(attributes.HidePlugin || !attributes.AlwaysDisplay && configurationData.ConfigCount == 0);
 
-                if (configurationData.Configs.All(x => x.ConfigurationAttributes.HideSetting || !isAdvanced && x.ConfigurationAttributes.Advanced))
+                if (configurationData.Configs.All(x =>
+                        x.ConfigurationAttributes.HideSetting || !isAdvanced && x.ConfigurationAttributes.Advanced))
                     show = false;
 
                 changes.Add((i, show));

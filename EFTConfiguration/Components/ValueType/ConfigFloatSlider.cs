@@ -7,12 +7,14 @@ namespace EFTConfiguration.Components.ValueType
 {
     public class ConfigFloatSlider : ConfigSliderRange<float>
     {
-        [SerializeField]
-        private TMP_InputField floatValue;
+        [SerializeField] private TMP_InputField floatValue;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue, float min, float max)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue,
+            float min, float max)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue, min, max);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue, min, max);
 
             floatValue.onEndEdit.AddListener(value =>
             {

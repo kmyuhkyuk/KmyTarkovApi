@@ -14,34 +14,35 @@ namespace EFTApi.Helpers
         public Player Player { get; private set; }
 
         /// <summary>
-        /// FirearmController Helper
+        ///     FirearmController Helper
         /// </summary>
         public readonly FirearmControllerData FirearmControllerHelper = new FirearmControllerData();
 
         /// <summary>
-        /// Weapon Helper
+        ///     Weapon Helper
         /// </summary>
         public readonly WeaponData WeaponHelper = new WeaponData();
 
         /// <summary>
-        /// ArmorComponent Helper
+        ///     ArmorComponent Helper
         /// </summary>
         public readonly ArmorComponentData ArmorComponentHelper = new ArmorComponentData();
 
         /// <summary>
-        /// Role Helper
+        ///     Role Helper
         /// </summary>
         public readonly RoleData RoleHelper = new RoleData();
 
         /// <summary>
-        /// Inventory Helper
+        ///     Inventory Helper
         /// </summary>
         public readonly InventoryData InventoryHelper = new InventoryData();
 
         /// <summary>
-        /// Init Action
+        ///     Init Action
         /// </summary>
-        public event Action<Player, Quaternion, string, EPointOfView, Profile, object, IHealthController, object, object, object, Player.EVoipState, bool, bool> Init;
+        public event Action<Player, Quaternion, string, EPointOfView, Profile, object, IHealthController, object, object
+            , object, Player.EVoipState, bool, bool> Init;
 
         public event Action<Player> Dispose;
 
@@ -52,17 +53,17 @@ namespace EFTApi.Helpers
         public event Action<Player, Player, DamageInfo, EBodyPart, EDamageType> OnBeenKilledByAggressor;
 
         /// <summary>
-        /// InfoClass.Settings
+        ///     InfoClass.Settings
         /// </summary>
         public readonly RefHelper.FieldRef<InfoClass, object> RefSettings;
 
         /// <summary>
-        /// InfoClass.Settings.Role
+        ///     InfoClass.Settings.Role
         /// </summary>
         public readonly RefHelper.FieldRef<object, WildSpawnType> RefRole;
 
         /// <summary>
-        /// InfoClass.Settings.Experience
+        ///     InfoClass.Settings.Experience
         /// </summary>
         public readonly RefHelper.FieldRef<object, int> RefExperience;
 
@@ -79,14 +80,17 @@ namespace EFTApi.Helpers
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
         }
 
-        internal void Trigger_Init(Player player, Quaternion rotation, string layerName, EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController, object statisticsManager, object questController, object filter, Player.EVoipState voipState, bool aiControlled, bool async)
+        internal void Trigger_Init(Player player, Quaternion rotation, string layerName, EPointOfView pointOfView,
+            Profile profile, object inventoryController, IHealthController healthController, object statisticsManager,
+            object questController, object filter, Player.EVoipState voipState, bool aiControlled, bool async)
         {
             if (EFTVersion.Is231Up ? player.IsYourPlayer : player.Id == 1)
             {
                 Player = player;
             }
 
-            Init?.Invoke(player, rotation, layerName, pointOfView, profile, inventoryController, healthController, statisticsManager, questController, filter, voipState, aiControlled, async);
+            Init?.Invoke(player, rotation, layerName, pointOfView, profile, inventoryController, healthController,
+                statisticsManager, questController, filter, voipState, aiControlled, async);
         }
 
         internal void Trigger_Dispose(Player player)
@@ -99,12 +103,14 @@ namespace EFTApi.Helpers
             OnDead?.Invoke(player, damageType);
         }
 
-        internal void Trigger_ApplyDamageInfo(Player player, DamageInfo damageInfo, EBodyPart bodyPartType, float absorbed, EHeadSegment? headSegment)
+        internal void Trigger_ApplyDamageInfo(Player player, DamageInfo damageInfo, EBodyPart bodyPartType,
+            float absorbed, EHeadSegment? headSegment)
         {
             ApplyDamageInfo?.Invoke(player, damageInfo, bodyPartType, absorbed, headSegment);
         }
 
-        internal void Trigger_OnBeenKilledByAggressor(Player player, Player aggressor, DamageInfo damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
+        internal void Trigger_OnBeenKilledByAggressor(Player player, Player aggressor, DamageInfo damageInfo,
+            EBodyPart bodyPart, EDamageType lethalDamageType)
         {
             OnBeenKilledByAggressor?.Invoke(player, aggressor, damageInfo, bodyPart, lethalDamageType);
         }
@@ -112,13 +118,19 @@ namespace EFTApi.Helpers
 
         public class FirearmControllerData
         {
-            public Player.FirearmController FirearmController => EFTHelpers._PlayerHelper.Player != null ? EFTHelpers._PlayerHelper.Player.HandsController as Player.FirearmController : null;
+            public Player.FirearmController FirearmController => EFTHelpers._PlayerHelper.Player != null
+                ? EFTHelpers._PlayerHelper.Player.HandsController as Player.FirearmController
+                : null;
 
-            public event Action<Player.FirearmController, Player, BulletClass, Vector3, Vector3, Vector3, int, float> InitiateShot;
+            public event Action<Player.FirearmController, Player, BulletClass, Vector3, Vector3, Vector3, int, float>
+                InitiateShot;
 
-            internal void Trigger_InitiateShot(Player.FirearmController firearmController, Player player, BulletClass ammo, Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition, int chamberIndex, float overheat)
+            internal void Trigger_InitiateShot(Player.FirearmController firearmController, Player player,
+                BulletClass ammo, Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition,
+                int chamberIndex, float overheat)
             {
-                InitiateShot?.Invoke(firearmController, player, ammo, shotPosition, shotDirection, fireportPosition, chamberIndex, overheat);
+                InitiateShot?.Invoke(firearmController, player, ammo, shotPosition, shotDirection, fireportPosition,
+                    chamberIndex, overheat);
             }
         }
 
@@ -133,9 +145,12 @@ namespace EFTApi.Helpers
                 ApplyDurabilityDamage?.Invoke(armorComponent, armorDamage);
             }
 
-            internal void Trigger_ApplyDamage(ArmorComponent armorComponent, DamageInfo damageInfo, EBodyPart bodyPartType, bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction)
+            internal void Trigger_ApplyDamage(ArmorComponent armorComponent, DamageInfo damageInfo,
+                EBodyPart bodyPartType, bool damageInfoIsLocal, object lightVestsDamageReduction,
+                object heavyVestsDamageReduction)
             {
-                ApplyDamage?.Invoke(armorComponent, damageInfo, bodyPartType, damageInfoIsLocal, lightVestsDamageReduction, heavyVestsDamageReduction);
+                ApplyDamage?.Invoke(armorComponent, damageInfo, bodyPartType, damageInfoIsLocal,
+                    lightVestsDamageReduction, heavyVestsDamageReduction);
             }
         }
 
@@ -153,15 +168,21 @@ namespace EFTApi.Helpers
             {
                 var flags = BindingFlags.Static | RefTool.Public;
 
-                var roleType = RefTool.GetEftType(x => x.GetMethod("IsBoss", flags) != null && x.GetMethod("Init", flags) != null);
+                var roleType = RefTool.GetEftType(x =>
+                    x.GetMethod("IsBoss", flags) != null && x.GetMethod("Init", flags) != null);
 
                 _refIsBoss = AccessTools.MethodDelegate<Func<WildSpawnType, bool>>(roleType.GetMethod("IsBoss", flags));
 
-                _refIsFollower = AccessTools.MethodDelegate<Func<WildSpawnType, bool>>(roleType.GetMethod("IsFollower", flags));
+                _refIsFollower =
+                    AccessTools.MethodDelegate<Func<WildSpawnType, bool>>(roleType.GetMethod("IsFollower", flags));
 
-                _refIsBossOrFollower = AccessTools.MethodDelegate<Func<WildSpawnType, bool>>(roleType.GetMethod("IsBossOrFollower", flags));
+                _refIsBossOrFollower =
+                    AccessTools.MethodDelegate<Func<WildSpawnType, bool>>(roleType.GetMethod("IsBossOrFollower",
+                        flags));
 
-                _refGetScavRoleKey = AccessTools.MethodDelegate<Func<WildSpawnType, string>>(roleType.GetMethod("GetScavRoleKey", flags));
+                _refGetScavRoleKey =
+                    AccessTools.MethodDelegate<Func<WildSpawnType, string>>(roleType.GetMethod("GetScavRoleKey",
+                        flags));
             }
 
             public bool IsBoss(WildSpawnType role)
@@ -189,7 +210,8 @@ namespace EFTApi.Helpers
         {
             public object Equipment => RefEquipment.GetValue(EFTHelpers._PlayerHelper.Player.Profile.Inventory);
 
-            public object QuestRaidItems => RefQuestRaidItems.GetValue(EFTHelpers._PlayerHelper.Player.Profile.Inventory);
+            public object QuestRaidItems =>
+                RefQuestRaidItems.GetValue(EFTHelpers._PlayerHelper.Player.Profile.Inventory);
 
             public Slot[] EquipmentSlots => RefSlots.GetValue(Equipment);
 
@@ -204,7 +226,8 @@ namespace EFTApi.Helpers
 
                     var list = new List<object>();
 
-                    foreach (var slot in new[] { equipmentSlots[6], equipmentSlots[7], equipmentSlots[8], equipmentSlots[10] })
+                    foreach (var slot in new[]
+                                 { equipmentSlots[6], equipmentSlots[7], equipmentSlots[8], equipmentSlots[10] })
                     {
                         var gear = slot.ContainedItem;
 
@@ -334,28 +357,28 @@ namespace EFTApi.Helpers
             }
 
             /// <summary>
-            /// InventoryClass.Equipment
+            ///     InventoryClass.Equipment
             /// </summary>
             public readonly RefHelper.FieldRef<InventoryClass, object> RefEquipment;
 
             /// <summary>
-            /// InventoryClass.QuestRaidItems
+            ///     InventoryClass.QuestRaidItems
             /// </summary>
             public readonly RefHelper.FieldRef<InventoryClass, object> RefQuestRaidItems;
 
             /// <summary>
-            /// InventoryClass.Equipment.Slots
+            ///     InventoryClass.Equipment.Slots
             /// </summary>
             public readonly RefHelper.FieldRef<object, Slot[]> RefSlots;
 
             // ReSharper disable once InvalidXmlDocComment
             /// <summary>
-            /// InventoryClass.Equipment.Slots.Grids
+            ///     InventoryClass.Equipment.Slots.Grids
             /// </summary>
             public readonly RefHelper.FieldRef<object, object[]> RefGrids;
 
             /// <summary>
-            /// InventoryClass.Equipment.Slots.Grids.Items
+            ///     InventoryClass.Equipment.Slots.Grids.Items
             /// </summary>
             public readonly RefHelper.PropertyRef<object, IEnumerable<Item>> RefItems;
 
@@ -364,23 +387,32 @@ namespace EFTApi.Helpers
                 RefEquipment = RefHelper.FieldRef<InventoryClass, object>.Create("Equipment");
                 RefQuestRaidItems = RefHelper.FieldRef<InventoryClass, object>.Create("QuestRaidItems");
                 RefSlots = RefHelper.FieldRef<object, Slot[]>.Create(RefEquipment.FieldType, "Slots");
-                RefGrids = RefHelper.FieldRef<object, object[]>.Create(RefTool.GetEftType(x => x.GetMethod("TryGetLastForbiddenItem", BindingFlags.DeclaredOnly | RefTool.Public) != null), "Grids");
+                RefGrids = RefHelper.FieldRef<object, object[]>.Create(
+                    RefTool.GetEftType(x =>
+                        x.GetMethod("TryGetLastForbiddenItem", BindingFlags.DeclaredOnly | RefTool.Public) != null),
+                    "Grids");
 
-                RefItems = RefHelper.PropertyRef<object, IEnumerable<Item>>.Create(RefGrids.FieldType.GetElementType(), "Items");
+                RefItems = RefHelper.PropertyRef<object, IEnumerable<Item>>.Create(RefGrids.FieldType.GetElementType(),
+                    "Items");
             }
         }
 
         public class WeaponData
         {
-            public Weapon Weapon => EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController != null ? EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController.Item : null;
+            public Weapon Weapon => EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController != null
+                ? EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController.Item
+                : null;
 
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 
-            public Item UnderbarrelWeapon => RefUnderbarrelWeapon.GetValue(EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController);
+            public Item UnderbarrelWeapon =>
+                RefUnderbarrelWeapon.GetValue(EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController);
 
-            public Animator WeaponAnimator => RefAnimator.GetValue(RefWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
+            public Animator WeaponAnimator =>
+                RefAnimator.GetValue(RefWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
 
-            public Animator LauncherIAnimator => RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
+            public Animator LauncherIAnimator =>
+                RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
 
             public Slot[] UnderbarrelChambers => RefUnderbarrelChambers.GetValue(UnderbarrelWeapon);
 
@@ -391,57 +423,67 @@ namespace EFTApi.Helpers
             private readonly Func<Weapon, object> _refGetCurrentMagazine;
 
             /// <summary>
-            /// Player.FirearmController.UnderbarrelWeapon
+            ///     Player.FirearmController.UnderbarrelWeapon
             /// </summary>
             public readonly RefHelper.FieldRef<Player.FirearmController, Item> RefUnderbarrelWeapon;
 
             /// <summary>
-            /// Player.ArmsAnimatorCommon
+            ///     Player.ArmsAnimatorCommon
             /// </summary>
             public readonly RefHelper.PropertyRef<Player, object> RefWeaponIAnimator;
 
             /// <summary>
-            /// Player.UnderbarrelWeaponArmsAnimator
+            ///     Player.UnderbarrelWeaponArmsAnimator
             /// </summary>
             public readonly RefHelper.PropertyRef<Player, object> RefUnderbarrelWeaponIAnimator;
 
             /// <summary>
-            /// IAnimator.Animator
+            ///     IAnimator.Animator
             /// </summary>
             public readonly RefHelper.PropertyRef<object, Animator> RefAnimator;
 
             /// <summary>
-            /// Player.FirearmController.UnderbarrelWeapon.Chambers
+            ///     Player.FirearmController.UnderbarrelWeapon.Chambers
             /// </summary>
             public readonly RefHelper.FieldRef<object, Slot[]> RefUnderbarrelChambers;
 
             /// <summary>
-            /// Player.FirearmController.UnderbarrelWeapon.WeaponTemplate
+            ///     Player.FirearmController.UnderbarrelWeapon.WeaponTemplate
             /// </summary>
             public readonly RefHelper.PropertyRef<object, WeaponTemplate> RefUnderbarrelWeaponTemplate;
 
             /// <summary>
-            /// Player.FirearmController.UnderbarrelWeapon.ChamberAmmoCount
+            ///     Player.FirearmController.UnderbarrelWeapon.ChamberAmmoCount
             /// </summary>
             public readonly RefHelper.PropertyRef<object, int> RefUnderbarrelChamberAmmoCount;
 
             public WeaponData()
             {
-                _refGetCurrentMagazine = AccessTools.MethodDelegate<Func<Weapon, object>>(typeof(Weapon).GetMethod("GetCurrentMagazine", RefTool.Public));
+                _refGetCurrentMagazine =
+                    AccessTools.MethodDelegate<Func<Weapon, object>>(
+                        typeof(Weapon).GetMethod("GetCurrentMagazine", RefTool.Public));
 
                 RefWeaponIAnimator = RefHelper.PropertyRef<Player, object>.Create("ArmsAnimatorCommon");
-                RefAnimator = RefHelper.PropertyRef<object, Animator>.Create(RefTool.GetEftType(x => x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null), "Animator");
+                RefAnimator = RefHelper.PropertyRef<object, Animator>.Create(
+                    RefTool.GetEftType(x =>
+                        x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null),
+                    "Animator");
 
                 if (EFTVersion.Is341Up)
                 {
-                    RefUnderbarrelWeapon = RefHelper.FieldRef<Player.FirearmController, Item>.Create("UnderbarrelWeapon");
-                    RefUnderbarrelWeaponIAnimator = RefHelper.PropertyRef<Player, object>.Create("UnderbarrelWeaponArmsAnimator");
+                    RefUnderbarrelWeapon =
+                        RefHelper.FieldRef<Player.FirearmController, Item>.Create("UnderbarrelWeapon");
+                    RefUnderbarrelWeaponIAnimator =
+                        RefHelper.PropertyRef<Player, object>.Create("UnderbarrelWeaponArmsAnimator");
 
-                    var launcherType = RefTool.GetEftType(x => x.GetMethod("GetCenterOfImpact", RefTool.Public) != null);
+                    var launcherType =
+                        RefTool.GetEftType(x => x.GetMethod("GetCenterOfImpact", RefTool.Public) != null);
 
                     RefUnderbarrelChambers = RefHelper.FieldRef<object, Slot[]>.Create(launcherType, "Chambers");
-                    RefUnderbarrelWeaponTemplate = RefHelper.PropertyRef<object, WeaponTemplate>.Create(launcherType, "WeaponTemplate");
-                    RefUnderbarrelChamberAmmoCount = RefHelper.PropertyRef<object, int>.Create(launcherType, "ChamberAmmoCount");
+                    RefUnderbarrelWeaponTemplate =
+                        RefHelper.PropertyRef<object, WeaponTemplate>.Create(launcherType, "WeaponTemplate");
+                    RefUnderbarrelChamberAmmoCount =
+                        RefHelper.PropertyRef<object, int>.Create(launcherType, "ChamberAmmoCount");
                 }
             }
 

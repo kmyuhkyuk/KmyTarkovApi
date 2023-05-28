@@ -7,12 +7,14 @@ namespace EFTConfiguration.Components
 {
     public class ConfigUnknown : ConfigObject
     {
-        [SerializeField] 
-        private TMP_InputField unknownValue;
+        [SerializeField] private TMP_InputField unknownValue;
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue, Type type)
-        { 
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue, type);
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            Type type)
+        {
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue, type);
 
             unknownValue.onEndEdit.AddListener(value =>
             {
@@ -23,9 +25,12 @@ namespace EFTConfiguration.Components
             unknownValue.interactable = !readOnly;
         }
 
-        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced, bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue, Type type, Func<object, string> customToString, Func<string, object> customToObject)
+        public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            Type type, Func<object, string> customToString, Func<string, object> customToObject)
         {
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged, hideRest, currentValue, type, customToString, customToObject);
+            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+                hideRest, currentValue, type, customToString, customToObject);
 
             unknownValue.onEndEdit.AddListener(value =>
             {

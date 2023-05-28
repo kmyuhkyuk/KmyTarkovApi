@@ -28,9 +28,11 @@ namespace EFTApi.Patches
         }
 
         [PatchPostfix]
-        private static void PatchPostfix(ArmorComponent __instance, DamageInfo damageInfo, EBodyPart bodyPartType, bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction)
+        private static void PatchPostfix(ArmorComponent __instance, DamageInfo damageInfo, EBodyPart bodyPartType,
+            bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction)
         {
-            EFTHelpers._PlayerHelper.ArmorComponentHelper.Trigger_ApplyDamage(__instance, damageInfo, bodyPartType, damageInfoIsLocal, lightVestsDamageReduction, heavyVestsDamageReduction);
+            EFTHelpers._PlayerHelper.ArmorComponentHelper.Trigger_ApplyDamage(__instance, damageInfo, bodyPartType,
+                damageInfoIsLocal, lightVestsDamageReduction, heavyVestsDamageReduction);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("kmyuhkyuk-EFTReflection")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EFTReflection")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#if !UNITY_EDITOR
+using System.Reflection;
 using Aki.Reflection.Patching;
 using UnityEngine;
 
@@ -36,3 +37,4 @@ namespace EFTConfiguration.Patches
         }
     }
 }
+#endif

@@ -15,12 +15,16 @@ namespace EFTConfiguration.UI
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
+#if !UNITY_EDITOR
             EFTConfigurationPlugin.Unlock = true;
+#endif
         }
 
         private void OnDisable()
         {
+#if !UNITY_EDITOR
             EFTConfigurationPlugin.Unlock = false;
+#endif
 
             Cursor.lockState = _oldLockState;
             Cursor.visible = _oldVisible;

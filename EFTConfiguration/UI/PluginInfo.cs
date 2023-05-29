@@ -132,7 +132,11 @@ namespace EFTConfiguration.UI
 
         public void BindWeb(Sprite modIcon, string modDownloadUrl, int modDownloads, Version modVersion)
         {
-            icon.sprite = modIcon;
+            if (modIcon != null)
+            {
+                icon.sprite = modIcon;
+            }
+
             modDownload.onClick.AddListener(() => Application.OpenURL(modDownloadUrl));
             downloads.text = modDownloads.ToString();
 

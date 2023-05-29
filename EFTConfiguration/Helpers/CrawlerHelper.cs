@@ -45,7 +45,7 @@ namespace EFTConfiguration.Helpers
 
         public static Version GetModVersion(HtmlDocument doc)
         {
-            return new Version(doc.DocumentNode.SelectSingleNode("//header/div[2]/h1/span[3]").InnerText);
+            return new Version(new string(doc.DocumentNode.SelectSingleNode("//span[@class='filebaseVersionNumber']").InnerText.Where(x => char.IsDigit(x) || x == '.').ToArray()));
         }
 
         /*public static DateTime GetModVersionDataTime(HtmlDocument doc)
@@ -55,23 +55,26 @@ namespace EFTConfiguration.Helpers
 
         public static int GetModDownloads(HtmlDocument doc)
         {
-            return Convert.ToInt32(doc.DocumentNode.SelectSingleNode("//header/div[2]/ul/li[5]/meta[2]")
+            return Convert.ToInt32(doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[2]/ul/li[5]/meta[2]")
                 .GetAttributeValue("content", string.Empty));
         }
 
         public static string GetModDownloadUrl(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//header/nav/ul/li/a").GetAttributeValue("href", string.Empty);
+            return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/nav/ul/li/a").GetAttributeValue("href", string.Empty);
         }
 
         public static string GetModIconUrl(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//header/div[1]/img").GetAttributeValue("src", string.Empty);
+            return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[1]/img")?.GetAttributeValue("src", string.Empty);
         }
 
         public static async Task<Sprite> GetModIcon(HtmlDocument doc)
         {
             var url = GetModIconUrl(doc);
+
+            if (string.IsNullOrEmpty(url))
+                return null;
 
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 

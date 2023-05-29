@@ -20,7 +20,7 @@ using UnityEngine.UI;
 namespace EFTConfiguration
 {
     [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.0.0")]
-    [EFTConfigurationPluginAttributes("")]
+    [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {
         private static Dictionary<string, PluginInfo> PluginInfos => Chainloader.PluginInfos;

@@ -55,10 +55,11 @@ namespace EFTConfiguration
 
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 |
-                                               AdditionalCanvasShaderChannels.Normal |
-                                               AdditionalCanvasShaderChannels.Tangent;
+                                              AdditionalCanvasShaderChannels.Normal |
+                                              AdditionalCanvasShaderChannels.Tangent;
 
-            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).transform.SetParent(_eftConfigurationPublic.transform);
+            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).transform.SetParent(
+                _eftConfigurationPublic.transform);
 
             DontDestroyOnLoad(_eftConfigurationPublic);
 

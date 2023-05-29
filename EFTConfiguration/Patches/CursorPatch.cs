@@ -8,7 +8,9 @@ namespace EFTConfiguration.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(Cursor).GetProperty("lockState", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)?.GetSetMethod();
+            return typeof(Cursor)
+                .GetProperty("lockState", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+                ?.GetSetMethod();
         }
 
         [PatchPrefix]
@@ -22,7 +24,9 @@ namespace EFTConfiguration.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(Cursor).GetProperty("visible", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)?.GetSetMethod();
+            return typeof(Cursor)
+                .GetProperty("visible", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+                ?.GetSetMethod();
         }
 
         [PatchPrefix]

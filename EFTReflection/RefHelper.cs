@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTReflection

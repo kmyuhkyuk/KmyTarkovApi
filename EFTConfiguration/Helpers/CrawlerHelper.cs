@@ -50,23 +50,23 @@ namespace EFTConfiguration.Helpers
 
         /*public static DateTime GetModVersionDataTime(HtmlDocument doc)
         {
-            return Convert.ToDateTime(doc.DocumentNode.SelectSingleNode("//div[1]/ul/li[2]/time").GetAttributeValue("datetime", ""));
+            return Convert.ToDateTime(doc.DocumentNode.SelectSingleNode("//div[1]/ul/li[2]/time").GetAttributeValue("datetime", string.Empty));
         }*/
 
         public static int GetModDownloads(HtmlDocument doc)
         {
             return Convert.ToInt32(doc.DocumentNode.SelectSingleNode("//header/div[2]/ul/li[5]/meta[2]")
-                .GetAttributeValue("content", ""));
+                .GetAttributeValue("content", string.Empty));
         }
 
         public static string GetModDownloadUrl(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//header/nav/ul/li/a").GetAttributeValue("href", "");
+            return doc.DocumentNode.SelectSingleNode("//header/nav/ul/li/a").GetAttributeValue("href", string.Empty);
         }
 
         public static string GetModIconUrl(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//header/div[1]/img").GetAttributeValue("src", "");
+            return doc.DocumentNode.SelectSingleNode("//header/div[1]/img").GetAttributeValue("src", string.Empty);
         }
 
         public static async Task<Sprite> GetModIcon(HtmlDocument doc)

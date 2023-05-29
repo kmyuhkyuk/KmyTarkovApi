@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />
     <Compile Include="EFTReflectionPlugin.cs" />
     <Compile Include="Patching\BaseModulePatch.cs" />
     <Compile Include="Patching\ModulePatchs.cs" />

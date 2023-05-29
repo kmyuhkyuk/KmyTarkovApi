@@ -234,10 +234,7 @@ namespace EFTApi.Helpers
                         if (gear == null)
                             continue;
 
-                        foreach (var grid in RefGrids.GetValue(gear))
-                        {
-                            list.Add(grid);
-                        }
+                        list.AddRange(RefGrids.GetValue(gear));
                     }
 
                     return list;
@@ -257,10 +254,7 @@ namespace EFTApi.Helpers
 
                     foreach (var grid in equipmentGrids)
                     {
-                        foreach (var item in RefItems.GetValue(grid))
-                        {
-                            list.Add(item);
-                        }
+                        list.AddRange(RefItems.GetValue(grid));
                     }
 
                     return list;
@@ -323,10 +317,7 @@ namespace EFTApi.Helpers
 
                     foreach (var grid in questRaidItemsGrids)
                     {
-                        foreach (var item in RefItems.GetValue(grid))
-                        {
-                            list.Add(item);
-                        }
+                        list.AddRange(RefItems.GetValue(grid));
                     }
 
                     return list;

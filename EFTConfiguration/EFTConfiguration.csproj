@@ -41,6 +41,9 @@
     <DefineConstants>TRACE;DEBUG;UNITY_EDITOR</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aki.Reflection">
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\EscapeFromTarkov_Data\Managed\Aki.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
@@ -126,6 +129,7 @@
     <Compile Include="EFTConfiguration.cs" />
     <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />
     <Compile Include="EFTConfigurationPlugin.cs" />
+    <Compile Include="Patches\CursorPatch.cs" />
     <Compile Include="PrefabManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\CrawlerHelper.cs" />

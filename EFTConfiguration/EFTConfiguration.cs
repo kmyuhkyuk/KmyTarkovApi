@@ -53,7 +53,7 @@ namespace EFTConfiguration
                 {
                     _windowRect.anchoredPosition = EFTConfigurationPlugin.SetData.KeyDefaultPosition.Value;
 
-                    Filter(advanced.isOn, search.text);
+                    CheckPluginInfo(advanced.isOn);
                 }
 #endif
 
@@ -64,16 +64,14 @@ namespace EFTConfiguration
         internal static Action<PluginInfo> SwitchPluginInfo;
 
 #if !UNITY_EDITOR
-        private EFTConfigurationPlugin.ConfigurationData[] _configurationsData;
+        private static EFTConfigurationPlugin.ConfigurationData[] ConfigurationsData =>
+            EFTConfigurationPlugin.Configurations;
 
         private void Start()
         {
             _windowRect = windowRoot.GetComponent<RectTransform>();
 
             _searchPanelTransform = search.transform.parent;
-
-            EFTConfigurationPlugin.UISwitch = SwitchState;
-            EFTConfigurationPlugin.ShowUI = CreateUI;
 
             search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
             advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
@@ -107,13 +105,21 @@ namespace EFTConfiguration
             SwitchPluginInfo = SwitchConfiguration;
 
             CustomLocalizedHelper.LanguageChange += UpdateLocalized;
+
+            CreateUI();
         }
 
-        private void CreateUI(EFTConfigurationPlugin.ConfigurationData[] configurationsData)
+        private void Update()
         {
-            _configurationsData = configurationsData;
+            if (EFTConfigurationPlugin.SetData.KeyConfigurationShortcut.Value.IsDown())
+            {
+                State = !State;
+            }
+        }
 
-            foreach (var configuration in configurationsData)
+        private void CreateUI()
+        {
+            foreach (var configuration in ConfigurationsData)
             {
                 var pluginInfo = Instantiate(EFTConfigurationPlugin.PrefabManager.pluginInfo, pluginInfosRoot)
                     .GetComponent<PluginInfo>();
@@ -203,11 +209,6 @@ namespace EFTConfiguration
             advancedName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "Advanced");
         }
 
-        private void SwitchState()
-        {
-            State = !State;
-        }
-
         private void Filter(bool isAdvanced, string searchName)
         {
             CheckPluginInfo(isAdvanced);
@@ -220,9 +221,9 @@ namespace EFTConfiguration
 
             var changes = new List<(int Index, bool Active)>();
 
-            for (var i = 0; i < _configurationsData.Length; i++)
+            for (var i = 0; i < ConfigurationsData.Length; i++)
             {
-                var configurationData = _configurationsData[i];
+                var configurationData = ConfigurationsData[i];
 
                 var attributes = configurationData.ConfigurationPluginAttributes;
 

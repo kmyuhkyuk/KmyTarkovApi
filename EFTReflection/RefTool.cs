@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using Aki.Reflection.Utils;
 using HarmonyLib;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTReflection
 {
@@ -73,7 +74,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Return Method is Async
+        ///     If Method is Async then return <see langword="true"/>
         /// </summary>
         /// <param name="methodInfo">Method</param>
         /// <returns>
@@ -183,7 +184,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Return MethodInfo have this IL
+        ///     If Method Contains this IL then return <see langword="true"/>
         /// </summary>
         /// <param name="methodInfo">MethodInfo</param>
         /// <param name="opcode">OpCode</param>
@@ -201,13 +202,7 @@ namespace EFTReflection
 
             var realMethod = methodInfo.IsAsync() ? GetAsyncMoveNext(methodInfo) : methodInfo;
 
-            foreach (var il in PatchProcessor.ReadMethodBody(realMethod))
-            {
-                if (il.Key == opcode && il.Value == operand)
-                    return true;
-            }
-
-            return false;
+            return PatchProcessor.ReadMethodBody(realMethod).Any(il => il.Key == opcode && il.Value == operand);
         }
     }
 }

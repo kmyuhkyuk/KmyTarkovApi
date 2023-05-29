@@ -6,14 +6,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Helpers;
+using EFTConfiguration.Patches;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace EFTConfiguration
@@ -36,78 +37,46 @@ namespace EFTConfiguration
         private readonly (string, Type)[] _eftConfigurationPluginAttributesFieldsTuple =
             typeof(EFTConfigurationPluginAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
 
-        internal static readonly SettingsData SetData = new SettingsData();
+        internal static SettingsData SetData { get; private set; }
 
         internal const string ModName = "kmyuhkyuk-EFTConfiguration";
+
+        internal static ConfigurationData[] Configurations { get; private set; }
 
         internal static PrefabManager PrefabManager { get; private set; }
 
         internal static readonly string ModPath = Path.Combine(Paths.PluginPath, "kmyuhkyuk-EFTApi");
 
-        internal static Action<ConfigurationData[]> ShowUI;
-
-        internal static Action UISwitch;
-
-        private readonly Canvas _canvas;
+        internal static bool Unlock;
 
         public EFTConfigurationPlugin()
         {
-            _canvas = _eftConfigurationPublic.GetComponent<Canvas>();
+            var canvas = _eftConfigurationPublic.GetComponent<Canvas>();
 
-            _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 |
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 |
                                                AdditionalCanvasShaderChannels.Normal |
                                                AdditionalCanvasShaderChannels.Tangent;
 
+            new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).transform.SetParent(_eftConfigurationPublic.transform);
+
             DontDestroyOnLoad(_eftConfigurationPublic);
-        }
 
-        private void Start()
-        {
-            const string mainSettings = "Main Settings";
+            SetData = new SettingsData(Config);
 
-            SetData.KeyConfigurationShortcut = Config.Bind<KeyboardShortcut>(mainSettings, "Configuration Shortcut",
-                new KeyboardShortcut(KeyCode.Home));
-            SetData.KeyDefaultPosition = Config.Bind<Vector2>(mainSettings, "Default Position", Vector2.zero);
-            SetData.KeyDescriptionPositionOffset = Config.Bind<Vector2>(mainSettings, "Description Position Offset",
-                new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
-            SetData.KeyLanguage = Config.Bind<CustomLocalizedHelper.Language>(mainSettings, "Language",
-                CustomLocalizedHelper.Language.En,
-                new ConfigDescription(
-                    "Preferred language, if not available will tried English, if still not available than return original text"));
-            SetData.KeySearch = Config.Bind<string>(mainSettings, "Search", string.Empty);
-            SetData.KeyAdvanced = Config.Bind<bool>(mainSettings, "Advanced", false);
-            SetData.KeySortingOrder = Config.Bind<int>(mainSettings, "Sorting Order", 29999);
-
-            //Test
-            /*const string testSettings = "Test Settings";
-            var eftConfigurationAttributes = new EFTConfigurationAttributes { Advanced = true };
-
-            Config.Bind<bool>(testSettings, "Bool", false, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<int>(testSettings, "Int", 0, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<int>(testSettings, "Int Slider", 0, new ConfigDescription(string.Empty, new AcceptableValueRange<int>(0, 100), eftConfigurationAttributes));
-            Config.Bind<float>(testSettings, "Float", 0f, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<float>(testSettings, "Float Slider", 0f, new ConfigDescription(string.Empty, new AcceptableValueRange<float>(0f, 100f), eftConfigurationAttributes));
-            Config.Bind<string>(testSettings, "String", string.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<string>(testSettings, "String Dropdown", string.Empty, new ConfigDescription("123", new AcceptableValueList<string>("123", "234"), eftConfigurationAttributes));
-            Config.Bind<Vector2>(testSettings, "Vector2", Vector2.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<Vector3>(testSettings, "Vector3", Vector3.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<Vector4>(testSettings, "Vector4", Vector4.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<Quaternion>(testSettings, "Quaternion", Quaternion.identity, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<Color>(testSettings, "Color", Color.white, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<CustomLocalizedHelper.Language>(testSettings, "Enum", CustomLocalizedHelper.Language.En, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<KeyboardShortcut>(testSettings, "KeyboardShortcut", KeyboardShortcut.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-
-            Config.Bind<double>(testSettings, "Double", 0d, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind(testSettings, "Action", string.Empty, new ConfigDescription(string.Empty, null, new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work")}));*/
-
-            _canvas.sortingOrder = SetData.KeySortingOrder.Value;
+            canvas.sortingOrder = SetData.KeySortingOrder.Value;
             SetData.KeySortingOrder.SettingChanged +=
-                (value, value2) => _canvas.sortingOrder = SetData.KeySortingOrder.Value;
+                (value, value2) => canvas.sortingOrder = SetData.KeySortingOrder.Value;
 
             CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
             SetData.KeyLanguage.SettingChanged += (value, value2) =>
                 CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
+        }
+
+        private void Start()
+        {
+            new CursorLockStatePatch().Enable();
+            new CursorVisiblePatch().Enable();
 
             Init();
         }
@@ -132,11 +101,8 @@ namespace EFTConfiguration
             }
         }
 
-        private async void Init()
+        private void Init()
         {
-            while (PluginInfos.Count == 0)
-                await Task.Yield();
-
             var configurationList = new List<ConfigurationData>
                 { GetCoreConfigurationData(), GetConfigurationData(Info) };
 
@@ -148,18 +114,7 @@ namespace EFTConfiguration
                 configurationList.Add(GetConfigurationData(pluginInfo));
             }
 
-            while (ShowUI == null)
-                await Task.Yield();
-
-            ShowUI(configurationList.ToArray());
-        }
-
-        private void Update()
-        {
-            if (SetData.KeyConfigurationShortcut.Value.IsDown())
-            {
-                UISwitch();
-            }
+            Configurations = configurationList.ToArray();
         }
 
         private ConfigurationData GetConfigurationData(PluginInfo pluginInfo)
@@ -307,7 +262,7 @@ namespace EFTConfiguration
 
             public AcceptableValueBase AcceptableValueBase => ConfigDescription.AcceptableValues;
 
-            public readonly EFTConfigurationAttributes ConfigurationAttributes;
+            public readonly EFTConfigurationAttributes ConfigurationAttributes = new EFTConfigurationAttributes();
 
             private readonly ConfigDefinition _configDefinition;
 
@@ -330,15 +285,18 @@ namespace EFTConfiguration
                 _configDefinition = configDefinition;
                 _configEntryBase = configEntryBase;
 
-                ConfigurationAttributes = new EFTConfigurationAttributes();
-
                 if (!isCore)
                 {
+                    object eftConfigurationAttributes = null;
+                    var eftConfigurationAttributesFieldInfos = Array.Empty<FieldInfo>();
+
+                    object configurationManagerAttributes = null;
+                    var configurationManagerAttributesFieldInfos = Array.Empty<FieldInfo>();
+
                     foreach (var tag in ConfigDescription.Tags)
                     {
                         var tagType = tag.GetType();
 
-                        var hasTag = false;
                         switch (tagType.Name)
                         {
                             case nameof(EFTConfigurationAttributes):
@@ -348,17 +306,8 @@ namespace EFTConfiguration
                                 if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
                                     .SequenceEqual(EFTConfigurationAttributesFieldsTuple))
                                 {
-                                    hasTag = true;
-
-                                    for (var i = 0; i < EFTConfigurationAttributesFields.Length; i++)
-                                    {
-                                        var configurationAttributesFields = EFTConfigurationAttributesFields[i];
-
-                                        var tagFieldInfo = tagFieldInfos[i];
-
-                                        configurationAttributesFields.SetValue(ConfigurationAttributes,
-                                            tagFieldInfo.GetValue(tag));
-                                    }
+                                    eftConfigurationAttributes = tag;
+                                    eftConfigurationAttributesFieldInfos = tagFieldInfos;
                                 }
 
                                 break;
@@ -370,37 +319,52 @@ namespace EFTConfiguration
                                 if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
                                     .SequenceEqual(ConfigurationManagerAttributesFieldsTuple))
                                 {
-                                    hasTag = true;
-
-                                    ConfigurationAttributes.HideSetting = (bool?)tagFieldInfos
-                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
-                                        .GetValue(tag) ?? false;
-                                    ConfigurationAttributes.HideRest = (bool?)tagFieldInfos.Single(x =>
-                                            x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
-                                        .GetValue(tag) ?? false;
-                                    ConfigurationAttributes.HideRange = (bool?)tagFieldInfos.Single(x =>
-                                            x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent))
-                                        .GetValue(tag) ?? false;
-                                    ConfigurationAttributes.Advanced = (bool?)tagFieldInfos
-                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced))
-                                        .GetValue(tag) ?? false;
-                                    ConfigurationAttributes.ReadOnly = (bool?)tagFieldInfos
-                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly))
-                                        .GetValue(tag) ?? false;
-                                    ConfigurationAttributes.CustomToString = (Func<object, string>)tagFieldInfos
-                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr))
-                                        .GetValue(tag);
-                                    ConfigurationAttributes.CustomToObject = (Func<string, object>)tagFieldInfos
-                                        .Single(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj))
-                                        .GetValue(tag);
+                                    configurationManagerAttributes = tag;
+                                    configurationManagerAttributesFieldInfos = tagFieldInfos;
                                 }
 
                                 break;
                             }
                         }
+                    }
 
-                        if (hasTag)
-                            break;
+                    if (eftConfigurationAttributes != null)
+                    {
+                        for (var i = 0; i < EFTConfigurationAttributesFields.Length; i++)
+                        {
+                            var configurationAttributesFields = EFTConfigurationAttributesFields[i];
+
+                            var tagFieldInfo = eftConfigurationAttributesFieldInfos[i];
+
+                            configurationAttributesFields.SetValue(ConfigurationAttributes,
+                                tagFieldInfo.GetValue(eftConfigurationAttributes));
+                        }
+                    }
+                    else if (configurationManagerAttributes != null)
+                    {
+                        ConfigurationAttributes.HideSetting = !(bool?)configurationManagerAttributesFieldInfos
+                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
+                            .GetValue(configurationManagerAttributes) ?? false;
+                        ConfigurationAttributes.HideRest = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
+                                x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
+                            .GetValue(configurationManagerAttributes) ?? false;
+                        ConfigurationAttributes.HideRange = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
+                                x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent))
+                            .GetValue(configurationManagerAttributes) ?? false;
+                        ConfigurationAttributes.Advanced = (bool?)configurationManagerAttributesFieldInfos
+                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced))
+                            .GetValue(configurationManagerAttributes) ?? false;
+                        ConfigurationAttributes.ReadOnly = (bool?)configurationManagerAttributesFieldInfos
+                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly))
+                            .GetValue(configurationManagerAttributes) ?? false;
+                        ConfigurationAttributes.CustomToString =
+                            (Func<object, string>)configurationManagerAttributesFieldInfos
+                                .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr))
+                                .GetValue(configurationManagerAttributes);
+                        ConfigurationAttributes.CustomToObject =
+                            (Func<string, object>)configurationManagerAttributesFieldInfos
+                                .Single(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj))
+                                .GetValue(configurationManagerAttributes);
                     }
                 }
                 else
@@ -422,18 +386,58 @@ namespace EFTConfiguration
 
         public class SettingsData
         {
-            public ConfigEntry<KeyboardShortcut> KeyConfigurationShortcut;
+            public readonly ConfigEntry<KeyboardShortcut> KeyConfigurationShortcut;
 
-            public ConfigEntry<Vector2> KeyDefaultPosition;
-            public ConfigEntry<Vector2> KeyDescriptionPositionOffset;
+            public readonly ConfigEntry<Vector2> KeyDefaultPosition;
+            public readonly ConfigEntry<Vector2> KeyDescriptionPositionOffset;
 
-            public ConfigEntry<CustomLocalizedHelper.Language> KeyLanguage;
+            public readonly ConfigEntry<CustomLocalizedHelper.Language> KeyLanguage;
 
-            public ConfigEntry<string> KeySearch;
+            public readonly ConfigEntry<string> KeySearch;
 
-            public ConfigEntry<bool> KeyAdvanced;
+            public readonly ConfigEntry<bool> KeyAdvanced;
 
-            public ConfigEntry<int> KeySortingOrder;
+            public readonly ConfigEntry<int> KeySortingOrder;
+
+            public SettingsData(ConfigFile configFile)
+            {
+                const string mainSettings = "Main Settings";
+
+                KeyConfigurationShortcut = configFile.Bind<KeyboardShortcut>(mainSettings, "Configuration Shortcut",
+                    new KeyboardShortcut(KeyCode.Home));
+                KeyDefaultPosition = configFile.Bind<Vector2>(mainSettings, "Default Position", Vector2.zero);
+                KeyDescriptionPositionOffset = configFile.Bind<Vector2>(mainSettings, "Description Position Offset",
+                    new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
+                KeyLanguage = configFile.Bind<CustomLocalizedHelper.Language>(mainSettings, "Language",
+                    CustomLocalizedHelper.Language.En,
+                    new ConfigDescription(
+                        "Preferred language, if not available will tried English, if still not available than return original text"));
+                KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
+                KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
+                KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29999);
+
+                //Test
+                /*const string testSettings = "Test Settings";
+                var eftConfigurationAttributes = new EFTConfigurationAttributes { Advanced = true };
+
+                configFile.Bind<bool>(testSettings, "Bool", false, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<int>(testSettings, "Int", 0, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<int>(testSettings, "Int Slider", 0, new ConfigDescription(string.Empty, new AcceptableValueRange<int>(0, 100), eftConfigurationAttributes));
+                configFile.Bind<float>(testSettings, "Float", 0f, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<float>(testSettings, "Float Slider", 0f, new ConfigDescription(string.Empty, new AcceptableValueRange<float>(0f, 100f), eftConfigurationAttributes));
+                configFile.Bind<string>(testSettings, "String", string.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<string>(testSettings, "String Dropdown", string.Empty, new ConfigDescription("123", new AcceptableValueList<string>("123", "234"), eftConfigurationAttributes));
+                configFile.Bind<Vector2>(testSettings, "Vector2", Vector2.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<Vector3>(testSettings, "Vector3", Vector3.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<Vector4>(testSettings, "Vector4", Vector4.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<Quaternion>(testSettings, "Quaternion", Quaternion.identity, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<Color>(testSettings, "Color", Color.white, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<CustomLocalizedHelper.Language>(testSettings, "Enum", CustomLocalizedHelper.Language.En, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind<KeyboardShortcut>(testSettings, "KeyboardShortcut", KeyboardShortcut.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+
+                configFile.Bind<double>(testSettings, "Double", 0d, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+                configFile.Bind(testSettings, "Action", string.Empty, new ConfigDescription(string.Empty, null, new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work")}));*/
+            }
         }
     }
 }

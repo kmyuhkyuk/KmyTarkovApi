@@ -24,6 +24,10 @@ namespace EFTConfiguration.UI
         private readonly Dictionary<string, List<ConfigBase>> _configDictionary =
             new Dictionary<string, List<ConfigBase>>();
 
+        private bool _advanced;
+
+        private string _searchName;
+
 #if !UNITY_EDITOR
         private ConfigurationData _configurationData;
 
@@ -36,6 +40,9 @@ namespace EFTConfiguration.UI
 
         public void Filter(bool advanced, string searchName)
         {
+            _advanced = advanced;
+            _searchName = searchName;
+
             var hasName = !string.IsNullOrEmpty(searchName);
 
             foreach (var config in _configDictionary)
@@ -116,6 +123,8 @@ namespace EFTConfiguration.UI
                     AddConfig(configData.Key, config);
                 }
             }
+
+            Filter(_advanced, _searchName);
 
             _configurationData.SettingChanged = UpdateConfigs;
         }
@@ -321,7 +330,7 @@ namespace EFTConfiguration.UI
 
                 AddConfig(section, configUnknown);
             }
-            else
+            else if (attributes.CustomToString != null && attributes.CustomToObject != null)
             {
                 var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform)
                     .GetComponent<ConfigUnknown>();

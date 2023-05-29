@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace EFTConfiguration.Attributes
+﻿namespace EFTConfiguration.Attributes
 {
     // ReSharper disable InvalidXmlDocComment
+    // ReSharper disable FieldCanBeMadeReadOnly.Global
+    // ReSharper disable NotAccessedField.Global
     /// <summary>
     ///     You can copy this file to any project and Declare Attribute, EFTConfigurationManager will auto search Attribute by
     ///     name and fields
@@ -58,7 +58,7 @@ namespace EFTConfiguration.Attributes
         /// <remarks>
         ///     Will not copy because <see cref="ConfigurationManagerAttributes.CustomDrawer" /> is Draw OnGUI Action
         /// </remarks>
-        public Action ButtonAction;
+        public System.Action ButtonAction;
 
         /// <summary>
         ///     If your need add Custom Type Setting, Bind this <see cref="object" /> converted <see cref="string" />
@@ -66,7 +66,7 @@ namespace EFTConfiguration.Attributes
         /// <remarks>
         ///     Copy <see cref="ConfigurationManagerAttributes.ObjToStr" />
         /// </remarks>
-        public Func<object, string> CustomToString;
+        public System.Func<object, string> CustomToString;
 
         /// <summary>
         ///     If your need add Custom Type Setting, Bind this <see cref="string" /> converted <see cref="object" />
@@ -74,6 +74,6 @@ namespace EFTConfiguration.Attributes
         /// <remarks>
         ///     Copy <see cref="ConfigurationManagerAttributes.StrToObj" />
         /// </remarks>
-        public Func<string, object> CustomToObject;
+        public System.Func<string, object> CustomToObject;
     }
 }

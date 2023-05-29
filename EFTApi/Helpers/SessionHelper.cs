@@ -131,6 +131,8 @@ namespace EFTApi.Helpers
 
             private readonly Func<object, int, int> _refKillingBonusPercent;
 
+            private bool _isReady;
+
             public ExperienceData()
             {
                 _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(
@@ -151,6 +153,8 @@ namespace EFTApi.Helpers
                 _victimBotLevelExp = Traverse.Create(_kill).Field("VictimBotLevelExp").GetValue<int>();
 
                 _headShotMult = Traverse.Create(_kill).Field("HeadShotMult").GetValue<float>();
+
+                _isReady = true;
             }
 
             public int GetBaseExp(int exp, EPlayerSide side)
@@ -161,10 +165,7 @@ namespace EFTApi.Helpers
                     case EPlayerSide.Bear:
                         return _victimLevelExp;
                     case EPlayerSide.Savage:
-                        if (exp < 0)
-                            return _victimBotLevelExp;
-                        else
-                            return exp;
+                        return exp < 0 ? _victimBotLevelExp : exp;
                     default:
                         return 0;
                 }
@@ -182,7 +183,7 @@ namespace EFTApi.Helpers
 
             public int GetKillingBonusPercent(int killed)
             {
-                return _refKillingBonusPercent(_kill, killed);
+                return _isReady ? _refKillingBonusPercent(_kill, killed) : 0;
             }
         }
     }

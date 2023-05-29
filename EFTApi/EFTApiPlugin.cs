@@ -1,12 +1,10 @@
 ﻿using BepInEx;
-using EFTApi.Attributes;
 using EFTApi.Patches;
 
 namespace EFTApi
 {
     [BepInPlugin("com.kmyuhkyuk.EFTApi", "kmyuhkyuk-EFTApi", "1.0.0")]
     [BepInDependency("com.kmyuhkyuk.EFTReflection")]
-    [EFTConfigurationPluginAttributes("")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
         private void Start()

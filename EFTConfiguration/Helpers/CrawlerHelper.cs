@@ -96,12 +96,19 @@ namespace EFTConfiguration.Helpers
                     File.WriteAllBytes(Path.Combine(CachePath, fileName + ".png"), texture.EncodeToPNG());
                 }
 
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                    new Vector2(0.5f, 0.5f));
+                if (IconCache.TryGetValue(fileName, out cacheSprite))
+                {
+                    return cacheSprite;
+                }
+                else
+                {
+                    var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                        new Vector2(0.5f, 0.5f));
 
-                IconCache.Add(fileName, sprite);
+                    IconCache.Add(fileName, sprite);
 
-                return sprite;
+                    return sprite;
+                }
             }
         }
 

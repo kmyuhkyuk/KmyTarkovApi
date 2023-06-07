@@ -22,7 +22,7 @@ namespace EFTUtils
 
                 if (www.isNetworkError || www.isHttpError)
                 {
-                    Logger.LogError(nameof(GetAsyncTexture) + ": " + "Network Error");
+                    Logger.LogError($"{nameof(GetAsyncTexture)}: Network Error");
                     return null;
                 }
                 else
@@ -62,7 +62,7 @@ namespace EFTUtils
 
                 if (www.isNetworkError || www.isHttpError)
                 {
-                    Logger.LogError(nameof(GetAsyncAudioClip) + ": " + "Network Error");
+                    Logger.LogError($"{nameof(GetAsyncAudioClip)}: Network Error");
                     return null;
                 }
                 else

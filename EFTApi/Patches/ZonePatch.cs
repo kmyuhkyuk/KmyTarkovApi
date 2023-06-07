@@ -2,6 +2,7 @@
 using System.Reflection;
 using Aki.Reflection.Patching;
 using EFT.Interactive;
+using EFTApi.Helpers;
 using EFTReflection;
 using EFTReflection.Patching;
 
@@ -18,7 +19,7 @@ namespace EFTApi.Patches
         [PatchPostfix]
         private static void PatchPostfix(TriggerWithId __instance)
         {
-            EFTHelpers._GameWorldHelper.ZoneHelper.TriggerPoints.Add(__instance);
+            GameWorldHelper.ZoneData.Instance.TriggerPoints.Add(__instance);
         }
     }
 }

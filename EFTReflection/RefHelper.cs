@@ -195,7 +195,7 @@ namespace EFTReflection
             var delegateReturnType = delegateMethod.ReturnType;
             var returnNeedBox = delegateReturnType == typeof(object) && returnType.IsValueType;
 
-            var dmd = new DynamicMethod("OpenInstanceDelegate_" + method.Name, delegateReturnType,
+            var dmd = new DynamicMethod($"OpenInstanceDelegate_{method.Name}", delegateReturnType,
                 delegateParameterTypes);
 
             var ilGen = dmd.GetILGenerator();
@@ -315,7 +315,7 @@ namespace EFTReflection
 
                 if (propertyInfo == null)
                 {
-                    throw new Exception(propertyName + " is null");
+                    throw new Exception($"{propertyName} is null");
                 }
 
                 Init(propertyInfo, instance);
@@ -329,7 +329,7 @@ namespace EFTReflection
 
                 if (propertyInfo == null)
                 {
-                    throw new Exception(propertyNames.First() + " is null");
+                    throw new Exception($"{propertyNames.First()} is null");
                 }
 
                 Init(propertyInfo, instance);
@@ -479,7 +479,7 @@ namespace EFTReflection
 
                 if (fieldInfo == null)
                 {
-                    throw new Exception(fieldName + " is null");
+                    throw new Exception($"{fieldName} is null");
                 }
 
                 Init(fieldInfo, instance);
@@ -493,7 +493,7 @@ namespace EFTReflection
 
                 if (fieldInfo == null)
                 {
-                    throw new Exception(fieldNames.First() + " is null");
+                    throw new Exception($"{fieldNames.First()} is null");
                 }
 
                 Init(fieldInfo, instance);

@@ -147,16 +147,9 @@ namespace EFTReflection.Patching
         /// </summary>
         public virtual void Disable()
         {
-            var target = GetTargetMethod();
-
-            if (target == null)
-            {
-                throw new InvalidOperationException($"{Harmony.Id}: TargetMethod is null");
-            }
-
             try
             {
-                Harmony.Unpatch(target, HarmonyPatchType.All, Harmony.Id);
+                Harmony.UnpatchSelf();
                 Logger.LogInfo($"Disabled patch {Harmony.Id}");
             }
             catch (Exception ex)

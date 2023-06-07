@@ -2,6 +2,7 @@
 using EFT;
 using EFT.InventoryLogic;
 using EFT.UI;
+using EFTApi.Helpers;
 
 namespace EFTApi
 {
@@ -10,57 +11,57 @@ namespace EFTApi
         /// <summary>
         ///     Current Session
         /// </summary>
-        public static ISession Session => EFTHelpers._SessionHelper.Session;
+        public static ISession Session => SessionHelper.Instance.Session;
 
         /// <summary>
         ///     Current GameWorld
         /// </summary>
-        public static GameWorld GameWorld => EFTHelpers._GameWorldHelper.GameWorld;
+        public static GameWorld GameWorld => GameWorldHelper.Instance.GameWorld;
 
         /// <summary>
         ///     Current LevelSettings
         /// </summary>
-        public static LevelSettings LevelSettings => EFTHelpers._GameWorldHelper.LevelSettingsHelper.LevelSettings;
+        public static LevelSettings LevelSettings => GameWorldHelper.LevelSettingsData.Instance.LevelSettings;
 
         /// <summary>
         ///     Current Traders
         /// </summary>
-        public static object[] Traders => EFTHelpers._SessionHelper.TradersHelper.Traders;
+        public static object[] Traders => SessionHelper.TradersData.Instance.Traders;
 
         /// <summary>
         ///     Current AllBot
         /// </summary>
-        public static List<Player> AllBot => EFTHelpers._GameWorldHelper.AllBot;
+        public static List<Player> AllBot => GameWorldHelper.Instance.AllBot;
 
         /// <summary>
         ///     Current Player
         /// </summary>
-        public static Player Player => EFTHelpers._PlayerHelper.Player;
+        public static Player Player => PlayerHelper.Instance.Player;
 
         /// <summary>
         ///     Current FirearmController
         /// </summary>
         public static Player.FirearmController FirearmController =>
-            EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController;
+            PlayerHelper.FirearmControllerData.Instance.FirearmController;
 
         /// <summary>
         ///     Current Weapon
         /// </summary>
-        public static Weapon Weapon => EFTHelpers._PlayerHelper.WeaponHelper.Weapon;
+        public static Weapon Weapon => PlayerHelper.WeaponData.Instance.Weapon;
 
         /// <summary>
         ///     Current UnderbarrelWeapon
         /// </summary>
-        public static Item UnderbarrelWeapon => EFTHelpers._PlayerHelper.WeaponHelper.UnderbarrelWeapon;
+        public static Item UnderbarrelWeapon => PlayerHelper.WeaponData.Instance.UnderbarrelWeapon;
 
         /// <summary>
         ///     Current MainMenuController
         /// </summary>
-        public static MainMenuController MainMenuController => EFTHelpers._MainMenuControllerHelper.MainMenuController;
+        public static MainMenuController MainMenuController => MainMenuControllerHelper.Instance.MainMenuController;
 
         /// <summary>
         ///     Current GameUI
         /// </summary>
-        public static GameUI GameUI => EFTHelpers._GameUIHelper.GameUI;
+        public static GameUI GameUI => GameUIHelper.Instance.GameUI;
     }
 }

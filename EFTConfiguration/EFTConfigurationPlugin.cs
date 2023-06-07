@@ -19,7 +19,7 @@ using UnityEngine.UI;
 
 namespace EFTConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.0.0")]
+    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.1.0")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {
@@ -88,7 +88,7 @@ namespace EFTConfiguration
 
             if (assetBundle == null)
             {
-                Logger.LogError(nameof(EFTConfigurationPlugin) + ": " + "Failed to load AssetBundle!");
+                Logger.LogError($"{nameof(EFTConfigurationPlugin)}: Failed to load AssetBundle!");
             }
             else
             {

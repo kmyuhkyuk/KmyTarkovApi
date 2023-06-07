@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using EFT;
 using EFT.InventoryLogic;
 using EFTReflection;
+using EFTReflection.Patching;
 using HarmonyLib;
 using UnityEngine;
 
@@ -11,46 +13,68 @@ namespace EFTApi.Helpers
 {
     public class PlayerHelper
     {
+        public static readonly PlayerHelper Instance = new PlayerHelper();
+
         public Player Player { get; private set; }
 
-        /// <summary>
-        ///     FirearmController Helper
-        /// </summary>
-        public readonly FirearmControllerData FirearmControllerHelper = new FirearmControllerData();
+        public readonly FirearmControllerData FirearmControllerHelper = FirearmControllerData.Instance;
 
-        /// <summary>
-        ///     Weapon Helper
-        /// </summary>
-        public readonly WeaponData WeaponHelper = new WeaponData();
+        public readonly WeaponData WeaponHelper = WeaponData.Instance;
 
-        /// <summary>
-        ///     ArmorComponent Helper
-        /// </summary>
-        public readonly ArmorComponentData ArmorComponentHelper = new ArmorComponentData();
+        public readonly ArmorComponentData ArmorComponentHelper = ArmorComponentData.Instance;
 
-        /// <summary>
-        ///     Role Helper
-        /// </summary>
-        public readonly RoleData RoleHelper = new RoleData();
+        public readonly RoleData RoleHelper = RoleData.Instance;
 
-        /// <summary>
-        ///     Inventory Helper
-        /// </summary>
-        public readonly InventoryData InventoryHelper = new InventoryData();
+        public readonly InventoryData InventoryHelper = InventoryData.Instance;
 
         /// <summary>
         ///     Init Action
         /// </summary>
-        public event Action<Player, Quaternion, string, EPointOfView, Profile, object, IHealthController, object, object
-            , object, Player.EVoipState, bool, bool> Init;
+        public event hook_Init Init
+        {
+            add => HookPatch.Add(typeof(Player).GetMethod("Init", RefTool.NonPublic), value);
+            remove => HookPatch.Remove(typeof(Player).GetMethod("Init", RefTool.NonPublic), value);
+        }
 
-        public event Action<Player> Dispose;
+        public delegate void hook_Init(Player __instance, Task __result, Quaternion rotation, string layerName,
+            EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController,
+            object statisticsManager, object questController, object filter, Player.EVoipState voipState,
+            bool aiControlled, bool async);
 
-        public event Action<Player, EDamageType> OnDead;
+        public event hook_Dispose Dispose
+        {
+            add => HookPatch.Add(typeof(Player).GetMethod("Dispose", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(Player).GetMethod("Dispose", RefTool.Public), value);
+        }
 
-        public event Action<Player, DamageInfo, EBodyPart, float, EHeadSegment?> ApplyDamageInfo;
+        public delegate void hook_Dispose(Player __instance);
 
-        public event Action<Player, Player, DamageInfo, EBodyPart, EDamageType> OnBeenKilledByAggressor;
+        public event hook_OnDead OnDead
+        {
+            add => HookPatch.Add(typeof(Player).GetMethod("OnDead", RefTool.NonPublic), value);
+            remove => HookPatch.Remove(typeof(Player).GetMethod("OnDead", RefTool.NonPublic), value);
+        }
+
+        public delegate void hook_OnDead(Player __instance, EDamageType damageType);
+
+        public event hook_ApplyDamageInfo ApplyDamageInfo
+        {
+            add => HookPatch.Add(typeof(Player).GetMethod("ApplyDamageInfo", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(Player).GetMethod("ApplyDamageInfo", RefTool.Public), value);
+        }
+
+        public delegate void hook_ApplyDamageInfo(Player __instance, DamageInfo damageInfo, EBodyPart bodyPartType,
+            float absorbed, EHeadSegment? headSegment);
+
+        public event hook_OnBeenKilledByAggressor OnBeenKilledByAggressor
+        {
+            add => HookPatch.Add(typeof(Player).GetMethod("OnBeenKilledByAggressor", RefTool.NonPublic), value);
+            remove => HookPatch.Remove(typeof(Player).GetMethod("OnBeenKilledByAggressor", RefTool.NonPublic), value);
+        }
+
+        public delegate void hook_OnBeenKilledByAggressor(Player __instance, Player aggressor, DamageInfo damageInfo,
+            EBodyPart bodyPart,
+            EDamageType lethalDamageType);
 
         /// <summary>
         ///     InfoClass.Settings
@@ -73,89 +97,88 @@ namespace EFTApi.Helpers
 
         public int Experience => RefExperience.GetValue(Settings);
 
-        public PlayerHelper()
+        private PlayerHelper()
         {
+            Init += OnInit;
+
             RefSettings = RefHelper.FieldRef<InfoClass, object>.Create(typeof(InfoClass), "Settings");
             RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
         }
 
-        internal void Trigger_Init(Player player, Quaternion rotation, string layerName, EPointOfView pointOfView,
-            Profile profile, object inventoryController, IHealthController healthController, object statisticsManager,
-            object questController, object filter, Player.EVoipState voipState, bool aiControlled, bool async)
+        private static async void OnInit(Player __instance, Task __result, Quaternion rotation, string layerName,
+            EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController,
+            object statisticsManager, object questController, object filter, Player.EVoipState voipState,
+            bool aiControlled, bool async)
         {
-            if (EFTVersion.Is231Up ? player.IsYourPlayer : player.Id == 1)
+            await __result;
+
+            if (EFTVersion.Is231Up ? __instance.IsYourPlayer : __instance.Id == 1)
             {
-                Player = player;
+                Instance.Player = __instance;
             }
-
-            Init?.Invoke(player, rotation, layerName, pointOfView, profile, inventoryController, healthController,
-                statisticsManager, questController, filter, voipState, aiControlled, async);
         }
-
-        internal void Trigger_Dispose(Player player)
-        {
-            Dispose?.Invoke(player);
-        }
-
-        internal void Trigger_OnDead(Player player, EDamageType damageType)
-        {
-            OnDead?.Invoke(player, damageType);
-        }
-
-        internal void Trigger_ApplyDamageInfo(Player player, DamageInfo damageInfo, EBodyPart bodyPartType,
-            float absorbed, EHeadSegment? headSegment)
-        {
-            ApplyDamageInfo?.Invoke(player, damageInfo, bodyPartType, absorbed, headSegment);
-        }
-
-        internal void Trigger_OnBeenKilledByAggressor(Player player, Player aggressor, DamageInfo damageInfo,
-            EBodyPart bodyPart, EDamageType lethalDamageType)
-        {
-            OnBeenKilledByAggressor?.Invoke(player, aggressor, damageInfo, bodyPart, lethalDamageType);
-        }
-
 
         public class FirearmControllerData
         {
-            public Player.FirearmController FirearmController => EFTHelpers._PlayerHelper.Player != null
-                ? EFTHelpers._PlayerHelper.Player.HandsController as Player.FirearmController
+            public static readonly FirearmControllerData Instance = new FirearmControllerData();
+
+            public Player.FirearmController FirearmController => PlayerHelper.Instance.Player != null
+                ? PlayerHelper.Instance.Player.HandsController as Player.FirearmController
                 : null;
 
-            public event Action<Player.FirearmController, Player, BulletClass, Vector3, Vector3, Vector3, int, float>
-                InitiateShot;
+            public event hook_InitiateShot
+                InitiateShot
+                {
+                    add => HookPatch.Add(typeof(Player.FirearmController).GetMethod("InitiateShot", RefTool.NonPublic),
+                        value);
+                    remove => HookPatch.Remove(
+                        typeof(Player.FirearmController).GetMethod("InitiateShot", RefTool.NonPublic),
+                        value);
+                }
 
-            internal void Trigger_InitiateShot(Player.FirearmController firearmController, Player player,
-                BulletClass ammo, Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition,
-                int chamberIndex, float overheat)
+            public delegate void hook_InitiateShot(Player.FirearmController __instance, Player ____player,
+                BulletClass ammo,
+                Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition, int chamberIndex,
+                float overheat);
+
+            private FirearmControllerData()
             {
-                InitiateShot?.Invoke(firearmController, player, ammo, shotPosition, shotDirection, fireportPosition,
-                    chamberIndex, overheat);
             }
         }
 
         public class ArmorComponentData
         {
-            public event Action<ArmorComponent, float> ApplyDurabilityDamage;
+            public static readonly ArmorComponentData Instance = new ArmorComponentData();
 
-            public event Action<ArmorComponent, DamageInfo, EBodyPart, bool, object, object> ApplyDamage;
-
-            internal void Trigger_ApplyDurabilityDamage(ArmorComponent armorComponent, float armorDamage)
+            public event hook_ApplyDurabilityDamage ApplyDurabilityDamage
             {
-                ApplyDurabilityDamage?.Invoke(armorComponent, armorDamage);
+                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDurabilityDamage", RefTool.Public), value);
+                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDurabilityDamage", RefTool.Public),
+                    value);
             }
 
-            internal void Trigger_ApplyDamage(ArmorComponent armorComponent, DamageInfo damageInfo,
-                EBodyPart bodyPartType, bool damageInfoIsLocal, object lightVestsDamageReduction,
-                object heavyVestsDamageReduction)
+            public delegate void hook_ApplyDurabilityDamage(ArmorComponent __instance, float armorDamage);
+
+            public event hook_ApplyDamage ApplyDamage
             {
-                ApplyDamage?.Invoke(armorComponent, damageInfo, bodyPartType, damageInfoIsLocal,
-                    lightVestsDamageReduction, heavyVestsDamageReduction);
+                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
+                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
+            }
+
+            public delegate void hook_ApplyDamage(ArmorComponent __instance, DamageInfo damageInfo,
+                EBodyPart bodyPartType,
+                bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction);
+
+            private ArmorComponentData()
+            {
             }
         }
 
         public class RoleData
         {
+            public static readonly RoleData Instance = new RoleData();
+
             private readonly Func<WildSpawnType, bool> _refIsBoss;
 
             private readonly Func<WildSpawnType, bool> _refIsFollower;
@@ -164,7 +187,7 @@ namespace EFTApi.Helpers
 
             private readonly Func<WildSpawnType, string> _refGetScavRoleKey;
 
-            public RoleData()
+            private RoleData()
             {
                 var flags = BindingFlags.Static | RefTool.Public;
 
@@ -208,10 +231,12 @@ namespace EFTApi.Helpers
 
         public class InventoryData
         {
-            public object Equipment => RefEquipment.GetValue(EFTHelpers._PlayerHelper.Player.Profile.Inventory);
+            public static readonly InventoryData Instance = new InventoryData();
+
+            public object Equipment => RefEquipment.GetValue(PlayerHelper.Instance.Player.Profile.Inventory);
 
             public object QuestRaidItems =>
-                RefQuestRaidItems.GetValue(EFTHelpers._PlayerHelper.Player.Profile.Inventory);
+                RefQuestRaidItems.GetValue(PlayerHelper.Instance.Player.Profile.Inventory);
 
             public Slot[] EquipmentSlots => RefSlots.GetValue(Equipment);
 
@@ -373,7 +398,7 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.PropertyRef<object, IEnumerable<Item>> RefItems;
 
-            public InventoryData()
+            private InventoryData()
             {
                 RefEquipment = RefHelper.FieldRef<InventoryClass, object>.Create("Equipment");
                 RefQuestRaidItems = RefHelper.FieldRef<InventoryClass, object>.Create("QuestRaidItems");
@@ -390,20 +415,22 @@ namespace EFTApi.Helpers
 
         public class WeaponData
         {
-            public Weapon Weapon => EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController != null
-                ? EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController.Item
+            public static readonly WeaponData Instance = new WeaponData();
+
+            public Weapon Weapon => FirearmControllerData.Instance.FirearmController != null
+                ? FirearmControllerData.Instance.FirearmController.Item
                 : null;
 
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 
             public Item UnderbarrelWeapon =>
-                RefUnderbarrelWeapon.GetValue(EFTHelpers._PlayerHelper.FirearmControllerHelper.FirearmController);
+                RefUnderbarrelWeapon.GetValue(FirearmControllerData.Instance.FirearmController);
 
             public Animator WeaponAnimator =>
-                RefAnimator.GetValue(RefWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
+                RefAnimator.GetValue(RefWeaponIAnimator.GetValue(PlayerHelper.Instance.Player));
 
             public Animator LauncherIAnimator =>
-                RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator.GetValue(EFTHelpers._PlayerHelper.Player));
+                RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator.GetValue(PlayerHelper.Instance.Player));
 
             public Slot[] UnderbarrelChambers => RefUnderbarrelChambers.GetValue(UnderbarrelWeapon);
 
@@ -448,7 +475,7 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.PropertyRef<object, int> RefUnderbarrelChamberAmmoCount;
 
-            public WeaponData()
+            private WeaponData()
             {
                 _refGetCurrentMagazine =
                     AccessTools.MethodDelegate<Func<Weapon, object>>(

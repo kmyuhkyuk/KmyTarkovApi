@@ -112,7 +112,7 @@ namespace EFTReflection
 
             if (asyncAttribute == null)
             {
-                throw new Exception(methodInfo.Name + " not is async type");
+                throw new Exception($"{methodInfo.Name} not is async type");
             }
 
             return asyncAttribute.StateMachineType;
@@ -146,14 +146,14 @@ namespace EFTReflection
         {
             if (!type.IsValueType)
             {
-                throw new Exception(type.Name + " not is Struct");
+                throw new Exception($"{type.Name} not is Struct");
             }
 
             var method = type.GetMethod("MoveNext", NonPublic);
 
             if (method == null)
             {
-                throw new Exception(type.Name + " not have MoveNext Method");
+                throw new Exception($"{type.Name} not have MoveNext Method");
             }
 
             return method;

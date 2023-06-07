@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
 using EFTReflection;
+using EFTReflection.Patching;
 using HarmonyLib;
 using UnityEngine;
 
@@ -11,40 +14,81 @@ namespace EFTApi.Helpers
 {
     public class SessionHelper
     {
+        public static readonly SessionHelper Instance = new SessionHelper();
+
         public ISession Session { get; private set; }
 
         public object BackEndConfig { get; private set; }
 
-        /// <summary>
-        ///     Traders Helper
-        /// </summary>
-        public readonly TradersData TradersHelper = new TradersData();
+        public readonly TradersData TradersHelper = TradersData.Instance;
 
-        /// <summary>
-        ///     Experience Helper
-        /// </summary>
-        public readonly ExperienceData ExperienceHelper = new ExperienceData();
+        public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
 
-        public event Action<ISession> CreateBackend;
-
-        internal void Trigger_CreateBackend(ISession session)
+        public event hook_CreateBackend CreateBackend
         {
-            Session = session;
+            add
+            {
+                var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
 
-            BackEndConfig = Traverse.Create(session).Property("BackEndConfig").GetValue<object>();
+                var applicationType = EFTVersion.Is330Up
+                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                    : RefTool.GetEftType(x => x.Name == "MainApplication");
 
-            TradersHelper.Init(session);
+                HookPatch.Add(RefTool.GetEftMethod(applicationType, flags,
+                    x => x.IsAsync() && x.ReturnType == typeof(Task) &&
+                         x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")), value);
+            }
+            remove
+            {
+                var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
 
-            CreateBackend?.Invoke(session);
+                var applicationType = EFTVersion.Is330Up
+                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                    : RefTool.GetEftType(x => x.Name == "MainApplication");
 
-            ExperienceHelper.Init(BackEndConfig);
+                HookPatch.Remove(RefTool.GetEftMethod(applicationType, flags,
+                    x => x.IsAsync() && x.ReturnType == typeof(Task) &&
+                         x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")), value);
+            }
+        }
+
+        public delegate void hook_CreateBackend(object __instance, Task __result);
+
+        private SessionHelper()
+        {
+            CreateBackend += OnCreateBackend;
+        }
+
+        private static async void OnCreateBackend(object __instance, Task __result)
+        {
+            await __result;
+
+            var session = EFTVersion.Is330Up
+                ? Traverse.Create(__instance).Field("ClientBackEnd").Property("Session").GetValue<ISession>()
+                : Traverse.Create(__instance).Field("_backEnd").Property("Session").GetValue<ISession>();
+
+            Instance.Session = session;
+
+            var backEndConfig = Traverse.Create(session).Property("BackEndConfig").GetValue<object>();
+
+            Instance.BackEndConfig = backEndConfig;
+
+            Instance.TradersHelper.Init(session);
+
+            Instance.ExperienceHelper.Init(backEndConfig);
         }
 
         public class TradersData
         {
+            public static readonly TradersData Instance = new TradersData();
+
             public object[] Traders { get; private set; } = Array.Empty<object>();
 
-            public readonly AvatarData TradersAvatarData = new AvatarData();
+            public readonly AvatarData TradersAvatarData = AvatarData.Instance;
+
+            private TradersData()
+            {
+            }
 
             internal void Init(ISession session)
             {
@@ -59,10 +103,16 @@ namespace EFTApi.Helpers
 
             public class AvatarData
             {
+                public static readonly AvatarData Instance = new AvatarData();
+
                 private readonly Dictionary<string, object> _avatar = new Dictionary<string, object>();
 
                 private readonly Dictionary<string, Task<Sprite>> _avatarSprites =
                     new Dictionary<string, Task<Sprite>>();
+
+                private AvatarData()
+                {
+                }
 
                 internal void Init(object[] traders)
                 {
@@ -117,6 +167,8 @@ namespace EFTApi.Helpers
 
         public class ExperienceData
         {
+            public static readonly ExperienceData Instance = new ExperienceData();
+
             private object _config;
 
             private object _experience;
@@ -133,14 +185,14 @@ namespace EFTApi.Helpers
 
             private bool _isReady;
 
-            public ExperienceData()
+            private ExperienceData()
             {
                 _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(
                     RefTool.GetEftMethod(x => x.GetMethod("GetKillingBonusPercent") != null, RefTool.Public,
                         x => x.Name == "GetKillingBonusPercent"));
             }
 
-            public void Init(object backEndConfig)
+            internal void Init(object backEndConfig)
             {
                 _config = Traverse.Create(backEndConfig).Field("Config").GetValue<object>();
 

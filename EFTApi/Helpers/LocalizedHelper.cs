@@ -9,13 +9,15 @@ namespace EFTApi.Helpers
 {
     public class LocalizedHelper
     {
+        public static readonly LocalizedHelper Instance = new LocalizedHelper();
+
         private readonly Func<string, string, string> _refLocalized;
 
         private readonly Func<string, EStringCase, string> _refLocalizedCase;
 
         private readonly Func<string, string> _refTransliterate;
 
-        public LocalizedHelper()
+        private LocalizedHelper()
         {
             var flags = BindingFlags.Static | RefTool.Public;
 

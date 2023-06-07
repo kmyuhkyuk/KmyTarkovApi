@@ -1,40 +1,55 @@
 ﻿using System;
+using System.Linq;
 using EFTReflection;
+using EFTReflection.Patching;
 using UnityEngine;
 
 namespace EFTApi.Helpers
 {
     public class AirdropHelper
     {
-        /// <summary>
-        ///     AirdropBox Helper
-        /// </summary>
-        public readonly AirdropBoxData AirdropBoxHelper = new AirdropBoxData();
+        public static readonly AirdropHelper Instance = new AirdropHelper();
 
-        /// <summary>
-        ///     AirdropSynchronizableObject Helper
-        /// </summary>
+        public readonly AirdropBoxData AirdropBoxHelper = AirdropBoxData.Instance;
+
         public readonly AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper =
-            new AirdropSynchronizableObjectData();
+            AirdropSynchronizableObjectData.Instance;
+
+        private AirdropHelper()
+        {
+        }
 
         public class AirdropBoxData
         {
-            public event Action<MonoBehaviour, object, float> OnBoxLand;
+            public static readonly AirdropBoxData Instance = new AirdropBoxData();
 
-            internal void Trigger_OnBoxLand(MonoBehaviour airdropBox, object boxSync, float clipLength)
+            public event hook_OnBoxLand OnBoxLand
             {
-                OnBoxLand?.Invoke(airdropBox, boxSync, clipLength);
+                add => HookPatch.Add(AppDomain.CurrentDomain.GetAssemblies()
+                    .Single(x => x.ManifestModule.Name == "aki-custom.dll")
+                    .GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic), value);
+                remove => HookPatch.Remove(AppDomain.CurrentDomain.GetAssemblies()
+                    .Single(x => x.ManifestModule.Name == "aki-custom.dll")
+                    .GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic), value);
+            }
+
+            public delegate void hook_OnBoxLand(MonoBehaviour __instance, object ___boxSync, float clipLength);
+
+            private AirdropBoxData()
+            {
             }
         }
 
         public class AirdropSynchronizableObjectData
         {
+            public static readonly AirdropSynchronizableObjectData Instance = new AirdropSynchronizableObjectData();
+
             /// <summary>
             ///     AirdropSynchronizableObject.AirdropType
             /// </summary>
             public readonly RefHelper.FieldRef<object, int> RefAirdropType;
 
-            public AirdropSynchronizableObjectData()
+            private AirdropSynchronizableObjectData()
             {
                 if (EFTVersion.Is350Up)
                 {

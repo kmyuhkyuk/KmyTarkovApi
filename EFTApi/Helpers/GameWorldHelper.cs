@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFTReflection;
+using EFTReflection.Patching;
 
 namespace EFTApi.Helpers
 {
     public class GameWorldHelper
     {
+        public static readonly GameWorldHelper Instance = new GameWorldHelper();
+
         public GameWorld GameWorld { get; private set; }
 
-        public readonly LevelSettingsData LevelSettingsHelper = new LevelSettingsData();
+        public readonly LevelSettingsData LevelSettingsHelper = LevelSettingsData.Instance;
 
-        public readonly LootableContainerData LootableContainerHelper = new LootableContainerData();
+        public readonly LootableContainerData LootableContainerHelper = LootableContainerData.Instance;
 
-        public readonly SearchableItemClassData SearchableItemClassHelper = new SearchableItemClassData();
+        public readonly SearchableItemClassData SearchableItemClassHelper = SearchableItemClassData.Instance;
 
-        /// <summary>
-        ///     Zone Helper
-        /// </summary>
-        public readonly ZoneData ZoneHelper = new ZoneData();
+        public readonly ZoneData ZoneHelper = ZoneData.Instance;
 
         public List<Player> AllBot
         {
@@ -35,7 +34,7 @@ namespace EFTApi.Helpers
 
                 foreach (var player in GameWorld.AllPlayers)
                 {
-                    if (player != EFTHelpers._PlayerHelper.Player)
+                    if (player != PlayerHelper.Instance.Player)
                     {
                         list.Add(player);
                     }
@@ -48,54 +47,83 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public event Action<GameWorld> Awake;
-
-        public event Action<GameWorld> OnGameStarted;
-
-        public event Action<GameWorld> Dispose;
-
-        internal void Trigger_Awake(GameWorld gameWorld)
+        public event hook_Awake Awake
         {
-            GameWorld = gameWorld;
-
-            Awake?.Invoke(gameWorld);
+            add => HookPatch.Add(typeof(GameWorld).GetMethod("Awake", RefTool.NonPublic), value);
+            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("Awake", RefTool.NonPublic), value);
         }
 
-        internal void Trigger_OnGameStarted(GameWorld gameWorld)
+        public delegate void hook_Awake(GameWorld __instance);
+
+        public event hook_OnGameStarted OnGameStarted
         {
-            OnGameStarted?.Invoke(gameWorld);
+            add => HookPatch.Add(typeof(GameWorld).GetMethod("OnGameStarted", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("OnGameStarted", RefTool.Public), value);
         }
 
-        internal void Trigger_Dispose(GameWorld gameWorld)
-        {
-            ZoneHelper.TriggerPoints.Clear();
+        public delegate void hook_OnGameStarted(GameWorld __instance);
 
-            Dispose?.Invoke(gameWorld);
+        public event hook_Dispose Dispose
+        {
+            add => HookPatch.Add(typeof(GameWorld).GetMethod("Dispose", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("Dispose", RefTool.Public), value);
+        }
+
+        public delegate void hook_Dispose(GameWorld __instance);
+
+        private GameWorldHelper()
+        {
+            Awake += OnAwake;
+            Dispose += OnDispose;
+        }
+
+        private static void OnDispose(GameWorld __instance)
+        {
+            ZoneData.Instance.TriggerPoints.Clear();
+        }
+
+        private static void OnAwake(GameWorld __instance)
+        {
+            Instance.GameWorld = __instance;
         }
 
         public class LevelSettingsData
         {
+            public static readonly LevelSettingsData Instance = new LevelSettingsData();
+
             public LevelSettings LevelSettings { get; private set; }
 
-            public event Action<LevelSettings> Awake;
-
-            public event Action<LevelSettings> OnDestroy;
-
-            internal void Trigger_Awake(LevelSettings levelSettings)
+            public event hook_Awake Awake
             {
-                LevelSettings = levelSettings;
-
-                Awake?.Invoke(levelSettings);
+                add => HookPatch.Add(typeof(LevelSettings).GetMethod("Awake", RefTool.NonPublic), value);
+                remove => HookPatch.Remove(typeof(LevelSettings).GetMethod("Awake", RefTool.NonPublic), value);
             }
 
-            internal void Trigger_OnDestroy(LevelSettings levelSettings)
+            public delegate void hook_Awake(LevelSettings __instance);
+
+            public event hook_OnDestroy OnDestroy
             {
-                OnDestroy?.Invoke(levelSettings);
+                add => HookPatch.Add(typeof(LevelSettings).GetMethod("OnDestroy", RefTool.Public), value);
+                remove => HookPatch.Remove(typeof(LevelSettings).GetMethod("OnDestroy", RefTool.Public), value);
+            }
+
+            public delegate void hook_OnDestroy(LevelSettings __instance);
+
+            private LevelSettingsData()
+            {
+                Awake += OnAwake;
+            }
+
+            private static void OnAwake(LevelSettings __instance)
+            {
+                Instance.LevelSettings = __instance;
             }
         }
 
         public class ZoneData
         {
+            public static readonly ZoneData Instance = new ZoneData();
+
             internal readonly List<TriggerWithId> TriggerPoints = new List<TriggerWithId>();
 
             public IEnumerable<ExperienceTrigger> ExperienceTriggers => TriggerPoints.OfType<ExperienceTrigger>();
@@ -103,6 +131,10 @@ namespace EFTApi.Helpers
             public IEnumerable<PlaceItemTrigger> PlaceItemTriggers => TriggerPoints.OfType<PlaceItemTrigger>();
 
             public IEnumerable<QuestTrigger> QuestTriggers => TriggerPoints.OfType<QuestTrigger>();
+
+            private ZoneData()
+            {
+            }
 
             public bool TryGetValues<T>(string id, out IEnumerable<T> triggers) where T : TriggerWithId
             {
@@ -129,6 +161,8 @@ namespace EFTApi.Helpers
 
         public class LootableContainerData
         {
+            public static readonly LootableContainerData Instance = new LootableContainerData();
+
             /// <summary>
             ///     LootableContainer.ItemOwner
             /// </summary>
@@ -139,7 +173,7 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.PropertyRef<object, Item> RefRootItem;
 
-            public LootableContainerData()
+            private LootableContainerData()
             {
                 RefItemOwner = RefHelper.FieldRef<LootableContainer, object>.Create("ItemOwner");
                 RefRootItem = RefHelper.PropertyRef<object, Item>.Create(RefItemOwner.FieldType, "RootItem");
@@ -148,12 +182,14 @@ namespace EFTApi.Helpers
 
         public class SearchableItemClassData
         {
+            public static readonly SearchableItemClassData Instance = new SearchableItemClassData();
+
             /// <summary>
             ///     SearchableItemClass.ItemOwner
             /// </summary>
             public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
 
-            public SearchableItemClassData()
+            private SearchableItemClassData()
             {
                 if (EFTVersion.Is350Up)
                 {

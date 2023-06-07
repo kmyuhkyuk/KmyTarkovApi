@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="EFTReflectionPlugin.cs" />
     <Compile Include="Patching\BaseModulePatch.cs" />
+    <Compile Include="Patching\HookPatch.cs" />
     <Compile Include="Patching\ModulePatchs.cs" />
     <Compile Include="RefHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

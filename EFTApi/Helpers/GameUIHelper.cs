@@ -1,26 +1,39 @@
-﻿using System;
-using EFT.UI;
+﻿using EFT.UI;
+using EFTReflection;
+using EFTReflection.Patching;
 
 namespace EFTApi.Helpers
 {
     public class GameUIHelper
     {
+        public static readonly GameUIHelper Instance = new GameUIHelper();
+
         public GameUI GameUI { get; private set; }
 
-        public event Action<GameUI> Awake;
-
-        public event Action<GameUI> OnDestroy;
-
-        internal void Trigger_Awake(GameUI gameUI)
+        public event hook_Awake Awake
         {
-            GameUI = gameUI;
-
-            Awake?.Invoke(gameUI);
+            add => HookPatch.Add(typeof(GameUI).GetMethod("Awake", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(GameUI).GetMethod("Awake", RefTool.Public), value);
         }
 
-        internal void Trigger_Destroy(GameUI gameUI)
+        public delegate void hook_Awake(GameUI __instance);
+
+        public event hook_OnDestroy OnDestroy
         {
-            OnDestroy?.Invoke(gameUI);
+            add => HookPatch.Add(typeof(GameUI).GetMethod("OnDestroy", RefTool.Public), value);
+            remove => HookPatch.Remove(typeof(GameUI).GetMethod("OnDestroy", RefTool.Public), value);
+        }
+
+        public delegate void hook_OnDestroy(GameUI __instance);
+
+        private GameUIHelper()
+        {
+            Awake += OnAwake;
+        }
+
+        private static void OnAwake(GameUI __instance)
+        {
+            Instance.GameUI = __instance;
         }
     }
 }

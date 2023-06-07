@@ -7,6 +7,7 @@ using EFT.InventoryLogic;
 using EFTReflection;
 using EFTReflection.Patching;
 using HarmonyLib;
+using MonoMod.Cil;
 using UnityEngine;
 
 namespace EFTApi.Helpers
@@ -151,15 +152,6 @@ namespace EFTApi.Helpers
         {
             public static readonly ArmorComponentData Instance = new ArmorComponentData();
 
-            public event hook_ApplyDurabilityDamage ApplyDurabilityDamage
-            {
-                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDurabilityDamage", RefTool.Public), value);
-                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDurabilityDamage", RefTool.Public),
-                    value);
-            }
-
-            public delegate void hook_ApplyDurabilityDamage(ArmorComponent __instance, float armorDamage);
-
             public event hook_ApplyDamage ApplyDamage
             {
                 add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
@@ -169,6 +161,13 @@ namespace EFTApi.Helpers
             public delegate void hook_ApplyDamage(ArmorComponent __instance, DamageInfo damageInfo,
                 EBodyPart bodyPartType,
                 bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction);
+
+            public event ILContext.Manipulator ILApplyDamage
+            {
+                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value,
+                    HarmonyPatchType.ILManipulator);
+                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
+            }
 
             private ArmorComponentData()
             {

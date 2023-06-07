@@ -52,6 +52,10 @@
     <Reference Include="BepInEx">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="MonoMod.Utils, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">

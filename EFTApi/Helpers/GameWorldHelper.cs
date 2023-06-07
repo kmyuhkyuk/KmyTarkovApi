@@ -140,15 +140,15 @@ namespace EFTApi.Helpers
             {
                 if (typeof(T) == typeof(ExperienceTrigger))
                 {
-                    triggers = ExperienceTriggers.Where(x => x.Id == id) as IEnumerable<T>;
+                    triggers = (IEnumerable<T>)ExperienceTriggers.Where(x => x.Id == id);
                 }
                 else if (typeof(T) == typeof(PlaceItemTrigger))
                 {
-                    triggers = PlaceItemTriggers.Where(x => x.Id == id) as IEnumerable<T>;
+                    triggers = (IEnumerable<T>)PlaceItemTriggers.Where(x => x.Id == id);
                 }
                 else if (typeof(T) == typeof(QuestTrigger))
                 {
-                    triggers = QuestTriggers.Where(x => x.Id == id) as IEnumerable<T>;
+                    triggers = (IEnumerable<T>)QuestTriggers.Where(x => x.Id == id);
                 }
                 else
                 {

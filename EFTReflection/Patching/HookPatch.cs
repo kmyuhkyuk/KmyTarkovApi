@@ -20,42 +20,42 @@ namespace EFTReflection.Patching
                 throw new ArgumentNullException(nameof(originalDeclaringType));
             }
 
-            var delegateMethod = hookDelegate.Method;
+            var hookDelegateMethod = hookDelegate.Method;
 
-            var declaringType = delegateMethod.DeclaringType;
+            var hookDeclaringType = hookDelegateMethod.DeclaringType;
 
-            if (declaringType == null)
+            if (hookDeclaringType == null)
             {
-                throw new ArgumentNullException(nameof(declaringType));
+                throw new ArgumentNullException(nameof(hookDeclaringType));
             }
 
-            if (!delegateMethod.IsStatic)
+            if (!hookDelegateMethod.IsStatic)
             {
-                throw new Exception($"{declaringType.Name}_{delegateMethod.Name} not is static");
+                throw new Exception($"{hookDeclaringType.Name}_{hookDelegateMethod.Name} not is static");
             }
 
             var hasHook = HookDictionary.TryGetValue(original, out var typeDictionary);
 
-            if (hasHook && typeDictionary.TryGetValue(declaringType, out var harmonyTuple))
+            if (hasHook && typeDictionary.TryGetValue(hookDeclaringType, out var harmonyTuple))
             {
-                Patch(harmonyTuple.Harmony, original, delegateMethod, patchType);
+                Patch(harmonyTuple.Harmony, original, hookDelegateMethod, patchType);
                 harmonyTuple.MethodCount++;
             }
             else
             {
-                var harmony = new Harmony($"Hook_{originalDeclaringType.Name}_{original.Name}:{declaringType.Name}_{delegateMethod.Name}");
+                var harmony = new Harmony($"Hook_{originalDeclaringType.Name}_{original.Name}:{hookDeclaringType.Name}_{hookDelegateMethod.Name}");
 
-                Patch(harmony, original, delegateMethod, patchType);
+                Patch(harmony, original, hookDelegateMethod, patchType);
 
                 if (hasHook)
                 {
-                    typeDictionary.Add(declaringType, (harmony, 1));
+                    typeDictionary.Add(hookDeclaringType, (harmony, 1));
                 }
                 else
                 {
                     HookDictionary.Add(original, new Dictionary<Type, (Harmony Harmony, int MethodCount)>
                     {
-                        { declaringType, (harmony, 1) }
+                        { hookDeclaringType, (harmony, 1) }
                     });
                 }
             }
@@ -100,29 +100,29 @@ namespace EFTReflection.Patching
                 throw new ArgumentNullException(nameof(originalDeclaringType));
             }
 
-            var delegateMethod = hookDelegate.Method;
+            var hookDelegateMethod = hookDelegate.Method;
 
-            var declaringType = delegateMethod.DeclaringType;
+            var hookDeclaringType = hookDelegateMethod.DeclaringType;
 
-            if (declaringType == null)
+            if (hookDeclaringType == null)
             {
-                throw new ArgumentNullException(nameof(declaringType));
+                throw new ArgumentNullException(nameof(hookDeclaringType));
             }
 
-            if (!delegateMethod.IsStatic)
+            if (!hookDelegateMethod.IsStatic)
             {
-                throw new Exception($"{declaringType.Name}_{delegateMethod.Name} not is static");
+                throw new Exception($"{hookDeclaringType.Name}_{hookDelegateMethod.Name} not is static");
             }
 
             if (HookDictionary.TryGetValue(original, out var typeDictionary) &&
-                typeDictionary.TryGetValue(declaringType, out var harmonyTuple))
+                typeDictionary.TryGetValue(hookDeclaringType, out var harmonyTuple))
             {
-                harmonyTuple.Harmony.Unpatch(original, delegateMethod);
+                harmonyTuple.Harmony.Unpatch(original, hookDelegateMethod);
                 harmonyTuple.MethodCount--;
 
                 if (harmonyTuple.MethodCount == 0)
                 {
-                    typeDictionary.Remove(declaringType);
+                    typeDictionary.Remove(hookDeclaringType);
                 }
 
                 if (typeDictionary.Count == 0)

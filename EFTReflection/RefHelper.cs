@@ -18,7 +18,7 @@ namespace EFTReflection
         /// <param name="fieldInfo"></param>
         /// <returns><see cref="Func{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo)
+        public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo) where T : class
         {
             if (fieldInfo == null)
             {
@@ -85,7 +85,7 @@ namespace EFTReflection
         /// <param name="fieldInfo"></param>
         /// <returns><see cref="Action{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo)
+        public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo) where T : class
         {
             if (fieldInfo == null)
             {

@@ -43,7 +43,9 @@ namespace EFTReflection.Patching
             }
             else
             {
-                var harmony = new Harmony($"Hook_{originalDeclaringType.Name}_{original.Name}:{hookDeclaringType.Name}_{hookDelegateMethod.Name}");
+                var harmony =
+                    new Harmony(
+                        $"Hook_{originalDeclaringType.Name}_{original.Name}:{hookDeclaringType.Name}_{hookDelegateMethod.Name}");
 
                 Patch(harmony, original, hookDelegateMethod, patchType);
 

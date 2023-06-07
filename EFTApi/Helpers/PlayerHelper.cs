@@ -101,7 +101,7 @@ namespace EFTApi.Helpers
         {
             Init += OnInit;
 
-            RefSettings = RefHelper.FieldRef<InfoClass, object>.Create(typeof(InfoClass), "Settings");
+            RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
             RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
         }

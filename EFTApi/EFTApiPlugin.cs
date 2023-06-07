@@ -10,7 +10,7 @@ namespace EFTApi
         private void Start()
         {
             //GameWorld
-            new TriggerWithIdPatch().Enable();
+            new TriggerWithIdPatchs().Enable();
         }
     }
 }

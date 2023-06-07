@@ -13,14 +13,21 @@ namespace EFTReflection.Patching
         public static void Add(MethodBase original, Delegate hookDelegate,
             HarmonyPatchType patchType = HarmonyPatchType.Postfix)
         {
-            var declaringType = hookDelegate.Method.DeclaringType;
+            var originalDeclaringType = original.DeclaringType;
+
+            if (originalDeclaringType == null)
+            {
+                throw new ArgumentNullException(nameof(originalDeclaringType));
+            }
+
+            var delegateMethod = hookDelegate.Method;
+
+            var declaringType = delegateMethod.DeclaringType;
 
             if (declaringType == null)
             {
                 throw new ArgumentNullException(nameof(declaringType));
             }
-
-            var delegateMethod = hookDelegate.Method;
 
             if (!delegateMethod.IsStatic)
             {
@@ -31,14 +38,14 @@ namespace EFTReflection.Patching
 
             if (hasHook && typeDictionary.TryGetValue(declaringType, out var harmonyTuple))
             {
-                Patch(harmonyTuple.Harmony, original, hookDelegate.Method, patchType);
+                Patch(harmonyTuple.Harmony, original, delegateMethod, patchType);
                 harmonyTuple.MethodCount++;
             }
             else
             {
-                var harmony = new Harmony($"{declaringType.Name}_Hook_{declaringType.Name}_{original.Name}");
+                var harmony = new Harmony($"Hook_{originalDeclaringType.Name}_{original.Name}:{declaringType.Name}_{delegateMethod.Name}");
 
-                Patch(harmony, original, hookDelegate.Method, patchType);
+                Patch(harmony, original, delegateMethod, patchType);
 
                 if (hasHook)
                 {
@@ -84,26 +91,33 @@ namespace EFTReflection.Patching
             }
         }
 
-        public static void Remove(MethodBase method, Delegate hookDelegate)
+        public static void Remove(MethodBase original, Delegate hookDelegate)
         {
-            var declaringType = hookDelegate.Method.DeclaringType;
+            var originalDeclaringType = original.DeclaringType;
+
+            if (originalDeclaringType == null)
+            {
+                throw new ArgumentNullException(nameof(originalDeclaringType));
+            }
+
+            var delegateMethod = hookDelegate.Method;
+
+            var declaringType = delegateMethod.DeclaringType;
 
             if (declaringType == null)
             {
                 throw new ArgumentNullException(nameof(declaringType));
             }
 
-            var delegateMethod = hookDelegate.Method;
-
             if (!delegateMethod.IsStatic)
             {
-                throw new Exception($"{nameof(delegateMethod)} not is static");
+                throw new Exception($"{declaringType.Name}_{delegateMethod.Name} not is static");
             }
 
-            if (HookDictionary.TryGetValue(method, out var typeDictionary) &&
+            if (HookDictionary.TryGetValue(original, out var typeDictionary) &&
                 typeDictionary.TryGetValue(declaringType, out var harmonyTuple))
             {
-                harmonyTuple.Harmony.Unpatch(method, delegateMethod);
+                harmonyTuple.Harmony.Unpatch(original, delegateMethod);
                 harmonyTuple.MethodCount--;
 
                 if (harmonyTuple.MethodCount == 0)
@@ -113,7 +127,7 @@ namespace EFTReflection.Patching
 
                 if (typeDictionary.Count == 0)
                 {
-                    HookDictionary.Remove(method);
+                    HookDictionary.Remove(original);
                 }
             }
         }

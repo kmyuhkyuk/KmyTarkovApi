@@ -8,7 +8,7 @@ using EFTReflection.Patching;
 
 namespace EFTApi.Patches
 {
-    public class TriggerWithIdPatch : ModulePatchs
+    public class TriggerWithIdPatchs : ModulePatchs
     {
         protected override IEnumerable<MethodBase> GetTargetMethods()
         {

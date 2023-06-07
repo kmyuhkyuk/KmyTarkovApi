@@ -78,7 +78,7 @@
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Helpers\LocalizedHelper.cs" />
-    <Compile Include="Patches\ZonePatch.cs" />
+    <Compile Include="Patches\TriggerWithIdPatchs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

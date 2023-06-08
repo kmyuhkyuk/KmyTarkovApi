@@ -10,6 +10,14 @@ namespace EFTReflection.Patching
         private static readonly Dictionary<MethodBase, Dictionary<Type, (Harmony Harmony, int MethodCount)>>
             HookDictionary = new Dictionary<MethodBase, Dictionary<Type, (Harmony Harmony, int MethodCount)>>();
 
+        /// <summary>
+        ///     Add a Hook Patch by <see cref="Delegate" />
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="hookDelegate"></param>
+        /// <param name="patchType"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"></exception>
         public static void Add(MethodBase original, Delegate hookDelegate,
             HarmonyPatchType patchType = HarmonyPatchType.Postfix)
         {
@@ -93,6 +101,13 @@ namespace EFTReflection.Patching
             }
         }
 
+        /// <summary>
+        ///     Remove a Hook Patch by <see cref="Delegate" />
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="hookDelegate"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"></exception>
         public static void Remove(MethodBase original, Delegate hookDelegate)
         {
             var originalDeclaringType = original.DeclaringType;

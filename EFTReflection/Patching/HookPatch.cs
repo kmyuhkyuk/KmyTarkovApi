@@ -226,7 +226,7 @@ namespace EFTReflection.Patching
 
                 var parameterName = hookDelegateParameter.Name;
 
-                if ( /*patchNames.Contains(parameterName) ||*/
+                if (/*patchNames.Contains(parameterName) ||*/
                     parameterName.StartsWith("__", StringComparison.Ordinal) ||
                     (parameterName.StartsWith("___", StringComparison.Ordinal) &&
                      originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null) ||

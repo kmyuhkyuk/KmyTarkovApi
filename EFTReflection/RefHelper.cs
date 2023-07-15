@@ -664,7 +664,8 @@ namespace EFTReflection
                 HookPatch.Add(TargetMethod, hookMethod, patchType);
             }
 
-            public void Add(object hookObject, string hookMethodName, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            public void Add(object hookObject, string hookMethodName,
+                HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {
                 if (TargetMethod == null)
                     return;

@@ -23,12 +23,11 @@ namespace EFTApi.Helpers
 
         public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
 
-        public readonly RefHelper.HookRef CreateBackend = new RefHelper.HookRef(RefTool.GetEftMethod(EFTVersion.Is330Up
+        public readonly RefHelper.HookRef CreateBackend = new RefHelper.HookRef(EFTVersion.Is330Up
                 ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                 : RefTool.GetEftType(x => x.Name == "MainApplication"),
-            BindingFlags.DeclaredOnly | RefTool.NonPublic,
             x => x.IsAsync() && x.ReturnType == typeof(Task) &&
-                 x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")));
+                 x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
 
         private SessionHelper()
         {

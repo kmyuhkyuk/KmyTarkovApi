@@ -1,6 +1,5 @@
 ﻿using EFT.UI;
 using EFTReflection;
-using EFTReflection.Patching;
 
 namespace EFTApi.Helpers
 {
@@ -10,25 +9,13 @@ namespace EFTApi.Helpers
 
         public GameUI GameUI { get; private set; }
 
-        public event hook_Awake Awake
-        {
-            add => HookPatch.Add(typeof(GameUI).GetMethod("Awake", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(GameUI).GetMethod("Awake", RefTool.Public), value);
-        }
+        public readonly RefHelper.HookRef Awake = new RefHelper.HookRef(typeof(GameUI), "Awake");
 
-        public delegate void hook_Awake(GameUI __instance);
-
-        public event hook_OnDestroy OnDestroy
-        {
-            add => HookPatch.Add(typeof(GameUI).GetMethod("OnDestroy", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(GameUI).GetMethod("OnDestroy", RefTool.Public), value);
-        }
-
-        public delegate void hook_OnDestroy(GameUI __instance);
+        public readonly RefHelper.HookRef OnDestroy = new RefHelper.HookRef(typeof(GameUI), "OnDestroy");
 
         private GameUIHelper()
         {
-            Awake += OnAwake;
+            Awake.Add(this, nameof(OnAwake));
         }
 
         private static void OnAwake(GameUI __instance)

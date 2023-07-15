@@ -77,42 +77,78 @@ namespace EFTReflection
         /// <summary>
         ///     If Method is Async then return <see langword="true" />
         /// </summary>
-        /// <param name="methodInfo">Method</param>
+        /// <param name="methodBase">Method</param>
         /// <returns>
         ///     <see cref="bool" />
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static bool IsAsync(this MethodInfo methodInfo)
+        public static bool IsAsync(this MethodBase methodBase)
         {
-            if (methodInfo == null)
+            if (methodBase == null)
             {
-                throw new ArgumentNullException(nameof(methodInfo));
+                throw new ArgumentNullException(nameof(methodBase));
             }
 
-            return methodInfo.IsDefined(typeof(AsyncStateMachineAttribute));
+            return methodBase.IsDefined(typeof(AsyncStateMachineAttribute));
+        }
+
+        /// <summary>
+        ///     If Type is Compiler Generate then return <see langword="true" />
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <returns>
+        ///     <see cref="bool" />
+        /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool IsCompilerGenerated(this Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsDefined(typeof(CompilerGeneratedAttribute));
+        }
+
+        /// <summary>
+        ///     If Method is Compiler Generate then return <see langword="true" />
+        /// </summary>
+        /// <param name="methodBase">Method</param>
+        /// <returns>
+        ///     <see cref="bool" />
+        /// </returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool IsCompilerGenerated(this MethodBase methodBase)
+        {
+            if (methodBase == null)
+            {
+                throw new ArgumentNullException(nameof(methodBase));
+            }
+
+            return methodBase.IsDefined(typeof(CompilerGeneratedAttribute));
         }
 
         /// <summary>
         ///     Get Async Struct from MethodInfo
         /// </summary>
-        /// <param name="methodInfo">Async Method</param>
+        /// <param name="methodBase">Async Method</param>
         /// <returns>
         ///     <see cref="Type" />
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public static Type GetAsyncStruct(MethodInfo methodInfo)
+        public static Type GetAsyncStruct(MethodBase methodBase)
         {
-            if (methodInfo == null)
+            if (methodBase == null)
             {
-                throw new ArgumentNullException(nameof(methodInfo));
+                throw new ArgumentNullException(nameof(methodBase));
             }
 
-            var asyncAttribute = methodInfo.GetCustomAttribute<AsyncStateMachineAttribute>();
+            var asyncAttribute = methodBase.GetCustomAttribute<AsyncStateMachineAttribute>();
 
             if (asyncAttribute == null)
             {
-                throw new Exception($"{methodInfo.Name} not is async type");
+                throw new Exception($"{methodBase.Name} not is async type");
             }
 
             return asyncAttribute.StateMachineType;
@@ -123,13 +159,13 @@ namespace EFTReflection
         ///     Get Async MoveNext from MethodInfo, Harmony have been added this feature on Newer versions
         ///     <see cref="AccessTools.AsyncMoveNext" />
         /// </summary>
-        /// <param name="methodInfo">Async Method</param>
+        /// <param name="methodBase">Async Method</param>
         /// <returns>
         ///     <see cref="MethodInfo" />
         /// </returns>
-        public static MethodInfo GetAsyncMoveNext(MethodInfo methodInfo)
+        public static MethodInfo GetAsyncMoveNext(MethodBase methodBase)
         {
-            var asyncStruct = GetAsyncStruct(methodInfo);
+            var asyncStruct = GetAsyncStruct(methodBase);
 
             return asyncStruct.GetMethod("MoveNext", BindingFlags.DeclaredOnly | NonPublic);
         }
@@ -162,46 +198,46 @@ namespace EFTReflection
         /// <summary>
         ///     Get Nested Methods from MethodInfo
         /// </summary>
-        /// <param name="methodInfo">Method</param>
+        /// <param name="methodBase">Method</param>
         /// <returns>
         ///     <see cref="IEnumerable{MethodInfo}" />
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IEnumerable<MethodInfo> GetNestedMethods(MethodInfo methodInfo)
+        public static IEnumerable<MethodInfo> GetNestedMethods(MethodBase methodBase)
         {
-            if (methodInfo == null)
+            if (methodBase == null)
             {
-                throw new ArgumentNullException(nameof(methodInfo));
+                throw new ArgumentNullException(nameof(methodBase));
             }
 
-            var declaringType = methodInfo.DeclaringType;
+            var declaringType = methodBase.DeclaringType;
             if (declaringType == null)
             {
                 throw new ArgumentNullException(nameof(declaringType));
             }
 
             return declaringType.GetMethods(DeclaredStatic | NonPublic)
-                .Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodInfo.Name}>"));
+                .Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodBase.Name}>"));
         }
 
         /// <summary>
         ///     If Method Contains this IL then return <see langword="true" />
         /// </summary>
-        /// <param name="methodInfo">MethodInfo</param>
+        /// <param name="methodBase">MethodInfo</param>
         /// <param name="opcode">OpCode</param>
         /// <param name="operand">Operand</param>
         /// <returns>
         ///     <see cref="bool" />
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static bool ContainsIL(this MethodInfo methodInfo, OpCode opcode, object operand = null)
+        public static bool ContainsIL(this MethodBase methodBase, OpCode opcode, object operand = null)
         {
-            if (methodInfo == null)
+            if (methodBase == null)
             {
-                throw new ArgumentNullException(nameof(methodInfo));
+                throw new ArgumentNullException(nameof(methodBase));
             }
 
-            var realMethod = methodInfo.IsAsync() ? GetAsyncMoveNext(methodInfo) : methodInfo;
+            var realMethod = methodBase.IsAsync() ? GetAsyncMoveNext(methodBase) : methodBase;
 
             return PatchProcessor.ReadMethodBody(realMethod).Any(il => il.Key == opcode && il.Value == operand);
         }

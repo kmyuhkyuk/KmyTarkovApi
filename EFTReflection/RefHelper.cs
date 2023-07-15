@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using EFTReflection.Patching;
 using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -625,6 +626,64 @@ namespace EFTReflection
                         _refSetValue(_instance, value);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        ///     A Wrapper HookPatch Class
+        /// </summary>
+        public class HookRef
+        {
+            public readonly MethodBase TargetMethod;
+
+            public HookRef(MethodInfo targetMethod)
+            {
+                TargetMethod = targetMethod;
+            }
+
+            public HookRef(Type targetType, string targetMethodName)
+            {
+                TargetMethod = targetType.GetMethod(targetMethodName, AccessTools.allDeclared);
+            }
+
+            public HookRef(Type targetType, Func<MethodInfo, bool> targetMethodPredicate)
+            {
+                TargetMethod = targetType.GetMethods(AccessTools.allDeclared).Single(targetMethodPredicate);
+            }
+
+            public void Add(Delegate hookDelegate, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            {
+                Add(hookDelegate.Method, patchType);
+            }
+
+            public void Add(MethodInfo hookMethod, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            {
+                if (TargetMethod == null)
+                    return;
+
+                HookPatch.Add(TargetMethod, hookMethod, patchType);
+            }
+
+            public void Add(object hookObject, string hookMethodName, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            {
+                if (TargetMethod == null)
+                    return;
+
+                HookPatch.Add(TargetMethod, hookObject.GetType().GetMethod(hookMethodName, AccessTools.allDeclared),
+                    patchType);
+            }
+
+            public void Remove(Delegate hookDelegate)
+            {
+                Remove(hookDelegate.Method);
+            }
+
+            public void Remove(MethodInfo hookMethod)
+            {
+                if (TargetMethod == null)
+                    return;
+
+                HookPatch.Remove(TargetMethod, hookMethod);
             }
         }
     }

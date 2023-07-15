@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using EFTReflection;
-using EFTReflection.Patching;
-using UnityEngine;
 
 namespace EFTApi.Helpers
 {
@@ -23,17 +21,12 @@ namespace EFTApi.Helpers
         {
             public static readonly AirdropBoxData Instance = new AirdropBoxData();
 
-            public event hook_OnBoxLand OnBoxLand
-            {
-                add => HookPatch.Add(AppDomain.CurrentDomain.GetAssemblies()
+            public readonly RefHelper.HookRef OnBoxLand = new RefHelper.HookRef(EFTVersion.Is350Up
+                ? AppDomain.CurrentDomain.GetAssemblies()
                     .Single(x => x.ManifestModule.Name == "aki-custom.dll")
-                    .GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic), value);
-                remove => HookPatch.Remove(AppDomain.CurrentDomain.GetAssemblies()
-                    .Single(x => x.ManifestModule.Name == "aki-custom.dll")
-                    .GetTypes().Single(x => x.Name == "AirdropBox").GetMethod("OnBoxLand", RefTool.NonPublic), value);
-            }
-
-            public delegate void hook_OnBoxLand(MonoBehaviour __instance, object ___boxSync, float clipLength);
+                    .GetTypes().Single(x => x.Name == "AirdropBox")
+                    .GetMethod("OnBoxLand", RefTool.NonPublic)
+                : null);
 
             private AirdropBoxData()
             {

@@ -5,7 +5,6 @@ using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFTReflection;
-using EFTReflection.Patching;
 
 namespace EFTApi.Helpers
 {
@@ -47,34 +46,16 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public event hook_Awake Awake
-        {
-            add => HookPatch.Add(typeof(GameWorld).GetMethod("Awake", RefTool.NonPublic), value);
-            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("Awake", RefTool.NonPublic), value);
-        }
+        public readonly RefHelper.HookRef Awake = new RefHelper.HookRef(typeof(GameWorld), "Awake");
 
-        public delegate void hook_Awake(GameWorld __instance);
+        public readonly RefHelper.HookRef OnGameStarted = new RefHelper.HookRef(typeof(GameWorld), "OnGameStarted");
 
-        public event hook_OnGameStarted OnGameStarted
-        {
-            add => HookPatch.Add(typeof(GameWorld).GetMethod("OnGameStarted", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("OnGameStarted", RefTool.Public), value);
-        }
-
-        public delegate void hook_OnGameStarted(GameWorld __instance);
-
-        public event hook_Dispose Dispose
-        {
-            add => HookPatch.Add(typeof(GameWorld).GetMethod("Dispose", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(GameWorld).GetMethod("Dispose", RefTool.Public), value);
-        }
-
-        public delegate void hook_Dispose(GameWorld __instance);
+        public readonly RefHelper.HookRef Dispose = new RefHelper.HookRef(typeof(GameWorld), "Dispose");
 
         private GameWorldHelper()
         {
-            Awake += OnAwake;
-            Dispose += OnDispose;
+            Awake.Add(this, nameof(OnAwake));
+            Dispose.Add(this, nameof(OnDispose));
         }
 
         private static void OnDispose(GameWorld __instance)
@@ -93,25 +74,13 @@ namespace EFTApi.Helpers
 
             public LevelSettings LevelSettings { get; private set; }
 
-            public event hook_Awake Awake
-            {
-                add => HookPatch.Add(typeof(LevelSettings).GetMethod("Awake", RefTool.NonPublic), value);
-                remove => HookPatch.Remove(typeof(LevelSettings).GetMethod("Awake", RefTool.NonPublic), value);
-            }
+            public readonly RefHelper.HookRef Awake = new RefHelper.HookRef(typeof(LevelSettings), "Awake");
 
-            public delegate void hook_Awake(LevelSettings __instance);
-
-            public event hook_OnDestroy OnDestroy
-            {
-                add => HookPatch.Add(typeof(LevelSettings).GetMethod("OnDestroy", RefTool.Public), value);
-                remove => HookPatch.Remove(typeof(LevelSettings).GetMethod("OnDestroy", RefTool.Public), value);
-            }
-
-            public delegate void hook_OnDestroy(LevelSettings __instance);
+            public readonly RefHelper.HookRef OnDestroy = new RefHelper.HookRef(typeof(LevelSettings), "OnDestroy");
 
             private LevelSettingsData()
             {
-                Awake += OnAwake;
+                Awake.Add(this, nameof(OnAwake));
             }
 
             private static void OnAwake(LevelSettings __instance)

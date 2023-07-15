@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using EFT;
 using EFT.InventoryLogic;
 using EFTReflection;
-using EFTReflection.Patching;
 using HarmonyLib;
-using MonoMod.Cil;
 using UnityEngine;
 
 namespace EFTApi.Helpers
@@ -31,51 +29,16 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public event hook_Init Init
-        {
-            add => HookPatch.Add(typeof(Player).GetMethod("Init", RefTool.NonPublic), value);
-            remove => HookPatch.Remove(typeof(Player).GetMethod("Init", RefTool.NonPublic), value);
-        }
+        public readonly RefHelper.HookRef Init = new RefHelper.HookRef(typeof(Player), "Init");
 
-        public delegate void hook_Init(Player __instance, Task __result, Quaternion rotation, string layerName,
-            EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController,
-            object statisticsManager, object questController, object filter, Player.EVoipState voipState,
-            bool aiControlled, bool async);
+        public readonly RefHelper.HookRef Dispose = new RefHelper.HookRef(typeof(Player), "Dispose");
 
-        public event hook_Dispose Dispose
-        {
-            add => HookPatch.Add(typeof(Player).GetMethod("Dispose", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(Player).GetMethod("Dispose", RefTool.Public), value);
-        }
+        public readonly RefHelper.HookRef OnDead = new RefHelper.HookRef(typeof(Player), "OnDead");
 
-        public delegate void hook_Dispose(Player __instance);
+        public readonly RefHelper.HookRef ApplyDamageInfo = new RefHelper.HookRef(typeof(Player), "ApplyDamageInfo");
 
-        public event hook_OnDead OnDead
-        {
-            add => HookPatch.Add(typeof(Player).GetMethod("OnDead", RefTool.NonPublic), value);
-            remove => HookPatch.Remove(typeof(Player).GetMethod("OnDead", RefTool.NonPublic), value);
-        }
-
-        public delegate void hook_OnDead(Player __instance, EDamageType damageType);
-
-        public event hook_ApplyDamageInfo ApplyDamageInfo
-        {
-            add => HookPatch.Add(typeof(Player).GetMethod("ApplyDamageInfo", RefTool.Public), value);
-            remove => HookPatch.Remove(typeof(Player).GetMethod("ApplyDamageInfo", RefTool.Public), value);
-        }
-
-        public delegate void hook_ApplyDamageInfo(Player __instance, DamageInfo damageInfo, EBodyPart bodyPartType,
-            float absorbed, EHeadSegment? headSegment);
-
-        public event hook_OnBeenKilledByAggressor OnBeenKilledByAggressor
-        {
-            add => HookPatch.Add(typeof(Player).GetMethod("OnBeenKilledByAggressor", RefTool.NonPublic), value);
-            remove => HookPatch.Remove(typeof(Player).GetMethod("OnBeenKilledByAggressor", RefTool.NonPublic), value);
-        }
-
-        public delegate void hook_OnBeenKilledByAggressor(Player __instance, Player aggressor, DamageInfo damageInfo,
-            EBodyPart bodyPart,
-            EDamageType lethalDamageType);
+        public readonly RefHelper.HookRef OnBeenKilledByAggressor =
+            new RefHelper.HookRef(typeof(Player), "OnBeenKilledByAggressor");
 
         /// <summary>
         ///     InfoClass.Settings
@@ -100,17 +63,14 @@ namespace EFTApi.Helpers
 
         private PlayerHelper()
         {
-            Init += OnInit;
+            Init.Add(this, nameof(OnInit));
 
             RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
             RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
         }
 
-        private static async void OnInit(Player __instance, Task __result, Quaternion rotation, string layerName,
-            EPointOfView pointOfView, Profile profile, object inventoryController, IHealthController healthController,
-            object statisticsManager, object questController, object filter, Player.EVoipState voipState,
-            bool aiControlled, bool async)
+        private static async void OnInit(Player __instance, Task __result)
         {
             await __result;
 
@@ -128,20 +88,8 @@ namespace EFTApi.Helpers
                 ? PlayerHelper.Instance.Player.HandsController as Player.FirearmController
                 : null;
 
-            public event hook_InitiateShot
-                InitiateShot
-                {
-                    add => HookPatch.Add(typeof(Player.FirearmController).GetMethod("InitiateShot", RefTool.NonPublic),
-                        value);
-                    remove => HookPatch.Remove(
-                        typeof(Player.FirearmController).GetMethod("InitiateShot", RefTool.NonPublic),
-                        value);
-                }
-
-            public delegate void hook_InitiateShot(Player.FirearmController __instance, Player ____player,
-                BulletClass ammo,
-                Vector3 shotPosition, Vector3 shotDirection, Vector3 fireportPosition, int chamberIndex,
-                float overheat);
+            public readonly RefHelper.HookRef InitiateShot =
+                new RefHelper.HookRef(typeof(Player.FirearmController), "InitiateShot");
 
             private FirearmControllerData()
             {
@@ -152,22 +100,8 @@ namespace EFTApi.Helpers
         {
             public static readonly ArmorComponentData Instance = new ArmorComponentData();
 
-            public event hook_ApplyDamage ApplyDamage
-            {
-                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
-                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
-            }
-
-            public delegate void hook_ApplyDamage(ArmorComponent __instance, DamageInfo damageInfo,
-                EBodyPart bodyPartType,
-                bool damageInfoIsLocal, object lightVestsDamageReduction, object heavyVestsDamageReduction);
-
-            public event ILContext.Manipulator ILApplyDamage
-            {
-                add => HookPatch.Add(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value,
-                    HarmonyPatchType.ILManipulator);
-                remove => HookPatch.Remove(typeof(ArmorComponent).GetMethod("ApplyDamage", RefTool.Public), value);
-            }
+            public readonly RefHelper.HookRef
+                ApplyDamage = new RefHelper.HookRef(typeof(ArmorComponent), "ApplyDamage");
 
             private ArmorComponentData()
             {

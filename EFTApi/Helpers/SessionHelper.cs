@@ -6,7 +6,6 @@ using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
 using EFTReflection;
-using EFTReflection.Patching;
 using HarmonyLib;
 using UnityEngine;
 
@@ -24,39 +23,16 @@ namespace EFTApi.Helpers
 
         public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
 
-        public event hook_CreateBackend CreateBackend
-        {
-            add
-            {
-                var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
-
-                var applicationType = EFTVersion.Is330Up
-                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
-                    : RefTool.GetEftType(x => x.Name == "MainApplication");
-
-                HookPatch.Add(RefTool.GetEftMethod(applicationType, flags,
-                    x => x.IsAsync() && x.ReturnType == typeof(Task) &&
-                         x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")), value);
-            }
-            remove
-            {
-                var flags = BindingFlags.DeclaredOnly | RefTool.NonPublic;
-
-                var applicationType = EFTVersion.Is330Up
-                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
-                    : RefTool.GetEftType(x => x.Name == "MainApplication");
-
-                HookPatch.Remove(RefTool.GetEftMethod(applicationType, flags,
-                    x => x.IsAsync() && x.ReturnType == typeof(Task) &&
-                         x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")), value);
-            }
-        }
-
-        public delegate void hook_CreateBackend(object __instance, Task __result);
+        public readonly RefHelper.HookRef CreateBackend = new RefHelper.HookRef(RefTool.GetEftMethod(EFTVersion.Is330Up
+                ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                : RefTool.GetEftType(x => x.Name == "MainApplication"),
+            BindingFlags.DeclaredOnly | RefTool.NonPublic,
+            x => x.IsAsync() && x.ReturnType == typeof(Task) &&
+                 x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig")));
 
         private SessionHelper()
         {
-            CreateBackend += OnCreateBackend;
+            CreateBackend.Add(this, nameof(OnCreateBackend));
         }
 
         private static async void OnCreateBackend(object __instance, Task __result)

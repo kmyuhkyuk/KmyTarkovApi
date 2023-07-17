@@ -29,16 +29,15 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public readonly RefHelper.HookRef Init = new RefHelper.HookRef(typeof(Player), "Init");
+        public readonly RefHelper.HookRef Init;
 
-        public readonly RefHelper.HookRef Dispose = new RefHelper.HookRef(typeof(Player), "Dispose");
+        public readonly RefHelper.HookRef Dispose;
 
-        public readonly RefHelper.HookRef OnDead = new RefHelper.HookRef(typeof(Player), "OnDead");
+        public readonly RefHelper.HookRef OnDead;
 
-        public readonly RefHelper.HookRef ApplyDamageInfo = new RefHelper.HookRef(typeof(Player), "ApplyDamageInfo");
+        public readonly RefHelper.HookRef ApplyDamageInfo;
 
-        public readonly RefHelper.HookRef OnBeenKilledByAggressor =
-            new RefHelper.HookRef(typeof(Player), "OnBeenKilledByAggressor");
+        public readonly RefHelper.HookRef OnBeenKilledByAggressor;
 
         /// <summary>
         ///     InfoClass.Settings
@@ -63,6 +62,12 @@ namespace EFTApi.Helpers
 
         private PlayerHelper()
         {
+            Init = new RefHelper.HookRef(typeof(Player), "Init");
+            Dispose = new RefHelper.HookRef(typeof(Player), "Dispose");
+            OnDead = new RefHelper.HookRef(typeof(Player), "OnDead");
+            ApplyDamageInfo = new RefHelper.HookRef(typeof(Player), "ApplyDamageInfo");
+            OnBeenKilledByAggressor = new RefHelper.HookRef(typeof(Player), "OnBeenKilledByAggressor");
+
             Init.Add(this, nameof(OnInit));
 
             RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
@@ -88,11 +93,11 @@ namespace EFTApi.Helpers
                 ? PlayerHelper.Instance.Player.HandsController as Player.FirearmController
                 : null;
 
-            public readonly RefHelper.HookRef InitiateShot =
-                new RefHelper.HookRef(typeof(Player.FirearmController), "InitiateShot");
+            public readonly RefHelper.HookRef InitiateShot;
 
             private FirearmControllerData()
             {
+                InitiateShot = new RefHelper.HookRef(typeof(Player.FirearmController), "InitiateShot");
             }
         }
 
@@ -100,11 +105,11 @@ namespace EFTApi.Helpers
         {
             public static readonly ArmorComponentData Instance = new ArmorComponentData();
 
-            public readonly RefHelper.HookRef
-                ApplyDamage = new RefHelper.HookRef(typeof(ArmorComponent), "ApplyDamage");
+            public readonly RefHelper.HookRef ApplyDamage;
 
             private ArmorComponentData()
             {
+                ApplyDamage = new RefHelper.HookRef(typeof(ArmorComponent), "ApplyDamage");
             }
         }
 

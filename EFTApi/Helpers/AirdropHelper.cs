@@ -21,15 +21,16 @@ namespace EFTApi.Helpers
         {
             public static readonly AirdropBoxData Instance = new AirdropBoxData();
 
-            public readonly RefHelper.HookRef OnBoxLand = new RefHelper.HookRef(EFTVersion.Is350Up
-                ? AppDomain.CurrentDomain.GetAssemblies()
-                    .Single(x => x.ManifestModule.Name == "aki-custom.dll")
-                    .GetTypes().Single(x => x.Name == "AirdropBox")
-                    .GetMethod("OnBoxLand", RefTool.NonPublic)
-                : null);
+            public readonly RefHelper.HookRef OnBoxLand;
 
             private AirdropBoxData()
             {
+                if (EFTVersion.Is350Up)
+                {
+                    OnBoxLand = new RefHelper.HookRef(AppDomain.CurrentDomain.GetAssemblies()
+                        .Single(x => x.ManifestModule.Name == "aki-custom.dll")
+                        .GetTypes().Single(x => x.Name == "AirdropBox"), "OnBoxLand");
+                }
             }
         }
 

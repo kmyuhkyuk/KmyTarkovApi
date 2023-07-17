@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
@@ -23,14 +22,16 @@ namespace EFTApi.Helpers
 
         public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
 
-        public readonly RefHelper.HookRef CreateBackend = new RefHelper.HookRef(EFTVersion.Is330Up
-                ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
-                : RefTool.GetEftType(x => x.Name == "MainApplication"),
-            x => x.IsAsync() && x.ReturnType == typeof(Task) &&
-                 x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
+        public readonly RefHelper.HookRef CreateBackend;
 
         private SessionHelper()
         {
+            CreateBackend = new RefHelper.HookRef(EFTVersion.Is330Up
+                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                    : RefTool.GetEftType(x => x.Name == "MainApplication"),
+                x => x.IsAsync() && x.ReturnType == typeof(Task) &&
+                     x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
+
             CreateBackend.Add(this, nameof(OnCreateBackend));
         }
 

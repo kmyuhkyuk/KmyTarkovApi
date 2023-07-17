@@ -46,14 +46,18 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public readonly RefHelper.HookRef Awake = new RefHelper.HookRef(typeof(GameWorld), "Awake");
+        public readonly RefHelper.HookRef Awake;
 
-        public readonly RefHelper.HookRef OnGameStarted = new RefHelper.HookRef(typeof(GameWorld), "OnGameStarted");
+        public readonly RefHelper.HookRef OnGameStarted;
 
-        public readonly RefHelper.HookRef Dispose = new RefHelper.HookRef(typeof(GameWorld), "Dispose");
+        public readonly RefHelper.HookRef Dispose;
 
         private GameWorldHelper()
         {
+            Awake = new RefHelper.HookRef(typeof(GameWorld), "Awake");
+            OnGameStarted = new RefHelper.HookRef(typeof(GameWorld), "OnGameStarted");
+            Dispose = new RefHelper.HookRef(typeof(GameWorld), "Dispose");
+
             Awake.Add(this, nameof(OnAwake));
             Dispose.Add(this, nameof(OnDispose));
         }
@@ -74,12 +78,15 @@ namespace EFTApi.Helpers
 
             public LevelSettings LevelSettings { get; private set; }
 
-            public readonly RefHelper.HookRef Awake = new RefHelper.HookRef(typeof(LevelSettings), "Awake");
+            public readonly RefHelper.HookRef Awake;
 
-            public readonly RefHelper.HookRef OnDestroy = new RefHelper.HookRef(typeof(LevelSettings), "OnDestroy");
+            public readonly RefHelper.HookRef OnDestroy;
 
             private LevelSettingsData()
             {
+                Awake = new RefHelper.HookRef(typeof(LevelSettings), "Awake");
+                OnDestroy = new RefHelper.HookRef(typeof(LevelSettings), "OnDestroy");
+
                 Awake.Add(this, nameof(OnAwake));
             }
 

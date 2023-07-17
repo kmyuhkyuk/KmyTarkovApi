@@ -12,13 +12,15 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public readonly RefHelper.HookRef
-            Unsubscribe = new RefHelper.HookRef(typeof(MainMenuController), "Unsubscribe");
+        public readonly RefHelper.HookRef Unsubscribe;
 
-        public readonly RefHelper.HookRef Execute = new RefHelper.HookRef(typeof(MainMenuController), "Execute");
+        public readonly RefHelper.HookRef Execute;
 
         private MainMenuControllerHelper()
         {
+            Unsubscribe = new RefHelper.HookRef(typeof(MainMenuController), "Unsubscribe");
+            Execute = new RefHelper.HookRef(typeof(MainMenuController), "Execute");
+
             Execute.Add(this, nameof(OnExecute));
         }
 

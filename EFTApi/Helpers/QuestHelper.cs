@@ -7,12 +7,13 @@ namespace EFTApi.Helpers
     {
         public static readonly QuestHelper Instance = new QuestHelper();
 
-        public readonly RefHelper.HookRef OnConditionValueChanged = new RefHelper.HookRef(RefTool.GetEftType(x =>
-                x.GetMethod("OnConditionValueChanged", BindingFlags.DeclaredOnly | RefTool.NonPublic) != null),
-            "OnConditionValueChanged");
+        public readonly RefHelper.HookRef OnConditionValueChanged;
 
         private QuestHelper()
         {
+            OnConditionValueChanged = new RefHelper.HookRef(RefTool.GetEftType(x =>
+                    x.GetMethod("OnConditionValueChanged", BindingFlags.DeclaredOnly | RefTool.NonPublic) != null),
+                "OnConditionValueChanged");
         }
     }
 }

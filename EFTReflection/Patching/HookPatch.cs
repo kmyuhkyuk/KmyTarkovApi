@@ -20,33 +20,43 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Add a Hook Patch by <see cref="Delegate" />
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="originalMethod"></param>
         /// <param name="hookDelegate"></param>
         /// <param name="patchType"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public static void Add(MethodBase original, Delegate hookDelegate,
+        public static void Add(MethodBase originalMethod, Delegate hookDelegate,
             HarmonyPatchType patchType = HarmonyPatchType.Postfix)
         {
-            Add(original, hookDelegate.Method, patchType);
+            Add(originalMethod, hookDelegate.Method, patchType);
         }
 
         /// <summary>
         ///     Add a Hook Patch by <see cref="MethodInfo" />
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="originalMethod"></param>
         /// <param name="hookMethod"></param>
         /// <param name="patchType"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public static void Add(MethodBase original, MethodInfo hookMethod,
+        public static void Add(MethodBase originalMethod, MethodInfo hookMethod,
             HarmonyPatchType patchType = HarmonyPatchType.Postfix)
         {
-            var originalDeclaringType = original.DeclaringType;
+            if (originalMethod == null)
+            {
+                throw new ArgumentNullException(nameof(originalMethod));
+            }
+
+            var originalDeclaringType = originalMethod.DeclaringType;
 
             if (originalDeclaringType == null)
             {
                 throw new ArgumentNullException(nameof(originalDeclaringType));
+            }
+
+            if (hookMethod == null)
+            {
+                throw new ArgumentNullException(nameof(hookMethod));
             }
 
             var hookDeclaringType = hookMethod.DeclaringType;
@@ -61,19 +71,19 @@ namespace EFTReflection.Patching
                 throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} not is static");
             }
 
-            var hasHook = HookDictionary.TryGetValue(original, out var typeDictionary);
+            var hasHook = HookDictionary.TryGetValue(originalMethod, out var typeDictionary);
 
             if (hasHook && typeDictionary.TryGetValue(hookDeclaringType, out var harmony))
             {
-                Patch(harmony, original, hookMethod, patchType);
+                Patch(harmony, originalMethod, hookMethod, patchType);
             }
             else
             {
                 harmony =
                     new Harmony(
-                        $"Hook_{originalDeclaringType.Name}_{original.Name}:{hookDeclaringType.Name}_{hookMethod.Name}");
+                        $"Hook_{originalDeclaringType.Name}_{originalMethod.Name}:{hookDeclaringType.Name}_{hookMethod.Name}");
 
-                Patch(harmony, original, hookMethod, patchType);
+                Patch(harmony, originalMethod, hookMethod, patchType);
 
                 if (hasHook)
                 {
@@ -81,7 +91,7 @@ namespace EFTReflection.Patching
                 }
                 else
                 {
-                    HookDictionary.Add(original, new Dictionary<Type, Harmony>
+                    HookDictionary.Add(originalMethod, new Dictionary<Type, Harmony>
                     {
                         { hookDeclaringType, harmony }
                     });
@@ -89,7 +99,7 @@ namespace EFTReflection.Patching
             }
         }
 
-        private static void Patch(Harmony harmony, MethodBase original, MethodInfo hookMethod,
+        private static void Patch(Harmony harmony, MethodBase originalMethod, MethodInfo hookMethod,
             HarmonyPatchType patchType)
         {
             switch (patchType)
@@ -97,29 +107,29 @@ namespace EFTReflection.Patching
                 case HarmonyPatchType.All:
                     throw new Exception("Can't Patch All Type");
                 case HarmonyPatchType.Prefix:
-                    harmony.Patch(original, prefix: new HarmonyMethod(VirtualMethod(original, hookMethod)));
+                    harmony.Patch(originalMethod, prefix: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.Postfix:
-                    harmony.Patch(original, postfix: new HarmonyMethod(VirtualMethod(original, hookMethod)));
+                    harmony.Patch(originalMethod, postfix: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.Transpiler:
-                    harmony.Patch(original, transpiler: new HarmonyMethod(hookMethod));
+                    harmony.Patch(originalMethod, transpiler: new HarmonyMethod(hookMethod));
                     break;
                 case HarmonyPatchType.Finalizer:
-                    harmony.Patch(original, finalizer: new HarmonyMethod(VirtualMethod(original, hookMethod)));
+                    harmony.Patch(originalMethod, finalizer: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.ReversePatch:
-                    harmony.CreateReversePatcher(original, new HarmonyMethod(hookMethod)).Patch();
+                    harmony.CreateReversePatcher(originalMethod, new HarmonyMethod(hookMethod)).Patch();
                     break;
                 case HarmonyPatchType.ILManipulator:
-                    harmony.Patch(original, ilmanipulator: new HarmonyMethod(hookMethod));
+                    harmony.Patch(originalMethod, ilmanipulator: new HarmonyMethod(hookMethod));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
             }
         }
 
-        private static MethodInfo VirtualMethod(MethodBase original, MethodInfo hookMethod)
+        private static MethodInfo VirtualMethod(MethodBase originalMethod, MethodInfo hookMethod)
         {
             var delegateMethodDeclaringType = hookMethod.DeclaringType;
 
@@ -134,7 +144,7 @@ namespace EFTReflection.Patching
             }
             else
             {
-                if (!NeedCastParameters(original, hookMethod, out var validParameters))
+                if (!NeedCastParameters(originalMethod, hookMethod, out var validParameters))
                 {
                     return hookMethod;
                 }
@@ -191,17 +201,17 @@ namespace EFTReflection.Patching
             }
         }
 
-        private static bool NeedCastParameters(MethodBase original, MethodInfo hookMethod,
+        private static bool NeedCastParameters(MethodBase originalMethod, MethodInfo hookMethod,
             out ParameterInfo[] validParameters)
         {
-            var originalDeclaringType = original.DeclaringType;
+            var originalDeclaringType = originalMethod.DeclaringType;
 
             if (originalDeclaringType == null)
             {
                 throw new ArgumentNullException(nameof(originalDeclaringType));
             }
 
-            var originalParameters = original.GetParameters();
+            var originalParameters = originalMethod.GetParameters();
 
             var delegateParameters = hookMethod.GetParameters();
 
@@ -258,29 +268,39 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Remove a Hook Patch by <see cref="Delegate" />
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="originalMethod"></param>
         /// <param name="hookDelegate"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public static void Remove(MethodBase original, Delegate hookDelegate)
+        public static void Remove(MethodBase originalMethod, Delegate hookDelegate)
         {
-            Remove(original, hookDelegate.Method);
+            Remove(originalMethod, hookDelegate.Method);
         }
 
         /// <summary>
         ///     Remove a Hook Patch by <see cref="MethodInfo" />
         /// </summary>
-        /// <param name="original"></param>
+        /// <param name="originalMethod"></param>
         /// <param name="hookMethod"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public static void Remove(MethodBase original, MethodInfo hookMethod)
+        public static void Remove(MethodBase originalMethod, MethodInfo hookMethod)
         {
-            var originalDeclaringType = original.DeclaringType;
+            if (originalMethod == null)
+            {
+                throw new ArgumentNullException(nameof(originalMethod));
+            }
+
+            var originalDeclaringType = originalMethod.DeclaringType;
 
             if (originalDeclaringType == null)
             {
                 throw new ArgumentNullException(nameof(originalDeclaringType));
+            }
+
+            if (hookMethod == null)
+            {
+                throw new ArgumentNullException(nameof(hookMethod));
             }
 
             var hookDeclaringType = hookMethod.DeclaringType;
@@ -295,10 +315,10 @@ namespace EFTReflection.Patching
                 throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} not is static");
             }
 
-            if (HookDictionary.TryGetValue(original, out var typeDictionary) &&
+            if (HookDictionary.TryGetValue(originalMethod, out var typeDictionary) &&
                 typeDictionary.TryGetValue(hookDeclaringType, out var harmony))
             {
-                harmony.Unpatch(original, hookMethod);
+                harmony.Unpatch(originalMethod, hookMethod);
             }
         }
     }

@@ -658,18 +658,12 @@ namespace EFTReflection
 
             public void Add(MethodInfo hookMethod, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {
-                if (TargetMethod == null)
-                    return;
-
                 HookPatch.Add(TargetMethod, hookMethod, patchType);
             }
 
             public void Add(object hookObject, string hookMethodName,
                 HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {
-                if (TargetMethod == null)
-                    return;
-
                 HookPatch.Add(TargetMethod, hookObject.GetType().GetMethod(hookMethodName, AccessTools.allDeclared),
                     patchType);
             }
@@ -681,9 +675,6 @@ namespace EFTReflection
 
             public void Remove(MethodInfo hookMethod)
             {
-                if (TargetMethod == null)
-                    return;
-
                 HookPatch.Remove(TargetMethod, hookMethod);
             }
         }

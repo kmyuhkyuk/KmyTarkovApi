@@ -110,13 +110,15 @@ namespace EFTReflection.Patching
                     harmony.Patch(originalMethod, prefix: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.Postfix:
-                    harmony.Patch(originalMethod, postfix: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
+                    harmony.Patch(originalMethod,
+                        postfix: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.Transpiler:
                     harmony.Patch(originalMethod, transpiler: new HarmonyMethod(hookMethod));
                     break;
                 case HarmonyPatchType.Finalizer:
-                    harmony.Patch(originalMethod, finalizer: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
+                    harmony.Patch(originalMethod,
+                        finalizer: new HarmonyMethod(VirtualMethod(originalMethod, hookMethod)));
                     break;
                 case HarmonyPatchType.ReversePatch:
                     harmony.CreateReversePatcher(originalMethod, new HarmonyMethod(hookMethod)).Patch();

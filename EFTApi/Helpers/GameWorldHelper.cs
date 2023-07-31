@@ -62,7 +62,7 @@ namespace EFTApi.Helpers
             Dispose.Add(this, nameof(OnDispose));
         }
 
-        private static void OnDispose(GameWorld __instance)
+        private static void OnDispose()
         {
             ZoneData.Instance.TriggerPoints.Clear();
         }

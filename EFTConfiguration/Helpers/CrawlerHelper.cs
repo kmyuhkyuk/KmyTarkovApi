@@ -57,7 +57,7 @@ namespace EFTConfiguration.Helpers
         public static int GetModDownloads(HtmlDocument doc)
         {
             return Convert.ToInt32(doc.DocumentNode
-                .SelectSingleNode("//*[@id=\"content\"]/header/div[2]/ul/li[5]/meta[2]")
+                .SelectSingleNode("//meta[@itemprop='userInteractionCount']")
                 .GetAttributeValue("content", string.Empty));
         }
 
@@ -95,24 +95,24 @@ namespace EFTConfiguration.Helpers
                 }
                 else
                 {
-                    texture = await GetAsyncTexture(url);
+                    cacheTexture = GetAsyncTexture(url);
+
+                    IconCacheFile.Add(fileName, cacheTexture);
+
+                    texture = await cacheTexture;
+
+                    if (texture == null)
+                        return null;
 
                     File.WriteAllBytes(Path.Combine(CachePath, $"{fileName}.png"), texture.EncodeToPNG());
                 }
 
-                if (IconCache.TryGetValue(fileName, out cacheSprite))
-                {
-                    return cacheSprite;
-                }
-                else
-                {
-                    var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                        new Vector2(0.5f, 0.5f));
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
 
-                    IconCache.Add(fileName, sprite);
+                IconCache.Add(fileName, sprite);
 
-                    return sprite;
-                }
+                return sprite;
             }
         }
 

@@ -44,8 +44,17 @@ namespace EFTUtils
                     return await GetAsyncAudioClip(url, AudioType.MPEG);
                 case "ogg":
                     return await GetAsyncAudioClip(url, AudioType.OGGVORBIS);
+                case "aiff":
                 case "aif":
                     return await GetAsyncAudioClip(url, AudioType.AIFF);
+                case "mod":
+                    return await GetAsyncAudioClip(url, AudioType.MOD);
+                case "it":
+                    return await GetAsyncAudioClip(url, AudioType.IT);
+                case "s3m":
+                    return await GetAsyncAudioClip(url, AudioType.S3M);
+                case "xm":
+                    return await GetAsyncAudioClip(url, AudioType.XM);
                 default:
                     return null;
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.UI;
 using TMPro;
@@ -161,17 +162,24 @@ namespace EFTConfiguration
 
         private static async void BindWeb(string modUrl, Action<Sprite, string, int, Version> action)
         {
-            var doc = await CrawlerHelper.CreateHtmlDocument(modUrl);
+            try
+            {
+                var doc = await CrawlerHelper.CreateHtmlDocument(modUrl);
 
-            var downloadUrl = CrawlerHelper.GetModDownloadUrl(doc);
+                var downloadUrl = CrawlerHelper.GetModDownloadUrl(doc);
 
-            var downloads = CrawlerHelper.GetModDownloads(doc);
+                var downloads = CrawlerHelper.GetModDownloads(doc);
 
-            var version = CrawlerHelper.GetModVersion(doc);
+                var version = CrawlerHelper.GetModVersion(doc);
 
-            var icon = await CrawlerHelper.GetModIcon(doc);
+                var icon = await CrawlerHelper.GetModIcon(doc);
 
-            action?.Invoke(icon, downloadUrl, downloads, version);
+                action?.Invoke(icon, downloadUrl, downloads, version);
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("Crawler Network error");
+            }
         }
 
         private void SwitchConfiguration(PluginInfo pluginInfo)

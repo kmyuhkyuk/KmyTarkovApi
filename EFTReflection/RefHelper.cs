@@ -19,7 +19,7 @@ namespace EFTReflection
         /// <param name="fieldInfo"></param>
         /// <returns><see cref="Func{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo) where T : class
+        public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo)
         {
             if (fieldInfo == null)
             {
@@ -86,7 +86,7 @@ namespace EFTReflection
         /// <param name="fieldInfo"></param>
         /// <returns><see cref="Action{T, F}" /> from <paramref name="fieldInfo" /></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo) where T : class
+        public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo)
         {
             if (fieldInfo == null)
             {
@@ -115,7 +115,7 @@ namespace EFTReflection
             if (!fieldInfo.IsStatic)
             {
                 var delegateInIsObject = delegateInstanceType == typeof(object);
-                var inIsValueType = declaringType == typeof(object);
+                var inIsValueType = declaringType.IsValueType;
 
                 if (!inIsValueType)
                 {
@@ -280,7 +280,7 @@ namespace EFTReflection
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
-        public class PropertyRef<T, TF> where T : class
+        public class PropertyRef<T, TF>
         {
             private Func<T, TF> _refGetValue;
 
@@ -342,7 +342,10 @@ namespace EFTReflection
 
                 DeclaringType = _propertyInfo.DeclaringType;
 
-                _instance = (T)instance;
+                if (instance != null)
+                {
+                    _instance = (T)instance;
+                }
 
                 var inIsObject = typeof(T) == typeof(object);
 
@@ -444,7 +447,7 @@ namespace EFTReflection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
-        public class FieldRef<T, TF> where T : class
+        public class FieldRef<T, TF>
         {
             private AccessTools.FieldRef<T, TF> _harmonyFieldRef;
 
@@ -527,13 +530,16 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(type, fieldNames, declaredOnly, instance);
             }
 
-            private void Init(FieldInfo fieldInfo, object instance = null)
+            private void Init(FieldInfo fieldInfo, object instance)
             {
                 _fieldInfo = fieldInfo;
 
                 DeclaringType = _fieldInfo.DeclaringType;
 
-                _instance = (T)instance;
+                if (instance != null)
+                {
+                    _instance = (T)instance;
+                }
 
                 if (typeof(TF) == typeof(object))
                 {

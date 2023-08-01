@@ -26,6 +26,8 @@ namespace EFTApi.Helpers
 
         public readonly InventoryData InventoryHelper = InventoryData.Instance;
 
+        public readonly DamageInfoData DamageInfoHelper = DamageInfoData.Instance;
+
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -79,7 +81,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            if (EFTVersion.Is231Up ? __instance.IsYourPlayer : __instance.Id == 1)
+            if (EFTVersion.AkiVersion > new Version("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
             {
                 Instance.Player = __instance;
             }
@@ -425,7 +427,7 @@ namespace EFTApi.Helpers
                         x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null),
                     "Animator");
 
-                if (EFTVersion.Is341Up)
+                if (EFTVersion.AkiVersion > new Version("3.4.1"))
                 {
                     RefUnderbarrelWeapon =
                         RefHelper.FieldRef<Player.FirearmController, Item>.Create("UnderbarrelWeapon");
@@ -446,6 +448,40 @@ namespace EFTApi.Helpers
             public object GetCurrentMagazine(Weapon weapon)
             {
                 return _refGetCurrentMagazine(weapon);
+            }
+        }
+
+        public class DamageInfoData
+        {
+            public static readonly DamageInfoData Instance = new DamageInfoData();
+
+            /// <summary>
+            ///     DamageInfo.Player
+            /// </summary>
+            public readonly RefHelper.FieldRef<DamageInfo, object> RefPlayer;
+
+            public readonly RefHelper.PropertyRef<object, IAIDetails> RefIPlayer;
+
+            private DamageInfoData()
+            {
+                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create(typeof(DamageInfo).GetField("Player"));
+
+                if (EFTVersion.AkiVersion > new Version("3.5.8"))
+                {
+                    RefIPlayer = RefHelper.PropertyRef<object, IAIDetails>.Create(RefPlayer.FieldType, "iPlayer");
+                }
+            }
+
+            public Player GetPlayer(DamageInfo damageInfo)
+            {
+                if (EFTVersion.AkiVersion > new Version("3.5.8"))
+                {
+                    return (Player)RefIPlayer.GetValue(RefPlayer.GetValue(damageInfo));
+                }
+                else
+                {
+                    return (Player)RefPlayer.GetValue(damageInfo);
+                }
             }
         }
     }

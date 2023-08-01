@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EFT;
@@ -167,7 +168,7 @@ namespace EFTApi.Helpers
 
             private SearchableItemClassData()
             {
-                if (EFTVersion.Is350Up)
+                if (EFTVersion.AkiVersion > new Version("3.5.0"))
                 {
                     RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(
                         RefTool.GetEftType(x =>

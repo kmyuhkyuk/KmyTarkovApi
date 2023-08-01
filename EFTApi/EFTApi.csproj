@@ -43,6 +43,9 @@
     <Reference Include="0Harmony">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="aki-core">
+      <HintPath>R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\spt\aki-core.dll</HintPath>
+    </Reference>
     <Reference Include="Aki.Reflection">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\EscapeFromTarkov_Data\Managed\Aki.Reflection.dll</HintPath>
     </Reference>

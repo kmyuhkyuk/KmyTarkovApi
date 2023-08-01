@@ -25,7 +25,7 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.Is350Up)
+                if (EFTVersion.AkiVersion > new Version("3.5.0"))
                 {
                     OnBoxLand = new RefHelper.HookRef(AppDomain.CurrentDomain.GetAssemblies()
                         .Single(x => x.ManifestModule.Name == "aki-custom.dll")
@@ -45,7 +45,7 @@ namespace EFTApi.Helpers
 
             private AirdropSynchronizableObjectData()
             {
-                if (EFTVersion.Is350Up)
+                if (EFTVersion.AkiVersion > new Version("3.5.0"))
                 {
                     RefAirdropType =
                         RefHelper.FieldRef<object, int>.Create(

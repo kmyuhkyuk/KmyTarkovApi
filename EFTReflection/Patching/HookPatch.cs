@@ -241,9 +241,11 @@ namespace EFTReflection.Patching
                 if ( /*patchNames.Contains(parameterName) ||*/
                     parameterName.StartsWith("__", StringComparison.Ordinal) ||
                     (parameterName.StartsWith("___", StringComparison.Ordinal) &&
-                     originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null) ||
+                     originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null) || 
                     originalParameters.Any(x =>
-                        x.Name == parameterName && (x.ParameterType == hookDelegateParameter.ParameterType || hookDelegateParameter.ParameterType.IsAssignableFrom(x.ParameterType))))
+                        x.Name == parameterName && (x.ParameterType == hookDelegateParameter.ParameterType ||
+                                                    x.ParameterType.IsAssignableFrom(
+                                                        hookDelegateParameter.ParameterType))))
                 {
                     list.Add(delegateParameters[i]);
                 }

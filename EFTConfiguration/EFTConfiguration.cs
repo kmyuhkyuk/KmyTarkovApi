@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.UI;
@@ -176,9 +177,9 @@ namespace EFTConfiguration
 
                 action?.Invoke(icon, downloadUrl, downloads, version);
             }
-            catch (SocketException)
+            catch (Exception e)
             {
-                Console.WriteLine("Crawler Network error");
+                Console.WriteLine($"CrawlerHelper: {e.Message}");
             }
         }
 

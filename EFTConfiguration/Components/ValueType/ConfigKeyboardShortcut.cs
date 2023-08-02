@@ -65,7 +65,7 @@ namespace EFTConfiguration.Components.ValueType
         {
             var bindKeyCode = KeyCode.None;
 
-            bindName.text = CustomLocalizedHelper.Localized(ModName, PressNameKey);
+            bindName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, PressNameKey);
 
             while (bindKeyCode == KeyCode.None)
             {
@@ -99,7 +99,7 @@ namespace EFTConfiguration.Components.ValueType
         {
             base.UpdateLocalized();
 
-            clearName.text = CustomLocalizedHelper.Localized(ModName, ClearNameKey);
+            clearName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ClearNameKey);
         }
 
         private void OnDisable()

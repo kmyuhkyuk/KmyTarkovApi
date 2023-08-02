@@ -159,6 +159,10 @@ namespace EFTApi
             {
                 AkiVersion = new Version("3.5.6");
             }
+            else
+            {
+                AkiVersion = new Version("0.0.0");
+            }
 
             /*Is230Up = gameVersion > new Version("0.12.12.17107");
             Is231Up = gameVersion > new Version("0.12.12.17349");

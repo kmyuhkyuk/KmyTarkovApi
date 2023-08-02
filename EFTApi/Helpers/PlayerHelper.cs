@@ -461,7 +461,7 @@ namespace EFTApi.Helpers
             public readonly RefHelper.FieldRef<DamageInfo, object> RefPlayer;
 
             /// <summary>
-            /// DamageInfo.Player.iPlayer
+            ///     DamageInfo.Player.iPlayer
             /// </summary>
             public readonly RefHelper.PropertyRef<object, IAIDetails> RefIPlayer;
 

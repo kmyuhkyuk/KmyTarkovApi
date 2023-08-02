@@ -2,7 +2,7 @@
 
 namespace EFTUtils
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTUtils", "kmyuhkyuk-EFTUtils", "1.1.4")]
+    [BepInPlugin("com.kmyuhkyuk.EFTUtils", "kmyuhkyuk-EFTUtils", "1.1.5")]
     public class EFTUtilsPlugin : BaseUnityPlugin
     {
     }

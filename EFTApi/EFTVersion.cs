@@ -34,13 +34,7 @@ namespace EFTApi
 
             GameVersion = gameVersion;
 
-            if (gameVersion > new Version("0.13.0.23399"))
-            {
-                AkiVersion = AppDomain.CurrentDomain.GetAssemblies()
-                    .Single(x => x.ManifestModule.Name == "aki-core.dll")
-                    .GetTypes().Single(x => x.Name == "AkiCorePlugin").GetCustomAttribute<BepInPlugin>().Version;
-            }
-            else if (gameVersion >= new Version("0.12.12.17107") && gameVersion < new Version("0.12.12.17349"))
+            if (gameVersion >= new Version("0.12.12.17107") && gameVersion < new Version("0.12.12.17349"))
             {
                 AkiVersion = new Version("2.3.0");
             }
@@ -91,6 +85,16 @@ namespace EFTApi
             else if (gameVersion >= new Version("0.13.0.23043") && gameVersion < new Version("0.13.0.23399"))
             {
                 AkiVersion = new Version("3.5.6");
+            }
+            else if (gameVersion >= new Version("0.13.0.23399") && gameVersion < new Version("0.13.1.25206"))
+            {
+                AkiVersion = new Version("3.5.7");
+            }
+            else if (gameVersion > new Version("0.13.0.23399"))
+            {
+                AkiVersion = AppDomain.CurrentDomain.GetAssemblies()
+                    .Single(x => x.ManifestModule.Name == "aki-core.dll")
+                    .GetTypes().Single(x => x.Name == "AkiCorePlugin").GetCustomAttribute<BepInPlugin>().Version;
             }
             else
             {

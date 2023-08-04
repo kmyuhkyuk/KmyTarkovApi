@@ -61,13 +61,13 @@ namespace EFTConfiguration.Helpers
                 .GetAttributeValue("content", string.Empty));
         }
 
-        public static string GetModDownloadUrl(HtmlDocument doc)
+        public static string GetModDownloadURL(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/nav/ul/li/a")
                 .GetAttributeValue("href", string.Empty);
         }
 
-        public static string GetModIconUrl(HtmlDocument doc)
+        public static string GetModIconURL(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[1]/img")
                 ?.GetAttributeValue("src", string.Empty);
@@ -75,7 +75,7 @@ namespace EFTConfiguration.Helpers
 
         public static async Task<Sprite> GetModIcon(HtmlDocument doc)
         {
-            var url = GetModIconUrl(doc);
+            var url = GetModIconURL(doc);
 
             if (string.IsNullOrEmpty(url))
                 return null;

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Logging;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.UI;
+using HtmlAgilityPack;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +44,10 @@ namespace EFTConfiguration
         private Transform _searchPanelTransform;
 
         private RectTransform _windowRect;
+
+#if !UNITY_EDITOR
+        private static readonly ManualLogSource LogSource = new ManualLogSource("EFTConfiguration");
+#endif
 
         private bool State
         {
@@ -127,19 +133,20 @@ namespace EFTConfiguration
                 pluginInfo.isCore = configuration.IsCore;
                 pluginInfo.modName = configuration.ModName;
 
-                var modUrl = configuration.ConfigurationPluginAttributes.ModUrl;
+                var modURL = configuration.ConfigurationPluginAttributes.ModURL;
 
-                var hasUrl = Uri.IsWellFormedUriString(modUrl, UriKind.Absolute);
+                var hasURL = Uri.IsWellFormedUriString(modURL, UriKind.Absolute);
 
-                pluginInfo.hasModUrl = hasUrl;
-                pluginInfo.modUrl = modUrl;
+                pluginInfo.hasModURL = hasURL;
+                pluginInfo.modURL = modURL;
                 pluginInfo.toggleGroup = pluginInfosToggleGroup;
 
                 pluginInfo.Init(configuration.ModVersion);
 
-                if (hasUrl && modUrl.StartsWith("https://hub.sp-tarkov.com/files/file"))
+                if (hasURL && modURL.StartsWith("https://hub.sp-tarkov.com/files/file"))
                 {
-                    BindWeb(modUrl, pluginInfo.BindWeb);
+                    BindWeb(modURL, pluginInfo.BindIcon, pluginInfo.BindURL, pluginInfo.BindDownloads,
+                        pluginInfo.BindVersion);
                 }
 
                 var config = Instantiate(EFTConfigurationPlugin.PrefabManager.config, configsRoot)
@@ -159,25 +166,54 @@ namespace EFTConfiguration
             UpdateLocalized();
         }
 
-        private static async void BindWeb(string modUrl, Action<Sprite, string, int, Version> action)
+        private static async void BindWeb(string modURL, Action<Sprite> bindIcon, Action<string> bindURL,
+            Action<int> bindDownloads, Action<Version> bindVersion)
         {
+            HtmlDocument doc;
             try
             {
-                var doc = await CrawlerHelper.CreateHtmlDocument(modUrl);
-
-                var downloadUrl = CrawlerHelper.GetModDownloadUrl(doc);
-
-                var downloads = CrawlerHelper.GetModDownloads(doc);
-
-                var version = CrawlerHelper.GetModVersion(doc);
-
-                var icon = await CrawlerHelper.GetModIcon(doc);
-
-                action?.Invoke(icon, downloadUrl, downloads, version);
+                doc = await CrawlerHelper.CreateHtmlDocument(modURL);
             }
             catch (Exception e)
             {
                 Console.WriteLine($"EFTConfiguration.BindWeb: {e.Message}");
+                return;
+            }
+
+            try
+            {
+                bindIcon(await CrawlerHelper.GetModIcon(doc));
+            }
+            catch (Exception e)
+            {
+                LogSource.LogWarning(e.Message);
+            }
+
+            try
+            {
+                bindURL(CrawlerHelper.GetModDownloadURL(doc));
+            }
+            catch (Exception e)
+            {
+                LogSource.LogWarning(e.Message);
+            }
+
+            try
+            {
+                bindDownloads(CrawlerHelper.GetModDownloads(doc));
+            }
+            catch (Exception e)
+            {
+                LogSource.LogWarning(e.Message);
+            }
+
+            try
+            {
+                bindVersion(CrawlerHelper.GetModVersion(doc));
+            }
+            catch (Exception e)
+            {
+                LogSource.LogWarning(e.Message);
             }
         }
 

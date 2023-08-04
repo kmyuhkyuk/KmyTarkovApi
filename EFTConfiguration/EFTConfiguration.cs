@@ -176,7 +176,7 @@ namespace EFTConfiguration
             }
             catch (Exception e)
             {
-                Console.WriteLine($"EFTConfiguration.BindWeb: {e.Message}");
+                LogSource.LogWarning(e.Message);
                 return;
             }
 

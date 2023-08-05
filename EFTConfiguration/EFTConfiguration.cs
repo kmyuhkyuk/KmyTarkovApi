@@ -169,18 +169,23 @@ namespace EFTConfiguration
         private static async void BindWeb(string modURL, Action<Sprite> bindIcon, Action<string> bindURL,
             Action<int> bindDownloads, Action<Version> bindVersion)
         {
-            HtmlDocument doc;
             try
             {
                 var doc = await CrawlerHelper.CreateHtmlDocument(modURL);
 
-                action?.Invoke(icon, downloadUrl, downloads, version);
+                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
+                bindURL(CrawlerHelper.GetModDownloadURL(doc));
+                bindDownloads(CrawlerHelper.GetModDownloads(doc));
+                bindVersion(CrawlerHelper.GetModVersion(doc));
             }
             catch (Exception e)
             {
-                Console.WriteLine($"EFTConfiguration.BindWeb: {e.Message}");
+                LogSource.LogWarning(e.Message);
+
+                bindIcon(await CrawlerHelper.GetModIcon(modURL));
             }
         }
+
 
         private void SwitchConfiguration(PluginInfo pluginInfo)
         {

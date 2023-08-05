@@ -157,7 +157,7 @@ namespace EFTConfiguration
 
             if (!hasAttributes)
             {
-                attributes.ModUrl = FileVersionInfo.GetVersionInfo(pluginInfo.Location).CompanyName;
+                attributes.ModURL = FileVersionInfo.GetVersionInfo(pluginInfo.Location).CompanyName;
                 attributes.HidePlugin = type.GetCustomAttributes<BrowsableAttribute>().Any(x => !x.Browsable);
             }
 

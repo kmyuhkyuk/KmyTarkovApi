@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,10 +15,14 @@ namespace EFTConfiguration.Helpers
     {
         private static readonly string CachePath = Path.Combine(EFTConfigurationPlugin.ModPath, "cache");
 
+        private static readonly string CacheFilePath = Path.Combine(CachePath, "cache.json");
+
         private static readonly Dictionary<string, Task<Texture2D>> IconCacheFile =
             new Dictionary<string, Task<Texture2D>>();
 
         private static readonly Dictionary<string, Sprite> IconCache = new Dictionary<string, Sprite>();
+
+        private static readonly Dictionary<string, string> IconURL;
 
         static CrawlerHelper()
         {
@@ -33,6 +38,31 @@ namespace EFTConfiguration.Helpers
             foreach (var file in files)
             {
                 IconCacheFile.Add(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
+            }
+
+            var cacheFileInfo = new FileInfo(CacheFilePath);
+
+            if (!cacheFileInfo.Exists)
+            {
+                IconURL = new Dictionary<string, string>();
+            }
+            else
+            {
+                using (var stream = new StreamReader(cacheFileInfo.FullName))
+                {
+                    IconURL = JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd());
+                }
+            }
+        }
+
+        private static void Save()
+        {
+            using (var fs = new FileStream(CacheFilePath, FileMode.Create))
+            {
+                using (var write = new StreamWriter(fs))
+                {
+                    write.Write(JsonConvert.SerializeObject(IconURL));
+                }
             }
         }
 
@@ -61,25 +91,53 @@ namespace EFTConfiguration.Helpers
                 .GetAttributeValue("content", string.Empty));
         }
 
-        public static string GetModDownloadUrl(HtmlDocument doc)
+        public static string GetModDownloadURL(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/nav/ul/li/a")
                 .GetAttributeValue("href", string.Empty);
         }
 
-        public static string GetModIconUrl(HtmlDocument doc)
+        public static string GetModIconURL(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[1]/img")
                 ?.GetAttributeValue("src", string.Empty);
         }
 
-        public static async Task<Sprite> GetModIcon(HtmlDocument doc)
+        public static async Task<Sprite> GetModIcon(HtmlDocument doc, string modURL)
         {
-            var url = GetModIconUrl(doc);
+            var url = GetModIconURL(doc);
 
             if (string.IsNullOrEmpty(url))
                 return null;
 
+            if (IconURL.TryGetValue(url, out var iconURL))
+            {
+                if (iconURL != url)
+                {
+                    IconURL.Remove(modURL);
+                    IconURL.Add(modURL, url);
+                }
+            }
+            else
+            {
+                IconURL.Add(modURL, url);
+            }
+
+            Save();
+
+            return await LoadModIcon(url);
+        }
+
+        public static async Task<Sprite> GetModIcon(string modURL)
+        {
+            if (string.IsNullOrEmpty(modURL))
+                return null;
+
+            return IconURL.TryGetValue(modURL, out var url) ? await LoadModIcon(url) : null;
+        }
+
+        private static async Task<Sprite> LoadModIcon(string url)
+        {
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
             if (IconCache.TryGetValue(fileName, out var cacheSprite))

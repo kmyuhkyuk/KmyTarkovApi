@@ -19,11 +19,11 @@ namespace EFTConfiguration.UI
 
         public bool fistPluginInfo;
 
-        public bool hasModUrl;
+        public bool hasModURL;
 
         public string modName;
 
-        public string modUrl;
+        public string modURL;
 
         public ToggleGroup toggleGroup;
 
@@ -64,9 +64,9 @@ namespace EFTConfiguration.UI
                 }
             });
 
-            if (hasModUrl)
+            if (hasModURL)
             {
-                mod.onClick.AddListener(() => Application.OpenURL(modUrl));
+                mod.onClick.AddListener(() => Application.OpenURL(modURL));
             }
 
             if (fistPluginInfo)
@@ -130,16 +130,26 @@ namespace EFTConfiguration.UI
             version.text = modVersion.ToString();
         }
 
-        public void BindWeb(Sprite modIcon, string modDownloadUrl, int modDownloads, Version modVersion)
+        public void BindIcon(Sprite modIcon)
         {
             if (modIcon != null)
             {
                 icon.sprite = modIcon;
             }
+        }
 
-            modDownload.onClick.AddListener(() => Application.OpenURL(modDownloadUrl));
+        public void BindURL(string modDownloadURL)
+        {
+            modDownload.onClick.AddListener(() => Application.OpenURL(modDownloadURL));
+        }
+
+        public void BindDownloads(int modDownloads)
+        {
             downloads.text = modDownloads.ToString();
+        }
 
+        public void BindVersion(Version modVersion)
+        {
             if (modVersion > _modVersion)
             {
                 toggle.onValueChanged.AddListener(value =>

@@ -116,14 +116,14 @@ namespace EFTConfiguration.Helpers
                 {
                     IconURL.Remove(modURL);
                     IconURL.Add(modURL, url);
+                    Save();
                 }
             }
             else
             {
                 IconURL.Add(modURL, url);
+                Save();
             }
-
-            Save();
 
             return await LoadModIcon(url);
         }

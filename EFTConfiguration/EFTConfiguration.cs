@@ -185,7 +185,6 @@ namespace EFTConfiguration
             }
         }
 
-
         private void SwitchConfiguration(PluginInfo pluginInfo)
         {
             SwitchConfiguration(_configuration.Single(x => x.Key == pluginInfo), false);

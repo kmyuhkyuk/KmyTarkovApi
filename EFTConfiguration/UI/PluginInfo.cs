@@ -138,13 +138,7 @@ namespace EFTConfiguration.UI
             }
         }
 
-        public void BindURL(string modDownloadURL)
-        {
-            modDownload.onClick.AddListener(() => Application.OpenURL(modDownloadURL));
-        }
-
-        public void BindDownloads(int modDownloads)
-        {
+            modDownload.onClick.AddListener(() => Application.OpenURL(modDownloadUrl));
             downloads.text = modDownloads.ToString();
         }
 

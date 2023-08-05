@@ -172,10 +172,10 @@ namespace EFTConfiguration
             {
                 var doc = await CrawlerHelper.CreateHtmlDocument(modURL);
 
-                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
                 bindURL(CrawlerHelper.GetModDownloadURL(doc));
                 bindDownloads(CrawlerHelper.GetModDownloads(doc));
                 bindVersion(CrawlerHelper.GetModVersion(doc));
+                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
             }
             catch (Exception e)
             {

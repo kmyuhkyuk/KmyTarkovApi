@@ -4,7 +4,6 @@ using System.Linq;
 using BepInEx.Logging;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.UI;
-using HtmlAgilityPack;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

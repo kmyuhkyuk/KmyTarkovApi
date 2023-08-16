@@ -104,7 +104,7 @@ namespace EFTConfiguration.Helpers
                 ?.GetAttributeValue("src", string.Empty);
         }
 
-        public static Sprite GetModIcon(HtmlDocument doc, string modURL)
+        public static async Task<Sprite> GetModIcon(HtmlDocument doc, string modURL)
         {
             var url = GetModIconURL(doc);
 
@@ -115,26 +115,30 @@ namespace EFTConfiguration.Helpers
 
             Save();
 
-            return LoadModIcon(url);
+            return await LoadModIcon(url);
         }
 
-        public static Sprite GetModIcon(string modURL)
+        public static async Task<Sprite> GetModIcon(string modURL)
         {
             if (string.IsNullOrEmpty(modURL))
                 return null;
 
-            return IconURL.TryGetValue(modURL, out var url) ? LoadModIcon(url) : null;
+            return IconURL.TryGetValue(modURL, out var url) ? await LoadModIcon(url) : null;
         }
 
-        private static Sprite LoadModIcon(string url)
+        private static async Task<Sprite> LoadModIcon(string url)
         {
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
-            return IconCache.GetOrAdd(fileName, key =>
+            if (IconCache.TryGetValue(fileName, out var cacheSprite))
+            {
+                return cacheSprite;
+            }
+            else
             {
                 var cacheTexture = IconCacheFile.GetOrAdd(fileName, key2 => GetAsyncTexture(url));
 
-                var texture = cacheTexture.GetAwaiter().GetResult();
+                var texture = await cacheTexture;
 
                 return IconCache.GetOrAdd(fileName, key3 =>
                 {
@@ -143,7 +147,7 @@ namespace EFTConfiguration.Helpers
                     return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
                         new Vector2(0.5f, 0.5f));
                 });
-            });
+            }
         }
 
         private static async Task<Texture2D> GetAsyncTexture(string url)

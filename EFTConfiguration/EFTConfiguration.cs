@@ -236,13 +236,13 @@ namespace EFTConfiguration
                 bindURL(CrawlerHelper.GetModDownloadURL(doc));
                 bindDownloads(CrawlerHelper.GetModDownloads(doc));
                 bindVersion(CrawlerHelper.GetModVersion(doc));
-                bindIcon(CrawlerHelper.GetModIcon(doc, modURL));
+                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
             }
             catch (Exception e)
             {
                 LogSource.LogWarning(e.Message);
 
-                bindIcon(CrawlerHelper.GetModIcon(modURL));
+                bindIcon(await CrawlerHelper.GetModIcon(modURL));
             }
         }
 

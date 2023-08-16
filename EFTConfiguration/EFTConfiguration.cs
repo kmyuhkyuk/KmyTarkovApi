@@ -158,10 +158,10 @@ namespace EFTConfiguration
             switch (log.EventArgs.Level)
             {
                 case LogLevel.Fatal:
-                    color = "#FF0000";
+                    color = "#5F0000";
                     break;
                 case LogLevel.Error:
-                    color = "#5F0000";
+                    color = "#FF0000";
                     break;
                 case LogLevel.Warning:
                     color = "#FFFF00";
@@ -171,12 +171,12 @@ namespace EFTConfiguration
                     break;
                 case LogLevel.Info:
                 case LogLevel.Debug:
-                    color = "#808080";
+                    color = "#C0C0C0";
                     break;
                 case LogLevel.None:
                 case LogLevel.All:
                 default:
-                    color = "#C0C0C0";
+                    color = "#808080";
                     break;
             }
 

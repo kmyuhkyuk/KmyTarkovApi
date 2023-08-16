@@ -15,7 +15,7 @@ namespace EFTUtils
             }
             else
             {
-                hexColor = string.Concat("#", ColorUtility.ToHtmlStringRGBA(color));
+                hexColor = $"#{ColorUtility.ToHtmlStringRGBA(color)}";
 
                 HexColorPool.Add(color, hexColor);
 

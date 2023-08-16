@@ -154,9 +154,8 @@ namespace EFTConfiguration.UI
             {
                 toggle.onValueChanged.AddListener(value =>
                 {
-                    version.text = string.Concat("<color=yellow>", _modVersion, "</color>",
-                        value ? "<color=black>" : "<color=white>", " < ", "</color>", "<color=green>", modVersion,
-                        "</color>");
+                    version.text =
+                        $"<color=yellow>{_modVersion}</color><color={(value ? "black" : "white")}<</color><color=green>{modVersion}</color>";
                 });
             }
         }

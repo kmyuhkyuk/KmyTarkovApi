@@ -1,6 +1,6 @@
 ﻿#if !UNITY_EDITOR
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,12 +17,13 @@ namespace EFTConfiguration.Helpers
 
         private static readonly string CacheFilePath = Path.Combine(CachePath, "cache.json");
 
-        private static readonly Dictionary<string, Task<Texture2D>> IconCacheFile =
-            new Dictionary<string, Task<Texture2D>>();
+        private static readonly ConcurrentDictionary<string, Task<Texture2D>> IconCacheFile =
+            new ConcurrentDictionary<string, Task<Texture2D>>();
 
-        private static readonly Dictionary<string, Sprite> IconCache = new Dictionary<string, Sprite>();
+        private static readonly ConcurrentDictionary<string, Sprite> IconCache =
+            new ConcurrentDictionary<string, Sprite>();
 
-        private static readonly Dictionary<string, string> IconURL;
+        private static readonly ConcurrentDictionary<string, string> IconURL;
 
         static CrawlerHelper()
         {
@@ -37,20 +38,20 @@ namespace EFTConfiguration.Helpers
 
             foreach (var file in files)
             {
-                IconCacheFile.Add(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
+                IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
             }
 
             var cacheFileInfo = new FileInfo(CacheFilePath);
 
             if (!cacheFileInfo.Exists)
             {
-                IconURL = new Dictionary<string, string>();
+                IconURL = new ConcurrentDictionary<string, string>();
             }
             else
             {
                 using (var stream = new StreamReader(cacheFileInfo.FullName))
                 {
-                    IconURL = JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd());
+                    IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(stream.ReadToEnd());
                 }
             }
         }
@@ -103,78 +104,46 @@ namespace EFTConfiguration.Helpers
                 ?.GetAttributeValue("src", string.Empty);
         }
 
-        public static async Task<Sprite> GetModIcon(HtmlDocument doc, string modURL)
+        public static Sprite GetModIcon(HtmlDocument doc, string modURL)
         {
             var url = GetModIconURL(doc);
 
             if (string.IsNullOrEmpty(url))
                 return null;
 
-            if (IconURL.TryGetValue(url, out var iconURL))
-            {
-                if (iconURL != url)
-                {
-                    IconURL.Remove(modURL);
-                    IconURL.Add(modURL, url);
-                    Save();
-                }
-            }
-            else
-            {
-                IconURL.Add(modURL, url);
-                Save();
-            }
+            IconURL.AddOrUpdate(modURL, url, (key, value) => url);
 
-            return await LoadModIcon(url);
+            Save();
+
+            return LoadModIcon(url);
         }
 
-        public static async Task<Sprite> GetModIcon(string modURL)
+        public static Sprite GetModIcon(string modURL)
         {
             if (string.IsNullOrEmpty(modURL))
                 return null;
 
-            return IconURL.TryGetValue(modURL, out var url) ? await LoadModIcon(url) : null;
+            return IconURL.TryGetValue(modURL, out var url) ? LoadModIcon(url) : null;
         }
 
-        private static async Task<Sprite> LoadModIcon(string url)
+        private static Sprite LoadModIcon(string url)
         {
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
-            if (IconCache.TryGetValue(fileName, out var cacheSprite))
+            return IconCache.GetOrAdd(fileName, key =>
             {
-                return cacheSprite;
-            }
-            else
-            {
-                Texture2D texture;
-                if (IconCacheFile.TryGetValue(fileName, out var cacheTexture))
+                var cacheTexture = IconCacheFile.GetOrAdd(fileName, key2 => GetAsyncTexture(url));
+
+                var texture = cacheTexture.GetAwaiter().GetResult();
+
+                return IconCache.GetOrAdd(fileName, key3 =>
                 {
-                    texture = await cacheTexture;
-                }
-                else
-                {
-                    cacheTexture = GetAsyncTexture(url);
-
-                    IconCacheFile.Add(fileName, cacheTexture);
-
-                    texture = await cacheTexture;
-
-                    if (texture == null)
-                        return null;
-
                     File.WriteAllBytes(Path.Combine(CachePath, $"{fileName}.png"), texture.EncodeToPNG());
-                }
 
-                if (!IconCache.TryGetValue(fileName, out var sprite))
-                {
-                    sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                    return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
                         new Vector2(0.5f, 0.5f));
-
-                    IconCache.Add(fileName, sprite);
-                }
-
-                return sprite;
-            }
+                });
+            });
         }
 
         private static async Task<Texture2D> GetAsyncTexture(string url)

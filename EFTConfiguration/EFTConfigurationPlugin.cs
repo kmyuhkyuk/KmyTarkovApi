@@ -9,9 +9,11 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
+using BepInEx.Logging;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.Patches;
+using Force.Crc32;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,6 +38,8 @@ namespace EFTConfiguration
 
         private readonly (string, Type)[] _eftConfigurationPluginAttributesFieldsTuple =
             typeof(EFTConfigurationPluginAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
+
+        private static readonly ManualLogSource ModVerifyLogger = BepInEx.Logging.Logger.CreateLogSource("ModVerify");
 
         internal static SettingsData SetData { get; private set; }
 
@@ -72,7 +76,10 @@ namespace EFTConfiguration
             CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
             SetData.KeyLanguage.SettingChanged += (value, value2) =>
                 CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
+
+            BepInEx.Logging.Logger.Listeners.Add(new EFTLogListener());
         }
+
 
         private void Start()
         {
@@ -109,6 +116,9 @@ namespace EFTConfiguration
 
             foreach (var pluginInfo in PluginInfos.Values)
             {
+                ModVerifyLogger.LogMessage(
+                    $"{Path.GetFileNameWithoutExtension(pluginInfo.Location)} Version:{pluginInfo.Metadata.Version} CRC32:{(string.IsNullOrEmpty(pluginInfo.Location) ? "null" : Crc32CAlgorithm.Compute(File.ReadAllBytes(pluginInfo.Location)).ToString("X"))}");
+
                 if (pluginInfo == Info)
                     continue;
 
@@ -416,28 +426,6 @@ namespace EFTConfiguration
                 KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
                 KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
                 KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29999);
-
-                //Test
-                /*const string testSettings = "Test Settings";
-                var eftConfigurationAttributes = new EFTConfigurationAttributes { Advanced = true };
-
-                configFile.Bind<bool>(testSettings, "Bool", false, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<int>(testSettings, "Int", 0, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<int>(testSettings, "Int Slider", 0, new ConfigDescription(string.Empty, new AcceptableValueRange<int>(0, 100), eftConfigurationAttributes));
-                configFile.Bind<float>(testSettings, "Float", 0f, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<float>(testSettings, "Float Slider", 0f, new ConfigDescription(string.Empty, new AcceptableValueRange<float>(0f, 100f), eftConfigurationAttributes));
-                configFile.Bind<string>(testSettings, "String", string.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<string>(testSettings, "String Dropdown", string.Empty, new ConfigDescription("123", new AcceptableValueList<string>("123", "234"), eftConfigurationAttributes));
-                configFile.Bind<Vector2>(testSettings, "Vector2", Vector2.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<Vector3>(testSettings, "Vector3", Vector3.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<Vector4>(testSettings, "Vector4", Vector4.zero, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<Quaternion>(testSettings, "Quaternion", Quaternion.identity, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<Color>(testSettings, "Color", Color.white, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<CustomLocalizedHelper.Language>(testSettings, "Enum", CustomLocalizedHelper.Language.En, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind<KeyboardShortcut>(testSettings, "KeyboardShortcut", KeyboardShortcut.Empty, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-
-                configFile.Bind<double>(testSettings, "Double", 0d, new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-                configFile.Bind(testSettings, "Action", string.Empty, new ConfigDescription(string.Empty, null, new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work")}));*/
             }
         }
     }

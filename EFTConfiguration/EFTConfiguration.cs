@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BepInEx.Logging;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.UI;
@@ -13,6 +14,8 @@ namespace EFTConfiguration
     public class EFTConfiguration : MonoBehaviour
     {
         private readonly Dictionary<PluginInfo, Config> _configuration = new Dictionary<PluginInfo, Config>();
+
+        private readonly StringBuilder stringBuilder = new StringBuilder();
 
         private KeyValuePair<PluginInfo, Config> _currentConfiguration;
 
@@ -36,16 +39,22 @@ namespace EFTConfiguration
 
         [SerializeField] private TMP_Text advancedName;
 
+        [SerializeField] private TMP_Text console;
+
         [SerializeField] private Toggle advanced;
 
         [SerializeField] private Button searchButton;
 
+        [SerializeField] private Button consoleButton;
+
         private Transform _searchPanelTransform;
+
+        private Transform _consolePanelTransform;
 
         private RectTransform _windowRect;
 
 #if !UNITY_EDITOR
-        private static readonly ManualLogSource LogSource = new ManualLogSource("EFTConfiguration");
+        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("EFTConfiguration");
 #endif
 
         private bool State
@@ -77,9 +86,23 @@ namespace EFTConfiguration
             _windowRect = windowRoot.GetComponent<RectTransform>();
 
             _searchPanelTransform = search.transform.parent;
+            _consolePanelTransform = console.transform.parent.parent.parent.parent;
 
             search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
             advanced.isOn = EFTConfigurationPlugin.SetData.KeyAdvanced.Value;
+
+            foreach (var log in EFTLogListener.LogList)
+            {
+                stringBuilder.Append(LogToString(log));
+            }
+
+            console.text = stringBuilder.ToString();
+
+            EFTLogListener.OnLog += log =>
+            {
+                stringBuilder.Append(LogToString(log));
+                console.text = stringBuilder.ToString();
+            };
 
             EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>
                 search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
@@ -105,6 +128,13 @@ namespace EFTConfiguration
                 searchPanel.SetActive(!searchPanel.activeSelf);
             });
 
+            consoleButton.onClick.AddListener(() =>
+            {
+                var consolePanel = _consolePanelTransform.gameObject;
+
+                consolePanel.SetActive(!consolePanel.activeSelf);
+            });
+
             closeButton.onClick.AddListener(() => State = false);
 
             SwitchPluginInfo = SwitchConfiguration;
@@ -120,6 +150,37 @@ namespace EFTConfiguration
             {
                 State = !State;
             }
+        }
+
+        private static string LogToString(EFTLogListener.LogData log)
+        {
+            string color;
+            switch (log.EventArgs.Level)
+            {
+                case LogLevel.Fatal:
+                    color = "#FF0000";
+                    break;
+                case LogLevel.Error:
+                    color = "#5F0000";
+                    break;
+                case LogLevel.Warning:
+                    color = "#FFFF00";
+                    break;
+                case LogLevel.Message:
+                    color = "#FFFFFF";
+                    break;
+                case LogLevel.Info:
+                case LogLevel.Debug:
+                    color = "#808080";
+                    break;
+                case LogLevel.None:
+                case LogLevel.All:
+                default:
+                    color = "#C0C0C0";
+                    break;
+            }
+
+            return $"<color={color}>{log.EventArgs.ToStringLine()}</color>";
         }
 
         private void CreateUI()
@@ -175,13 +236,13 @@ namespace EFTConfiguration
                 bindURL(CrawlerHelper.GetModDownloadURL(doc));
                 bindDownloads(CrawlerHelper.GetModDownloads(doc));
                 bindVersion(CrawlerHelper.GetModVersion(doc));
-                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
+                bindIcon(CrawlerHelper.GetModIcon(doc, modURL));
             }
             catch (Exception e)
             {
                 LogSource.LogWarning(e.Message);
 
-                bindIcon(await CrawlerHelper.GetModIcon(modURL));
+                bindIcon(CrawlerHelper.GetModIcon(modURL));
             }
         }
 

@@ -96,12 +96,12 @@ namespace EFTConfiguration
                 stringBuilder.Append(LogToString(log));
             }
 
-            console.text = stringBuilder.ToString();
+            console.SetText(stringBuilder);
 
             EFTLogListener.OnLog += log =>
             {
                 stringBuilder.Append(LogToString(log));
-                console.text = stringBuilder.ToString();
+                console.SetText(stringBuilder);
             };
 
             EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>

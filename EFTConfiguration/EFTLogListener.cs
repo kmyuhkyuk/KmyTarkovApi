@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Logging;
 
 namespace EFTConfiguration
@@ -13,31 +12,31 @@ namespace EFTConfiguration
 
         private static readonly List<LogData> AllLog = new List<LogData>();
 
-        private static readonly HashSet<string> HideLog = new HashSet<string>();
-
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
+
+        private static bool _hideUpdateError;
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
         {
             var logArg = (string)eventArgs.Data;
 
-            if (HideLog.Contains(logArg))
-                return;
-
-            if (logArg.Contains(".Update ()") && (string)AllLog.Last().EventArgs.Data == logArg)
+            switch (_hideUpdateError)
             {
-                LogSource.LogError("Major Error, This method loop throw error in Update (), Now added to hidden list, Please contact dev");
+                case true when logArg.Contains(".Update ()"):
+                    return;
+                case false when logArg.Contains(".Update ()"):
+                    LogSource.LogError(
+                        "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
 
-                HideLog.Add(logArg);
+                    _hideUpdateError = true;
+                    break;
             }
-            else
-            {
-                var log = new LogData(sender, eventArgs);
 
-                AllLog.Add(log);
+            var log = new LogData(sender, eventArgs);
 
-                OnLog?.Invoke(log);
-            }
+            AllLog.Add(log);
+
+            OnLog?.Invoke(log);
         }
 
         public class LogData

@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Helpers;
@@ -10,6 +11,8 @@ namespace ConfigurationTest
     [BepInDependency("com.kmyuhkyuk.EFTConfiguration", "1.1.6")]
     public class ConfigurationTest : BaseUnityPlugin
     {
+        private bool _testLoopThrow;
+
         private ConfigurationTest()
         {
             const string testSettings = "Test Settings";
@@ -51,6 +54,19 @@ namespace ConfigurationTest
             Config.Bind(testSettings, "Action", string.Empty,
                 new ConfigDescription(string.Empty, null,
                     new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work") }));
+        }
+
+        private void Update()
+        {
+            if (_testLoopThrow)
+            {
+                Test();
+            }
+        }
+
+        private static void Test()
+        {
+            throw new NotImplementedException();
         }
 
         /*private void Start()

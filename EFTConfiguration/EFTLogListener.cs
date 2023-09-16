@@ -21,7 +21,8 @@ namespace EFTConfiguration
         {
             var logArg = (string)eventArgs.Data;
 
-            if (!_manyUpdateError && logArg.Contains(".Update ()") && ((string)AllLog.Last().Sender).Contains(".Update ()"))
+            if (!_manyUpdateError && logArg.Contains(".Update ()") &&
+                ((string)AllLog.Last().Sender).Contains(".Update ()"))
             {
                 LogSource.LogError(
                     "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");

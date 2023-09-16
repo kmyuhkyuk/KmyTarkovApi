@@ -21,7 +21,7 @@ namespace EFTConfiguration.Helpers
         internal static readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> LanguageList =
             new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
 
-        internal static event Action LanguageChange;
+        public static event Action LanguageChange;
 
         public enum Language
         {

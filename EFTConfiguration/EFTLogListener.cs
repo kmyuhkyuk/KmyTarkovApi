@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Logging;
 
 namespace EFTConfiguration
@@ -14,22 +15,18 @@ namespace EFTConfiguration
 
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
 
-        private static bool _hideUpdateError;
+        private static bool _manyUpdateError;
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
         {
             var logArg = (string)eventArgs.Data;
 
-            switch (_hideUpdateError)
+            if (!_manyUpdateError && logArg.Contains(".Update ()") && ((string)AllLog.Last().Sender).Contains(".Update ()"))
             {
-                case true when logArg.Contains(".Update ()"):
-                    return;
-                case false when logArg.Contains(".Update ()"):
-                    LogSource.LogError(
-                        "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
+                LogSource.LogError(
+                    "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
 
-                    _hideUpdateError = true;
-                    break;
+                _manyUpdateError = true;
             }
 
             var log = new LogData(sender, eventArgs);

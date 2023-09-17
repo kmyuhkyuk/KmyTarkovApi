@@ -11,10 +11,10 @@ namespace EFTConfiguration.Components.ValueType
         [SerializeField] private Toggle toggle;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, bool defaultValue, Action<bool> onValueChanged, bool hideRest, Func<bool> currentValue)
+            bool readOnly, bool defaultValue, Action<bool> onValueChanged, bool hideReset, Func<bool> currentValue)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
 
             toggle.onValueChanged.AddListener(new UnityAction<bool>(onValueChanged));
             toggle.interactable = !readOnly;

@@ -11,10 +11,11 @@ namespace EFTConfiguration.Components.ClassType
         [SerializeField] private TMP_InputField stringValue;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, string defaultValue, Action<string> onValueChanged, bool hideRest, Func<string> currentValue)
+            bool readOnly, string defaultValue, Action<string> onValueChanged, bool hideReset,
+            Func<string> currentValue)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
 
             stringValue.onEndEdit.AddListener(new UnityAction<string>(onValueChanged));
             stringValue.readOnly = readOnly;

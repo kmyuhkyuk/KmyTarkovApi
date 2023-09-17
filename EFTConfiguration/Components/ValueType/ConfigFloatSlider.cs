@@ -10,11 +10,11 @@ namespace EFTConfiguration.Components.ValueType
         [SerializeField] private TMP_InputField floatValue;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideRest, Func<float> currentValue,
+            bool readOnly, float defaultValue, Action<float> onValueChanged, bool hideReset, Func<float> currentValue,
             float min, float max)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue, min, max);
+                hideReset, currentValue, min, max);
 
             floatValue.onEndEdit.AddListener(value =>
             {

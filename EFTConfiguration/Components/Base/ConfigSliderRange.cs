@@ -9,14 +9,14 @@ namespace EFTConfiguration.Components.Base
         [SerializeField] protected Slider slider;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue, T min, T max)
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset, Func<T> currentValue, T min, T max)
         {
             slider.minValue = min.ToSingle(null);
             slider.maxValue = max.ToSingle(null);
             slider.interactable = !readOnly;
 
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
         }
     }
 }

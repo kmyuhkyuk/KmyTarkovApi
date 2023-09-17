@@ -10,11 +10,12 @@ namespace EFTConfiguration.Components
         [SerializeField] private TMP_InputField unknownValue;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
+            Func<object> currentValue,
             Type type)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue, type);
+                hideReset, currentValue, type);
 
             unknownValue.onEndEdit.AddListener(value =>
             {
@@ -26,11 +27,12 @@ namespace EFTConfiguration.Components
         }
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
+            Func<object> currentValue,
             Type type, Func<object, string> customToString, Func<string, object> customToObject)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue, type, customToString, customToObject);
+                hideReset, currentValue, type, customToString, customToObject);
 
             unknownValue.onEndEdit.AddListener(value =>
             {

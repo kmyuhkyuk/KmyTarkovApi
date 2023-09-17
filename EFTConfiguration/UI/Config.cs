@@ -78,7 +78,7 @@ namespace EFTConfiguration.UI
 
         private void UpdateConfigs()
         {
-            foreach (var config in _configDictionary.Values.SelectMany(x => x).OfType<ConfigRest>())
+            foreach (var config in _configDictionary.Values.SelectMany(x => x).OfType<ConfigReset>())
             {
                 config.UpdateCurrentValue();
             }
@@ -141,7 +141,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigToggle>();
 
                 configToggle.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configToggle);
@@ -156,7 +156,7 @@ namespace EFTConfiguration.UI
                         .GetComponent<ConfigIntSlider>();
 
                     configIntSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                         configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
 
                     AddConfig(section, configIntSlider);
@@ -167,7 +167,7 @@ namespace EFTConfiguration.UI
                         .GetComponent<ConfigInt>();
 
                     configInt.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                         configData.GetValue);
 
                     AddConfig(section, configInt);
@@ -183,7 +183,7 @@ namespace EFTConfiguration.UI
                         .GetComponent<ConfigFloatSlider>();
 
                     configFloatSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                         configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
 
                     AddConfig(section, configFloatSlider);
@@ -194,7 +194,7 @@ namespace EFTConfiguration.UI
                         .GetComponent<ConfigFloat>();
 
                     configFloat.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                        attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                         configData.GetValue);
 
                     AddConfig(section, configFloat);
@@ -223,7 +223,7 @@ namespace EFTConfiguration.UI
                                 .GetComponent<ConfigStringDropdown>();
 
                         configStringDropdown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                             configData.GetValue, acceptableValueList.AcceptableValues);
 
                         AddConfig(section, configStringDropdown);
@@ -234,7 +234,7 @@ namespace EFTConfiguration.UI
                             .GetComponent<ConfigString>();
 
                         configString.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                             configData.GetValue);
 
                         AddConfig(section, configString);
@@ -247,7 +247,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigVector2>();
 
                 configVector2.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configVector2);
@@ -258,7 +258,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigVector3>();
 
                 configVector3.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configVector3);
@@ -269,7 +269,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigVector4>();
 
                 configVector4.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configVector4);
@@ -280,7 +280,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigQuaternion>();
 
                 configQuaternion.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configQuaternion);
@@ -291,7 +291,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigColor>();
 
                 configColor.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configColor);
@@ -303,7 +303,7 @@ namespace EFTConfiguration.UI
                         .GetComponent<ConfigKeyboardShortcut>();
 
                 configKeyboardShortcut.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue);
 
                 AddConfig(section, configKeyboardShortcut);
@@ -314,7 +314,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigEnum>();
 
                 configEnum.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue, Enum.GetValues(type));
 
                 AddConfig(section, configEnum);
@@ -325,7 +325,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigUnknown>();
 
                 configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue, type);
 
                 AddConfig(section, configUnknown);
@@ -336,7 +336,7 @@ namespace EFTConfiguration.UI
                     .GetComponent<ConfigUnknown>();
 
                 configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideRest,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
                     configData.GetValue, type, attributes.CustomToString, attributes.CustomToObject);
 
                 AddConfig(section, configUnknown);

@@ -43,7 +43,7 @@ namespace EFTConfiguration
 
         internal static SettingsData SetData { get; private set; }
 
-        internal const string ModName = "kmyuhkyuk-EFTConfiguration";
+        internal static string ModName { get; private set; }
 
         internal static ConfigurationData[] Configurations { get; private set; }
 
@@ -55,6 +55,8 @@ namespace EFTConfiguration
 
         public EFTConfigurationPlugin()
         {
+            ModName = GetType().GetCustomAttribute<BepInPlugin>().Name;
+
             var canvas = _eftConfigurationPublic.GetComponent<Canvas>();
 
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -215,7 +217,7 @@ namespace EFTConfiguration
 
             foreach (var localized in localizedDirectory.GetFiles("*.json"))
             {
-                using (var stream = new StreamReader(localized.FullName))
+                using (var stream = File.OpenText(localized.FullName))
                 {
                     localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name),
                         JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd()));
@@ -356,7 +358,7 @@ namespace EFTConfiguration
                         ConfigurationAttributes.HideSetting = !(bool?)configurationManagerAttributesFieldInfos
                             .Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
                             .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.HideRest = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
+                        ConfigurationAttributes.HideReset = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
                                 x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
                             .GetValue(configurationManagerAttributes) ?? false;
                         ConfigurationAttributes.HideRange = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
@@ -406,6 +408,8 @@ namespace EFTConfiguration
 
             public readonly ConfigEntry<string> KeySearch;
 
+            public readonly ConfigEntry<string> KeySavePath;
+
             public readonly ConfigEntry<bool> KeyAdvanced;
 
             public readonly ConfigEntry<int> KeySortingOrder;
@@ -424,6 +428,9 @@ namespace EFTConfiguration
                     new ConfigDescription(
                         "Preferred language, if not available will tried English, if still not available than return original text"));
                 KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
+                KeySavePath = configFile.Bind<string>(mainSettings, "Save Path", Paths.BepInExRootPath,
+                    new ConfigDescription(
+                        "Save Console Log Path"));
                 KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
                 KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29999);
             }

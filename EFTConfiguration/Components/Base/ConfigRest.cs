@@ -6,25 +6,25 @@ using UnityEngine.UI;
 
 namespace EFTConfiguration.Components.Base
 {
-    public abstract class ConfigRest : ConfigBase
+    public abstract class ConfigReset : ConfigBase
     {
-        private const string RestNameKey = "Rest";
+        private const string ResetNameKey = "Reset";
 
-        [SerializeField] protected TMP_Text restName;
+        [SerializeField] protected TMP_Text ResetName;
 
-        [SerializeField] protected Button rest;
+        [SerializeField] protected Button Reset;
 
         public void Init<T>(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest)
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced);
 
-            rest.onClick.AddListener(() => onValueChanged(defaultValue));
-            rest.interactable = !readOnly;
+            Reset.onClick.AddListener(() => onValueChanged(defaultValue));
+            Reset.interactable = !readOnly;
 
-            if (hideRest)
+            if (hideReset)
             {
-                rest.gameObject.SetActive(false);
+                Reset.gameObject.SetActive(false);
             }
         }
 
@@ -33,7 +33,7 @@ namespace EFTConfiguration.Components.Base
 #if !UNITY_EDITOR
             base.UpdateLocalized();
 
-            restName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, RestNameKey);
+            ResetName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
 #endif
         }
 

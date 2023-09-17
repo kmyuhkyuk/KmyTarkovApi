@@ -19,15 +19,11 @@ namespace EFTConfiguration
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
         {
-            var logArg = (string)eventArgs.Data;
+            var logArg = eventArgs.Data.ToString();
 
-            if (!_manyUpdateError && logArg.Contains(".Update ()") &&
-                ((string)AllLog.Last().Sender).Contains(".Update ()"))
+            if (_manyUpdateError && logArg.Contains(".Update ()"))
             {
-                LogSource.LogError(
-                    "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
-
-                _manyUpdateError = true;
+                return;
             }
 
             var log = new LogData(sender, eventArgs);
@@ -35,6 +31,15 @@ namespace EFTConfiguration
             AllLog.Add(log);
 
             OnLog?.Invoke(log);
+
+            if (!_manyUpdateError && logArg.Contains(".Update ()") &&
+                AllLog.Last().Sender.ToString().Contains(".Update ()"))
+            {
+                LogSource.LogError(
+                    "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
+
+                _manyUpdateError = true;
+            }
         }
 
         public class LogData

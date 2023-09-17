@@ -33,12 +33,14 @@ namespace EFTConfiguration.Helpers
             {
                 directory.Create();
             }
-
-            var files = directory.GetFiles("*.png");
-
-            foreach (var file in files)
+            else
             {
-                IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
+                var files = directory.GetFiles("*.png");
+
+                foreach (var file in files)
+                {
+                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
+                }
             }
 
             var cacheFileInfo = new FileInfo(CacheFilePath);
@@ -49,20 +51,9 @@ namespace EFTConfiguration.Helpers
             }
             else
             {
-                using (var stream = new StreamReader(cacheFileInfo.FullName))
+                using (var stream = File.OpenText(cacheFileInfo.FullName))
                 {
                     IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(stream.ReadToEnd());
-                }
-            }
-        }
-
-        private static void Save()
-        {
-            using (var fs = new FileStream(CacheFilePath, FileMode.Create))
-            {
-                using (var write = new StreamWriter(fs))
-                {
-                    write.Write(JsonConvert.SerializeObject(IconURL));
                 }
             }
         }
@@ -113,7 +104,7 @@ namespace EFTConfiguration.Helpers
 
             IconURL.AddOrUpdate(modURL, url, (key, value) => url);
 
-            Save();
+            File.WriteAllText(CacheFilePath, JsonConvert.SerializeObject(IconURL));
 
             return await LoadModIcon(url);
         }

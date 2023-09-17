@@ -2,15 +2,15 @@
 
 namespace EFTConfiguration.Components.Base
 {
-    public abstract class ConfigGetValue<T> : ConfigRest
+    public abstract class ConfigGetValue<T> : ConfigReset
     {
         protected Func<T> GetValue;
 
         public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue)
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset, Func<T> currentValue)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest);
+                hideReset);
 
             GetValue = currentValue;
 
@@ -18,10 +18,11 @@ namespace EFTConfiguration.Components.Base
         }
 
         public void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue)
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
+            Func<object> currentValue)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, (T)defaultValue,
-                value => onValueChanged(value), hideRest, () => (T)currentValue());
+                value => onValueChanged(value), hideReset, () => (T)currentValue());
         }
     }
 }

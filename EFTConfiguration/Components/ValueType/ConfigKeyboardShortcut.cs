@@ -31,11 +31,11 @@ namespace EFTConfiguration.Components.ValueType
         private CancellationTokenSource _cancellationTokenSource;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, KeyboardShortcut defaultValue, Action<KeyboardShortcut> onValueChanged, bool hideRest,
+            bool readOnly, KeyboardShortcut defaultValue, Action<KeyboardShortcut> onValueChanged, bool hideReset,
             Func<KeyboardShortcut> currentValue)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
 
             bind.onClick.AddListener(() =>
             {

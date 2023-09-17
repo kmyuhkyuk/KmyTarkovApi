@@ -16,11 +16,11 @@ namespace EFTConfiguration.Components.ValueType
         [SerializeField] private TMP_InputField w;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, Quaternion defaultValue, Action<Quaternion> onValueChanged, bool hideRest,
+            bool readOnly, Quaternion defaultValue, Action<Quaternion> onValueChanged, bool hideReset,
             Func<Quaternion> currentValue)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
 
             x.onEndEdit.AddListener(value =>
             {

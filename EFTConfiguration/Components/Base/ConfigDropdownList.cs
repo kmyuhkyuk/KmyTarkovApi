@@ -11,7 +11,7 @@ namespace EFTConfiguration.Components.Base
         protected Array Values;
 
         public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideRest, Func<T> currentValue, T[] values)
+            bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset, Func<T> currentValue, T[] values)
         {
             Values = values;
 
@@ -23,11 +23,12 @@ namespace EFTConfiguration.Components.Base
             dropdown.interactable = !readOnly;
 
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
         }
 
         public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
+            Func<object> currentValue,
             Array values)
         {
             Values = values;
@@ -40,15 +41,16 @@ namespace EFTConfiguration.Components.Base
             dropdown.interactable = !readOnly;
 
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
         }
 
         public void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideRest, Func<object> currentValue,
+            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
+            Func<object> currentValue,
             T[] values)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, (T)defaultValue,
-                value => onValueChanged(value), hideRest, () => (T)currentValue(), values);
+                value => onValueChanged(value), hideReset, () => (T)currentValue(), values);
         }
     }
 }

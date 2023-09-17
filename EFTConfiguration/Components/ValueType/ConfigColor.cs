@@ -18,10 +18,10 @@ namespace EFTConfiguration.Components.ValueType
         [SerializeField] private Image colorImage;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, Color defaultValue, Action<Color> onValueChanged, bool hideRest, Func<Color> currentValue)
+            bool readOnly, Color defaultValue, Action<Color> onValueChanged, bool hideReset, Func<Color> currentValue)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue);
+                hideReset, currentValue);
 
             r.onValueChanged.AddListener(value =>
             {

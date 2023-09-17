@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using BepInEx.Logging;
@@ -41,11 +43,15 @@ namespace EFTConfiguration
 
         [SerializeField] private TMP_Text console;
 
+        [SerializeField] private ScrollRect consoleScrollRect;
+
         [SerializeField] private Toggle advanced;
 
         [SerializeField] private Button searchButton;
 
         [SerializeField] private Button consoleButton;
+
+        [SerializeField] private Button consoleSaveButton;
 
         private Transform _searchPanelTransform;
 
@@ -102,7 +108,26 @@ namespace EFTConfiguration
             {
                 stringBuilder.Append(LogToString(log));
                 console.SetText(stringBuilder);
+
+                if (consoleScrollRect.verticalNormalizedPosition == 0)
+                {
+                    StartCoroutine(ResetConsoleScrollRect());
+                }
             };
+
+            consoleSaveButton.onClick.AddListener(() =>
+            {
+                var path = EFTConfigurationPlugin.SetData.KeySavePath.Value;
+
+                if (!new DirectoryInfo(path).Exists)
+                {
+                    LogSource.LogError($"{path} Directory not Exists");
+
+                    return;
+                }
+
+                File.WriteAllText($"{path}/FullLogOutput.log", stringBuilder.ToString());
+            });
 
             EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>
                 search.text = EFTConfigurationPlugin.SetData.KeySearch.Value;
@@ -377,6 +402,13 @@ namespace EFTConfiguration
 
                 configuration.Key.gameObject.SetActive(change.Active);
             }
+        }
+
+        private IEnumerator ResetConsoleScrollRect()
+        {
+            yield return new WaitForEndOfFrame();
+
+            consoleScrollRect.verticalNormalizedPosition = 0;
         }
 #endif
     }

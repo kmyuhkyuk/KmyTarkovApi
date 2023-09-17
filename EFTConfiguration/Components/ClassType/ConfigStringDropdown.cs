@@ -6,11 +6,12 @@ namespace EFTConfiguration.Components.ClassType
     public class ConfigStringDropdown : ConfigDropdownList<string>
     {
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, string defaultValue, Action<string> onValueChanged, bool hideRest, Func<string> currentValue,
+            bool readOnly, string defaultValue, Action<string> onValueChanged, bool hideReset,
+            Func<string> currentValue,
             string[] values)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideRest, currentValue, values);
+                hideReset, currentValue, values);
 
             dropdown.onValueChanged.AddListener(value =>
             {

@@ -8,7 +8,7 @@ namespace EFTConfiguration.Components.Base
     {
         [SerializeField] protected TMP_Dropdown dropdown;
 
-        protected Array Values;
+        protected T[] Values;
 
         public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
             bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset, Func<T> currentValue, T[] values)
@@ -23,24 +23,6 @@ namespace EFTConfiguration.Components.Base
             dropdown.interactable = !readOnly;
 
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideReset, currentValue);
-        }
-
-        public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
-            bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
-            Func<object> currentValue,
-            Array values)
-        {
-            Values = values;
-
-            foreach (var value in values)
-            {
-                dropdown.options.Add(new TMP_Dropdown.OptionData(value.ToString()));
-            }
-
-            dropdown.interactable = !readOnly;
-
-            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
                 hideReset, currentValue);
         }
 

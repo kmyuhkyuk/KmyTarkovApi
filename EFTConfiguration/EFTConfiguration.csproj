@@ -109,6 +109,7 @@
     <Compile Include="Components\Base\ConfigBase.cs" />
     <Compile Include="Components\Base\ConfigDescription.cs" />
     <Compile Include="Components\Base\ConfigDropdownList.cs" />
+    <Compile Include="Components\Base\ConfigDropdownObjectList.cs" />
     <Compile Include="Components\Base\ConfigGetValue.cs" />
     <Compile Include="Components\Base\ConfigNum.cs" />
     <Compile Include="Components\Base\ConfigObject.cs" />

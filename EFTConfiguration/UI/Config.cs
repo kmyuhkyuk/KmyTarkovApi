@@ -147,6 +147,45 @@ namespace EFTConfiguration.UI
 
                 AddConfig(section, configToggle);
             }
+            else if (type == typeof(string))
+            {
+                if (attributes.ButtonAction != null)
+                {
+                    var configStringAction = Instantiate(EFTConfigurationPlugin.PrefabManager.stringAction, transform)
+                        .GetComponent<ConfigStringAction>();
+
+                    configStringAction.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                        attributes.ButtonAction);
+
+                    AddConfig(section, configStringAction);
+                }
+                else
+                {
+                    if (configData.AcceptableValueBase is AcceptableValueList<string> acceptableValueList)
+                    {
+                        var configStringDropdown =
+                            Instantiate(EFTConfigurationPlugin.PrefabManager.stringDropdown, transform)
+                                .GetComponent<ConfigStringDropdown>();
+
+                        configStringDropdown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
+                            configData.GetValue, acceptableValueList.AcceptableValues);
+
+                        AddConfig(section, configStringDropdown);
+                    }
+                    else
+                    {
+                        var configString = Instantiate(EFTConfigurationPlugin.PrefabManager.@string, transform)
+                            .GetComponent<ConfigString>();
+
+                        configString.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
+                            configData.GetValue);
+
+                        AddConfig(section, configString);
+                    }
+                }
+            }
             else if (configData.AcceptableValueBase != null &&
                      configData.AcceptableValueBase.GetType().GetGenericTypeDefinition() ==
                      typeof(AcceptableValueList<>))
@@ -217,45 +256,6 @@ namespace EFTConfiguration.UI
                         configData.GetValue);
 
                     AddConfig(section, configFloat);
-                }
-            }
-            else if (type == typeof(string))
-            {
-                if (attributes.ButtonAction != null)
-                {
-                    var configStringAction = Instantiate(EFTConfigurationPlugin.PrefabManager.stringAction, transform)
-                        .GetComponent<ConfigStringAction>();
-
-                    configStringAction.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                        attributes.ButtonAction);
-
-                    AddConfig(section, configStringAction);
-                }
-                else
-                {
-                    if (configData.AcceptableValueBase is AcceptableValueList<string> acceptableValueList)
-                    {
-                        var configStringDropdown =
-                            Instantiate(EFTConfigurationPlugin.PrefabManager.stringDropdown, transform)
-                                .GetComponent<ConfigStringDropdown>();
-
-                        configStringDropdown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
-                            configData.GetValue, acceptableValueList.AcceptableValues);
-
-                        AddConfig(section, configStringDropdown);
-                    }
-                    else
-                    {
-                        var configString = Instantiate(EFTConfigurationPlugin.PrefabManager.@string, transform)
-                            .GetComponent<ConfigString>();
-
-                        configString.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
-                            attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
-                            configData.GetValue);
-
-                        AddConfig(section, configString);
-                    }
                 }
             }
             else if (type == typeof(Vector2))

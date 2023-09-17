@@ -165,8 +165,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     SearchableItemClass.ItemOwner
             /// </summary>
-            [CanBeNull]
-            public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
+            [CanBeNull] public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
 
             private SearchableItemClassData()
             {

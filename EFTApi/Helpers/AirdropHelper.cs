@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EFTReflection;
+using JetBrains.Annotations;
 
 namespace EFTApi.Helpers
 {
@@ -21,6 +22,7 @@ namespace EFTApi.Helpers
         {
             public static readonly AirdropBoxData Instance = new AirdropBoxData();
 
+            [CanBeNull]
             public readonly RefHelper.HookRef OnBoxLand;
 
             private AirdropBoxData()
@@ -41,6 +43,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     AirdropSynchronizableObject.AirdropType
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.FieldRef<object, int> RefAirdropType;
 
             private AirdropSynchronizableObjectData()

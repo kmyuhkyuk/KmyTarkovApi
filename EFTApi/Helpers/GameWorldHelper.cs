@@ -6,6 +6,7 @@ using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFTReflection;
+using JetBrains.Annotations;
 
 namespace EFTApi.Helpers
 {
@@ -164,6 +165,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     SearchableItemClass.ItemOwner
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
 
             private SearchableItemClassData()

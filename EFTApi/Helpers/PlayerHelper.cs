@@ -6,6 +6,7 @@ using EFT;
 using EFT.InventoryLogic;
 using EFTReflection;
 using HarmonyLib;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace EFTApi.Helpers
@@ -364,25 +365,26 @@ namespace EFTApi.Helpers
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 
             public Item UnderbarrelWeapon =>
-                RefUnderbarrelWeapon.GetValue(FirearmControllerData.Instance.FirearmController);
+                RefUnderbarrelWeapon?.GetValue(FirearmControllerData.Instance.FirearmController);
 
             public Animator WeaponAnimator =>
                 RefAnimator.GetValue(RefWeaponIAnimator.GetValue(PlayerHelper.Instance.Player));
 
             public Animator LauncherIAnimator =>
-                RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator.GetValue(PlayerHelper.Instance.Player));
+                RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator?.GetValue(PlayerHelper.Instance.Player));
 
-            public Slot[] UnderbarrelChambers => RefUnderbarrelChambers.GetValue(UnderbarrelWeapon);
+            public Slot[] UnderbarrelChambers => RefUnderbarrelChambers?.GetValue(UnderbarrelWeapon);
 
-            public WeaponTemplate UnderbarrelWeaponTemplate => RefUnderbarrelWeaponTemplate.GetValue(UnderbarrelWeapon);
+            public WeaponTemplate UnderbarrelWeaponTemplate => RefUnderbarrelWeaponTemplate?.GetValue(UnderbarrelWeapon);
 
-            public int UnderbarrelChamberAmmoCount => RefUnderbarrelChamberAmmoCount.GetValue(UnderbarrelWeapon);
+            public int UnderbarrelChamberAmmoCount => RefUnderbarrelChamberAmmoCount?.GetValue(UnderbarrelWeapon) ?? 0;
 
             private readonly Func<Weapon, object> _refGetCurrentMagazine;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.FieldRef<Player.FirearmController, Item> RefUnderbarrelWeapon;
 
             /// <summary>
@@ -393,6 +395,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     Player.UnderbarrelWeaponArmsAnimator
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.PropertyRef<Player, object> RefUnderbarrelWeaponIAnimator;
 
             /// <summary>
@@ -403,16 +406,19 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.Chambers
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.FieldRef<object, Slot[]> RefUnderbarrelChambers;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.WeaponTemplate
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.PropertyRef<object, WeaponTemplate> RefUnderbarrelWeaponTemplate;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.ChamberAmmoCount
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.PropertyRef<object, int> RefUnderbarrelChamberAmmoCount;
 
             private WeaponData()
@@ -463,6 +469,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     DamageInfo.Player.iPlayer
             /// </summary>
+            [CanBeNull]
             public readonly RefHelper.PropertyRef<object, IAIDetails> RefIPlayer;
 
             private DamageInfoData()
@@ -479,7 +486,7 @@ namespace EFTApi.Helpers
             {
                 if (EFTVersion.AkiVersion > new Version("3.5.8"))
                 {
-                    return (Player)RefIPlayer.GetValue(RefPlayer.GetValue(damageInfo));
+                    return (Player)RefIPlayer?.GetValue(RefPlayer.GetValue(damageInfo));
                 }
                 else
                 {

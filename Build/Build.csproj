@@ -42,6 +42,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigurationTest\ConfigurationTest.csproj">
+      <Project>{4281a4ae-6efb-4ebb-8ed3-12d950147827}</Project>
+      <Name>ConfigurationTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EFTApi\EFTApi.csproj">
       <Project>{87c57988-0732-4c2d-af35-b075b2112667}</Project>
       <Name>EFTApi</Name>

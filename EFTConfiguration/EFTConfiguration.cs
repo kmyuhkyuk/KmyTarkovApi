@@ -59,6 +59,8 @@ namespace EFTConfiguration
 
         private RectTransform _windowRect;
 
+        private bool consoleCache;
+
 #if !UNITY_EDITOR
         private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("EFTConfiguration");
 #endif
@@ -111,7 +113,14 @@ namespace EFTConfiguration
 
                 if (consoleScrollRect.verticalNormalizedPosition == 0)
                 {
-                    StartCoroutine(ResetConsoleScrollRect());
+                    if (_consolePanelTransform.gameObject.activeSelf)
+                    {
+                        StartCoroutine(ResetConsoleScrollRect());
+                    }
+                    else
+                    {
+                        consoleCache = true;
+                    }
                 }
             };
 
@@ -171,6 +180,13 @@ namespace EFTConfiguration
 
         private void Update()
         {
+            if (_consolePanelTransform.gameObject.activeSelf && consoleCache)
+            {
+                consoleScrollRect.verticalNormalizedPosition = 0;
+
+                consoleCache = false;
+            }
+
             if (EFTConfigurationPlugin.SetData.KeyConfigurationShortcut.Value.IsDown())
             {
                 State = !State;

@@ -58,7 +58,7 @@ namespace EFTApi.Helpers
         {
             public static readonly TradersData Instance = new TradersData();
 
-            public object[] Traders { get; private set; } = Array.Empty<object>();
+            public object[] Traders { get; private set; }
 
             public readonly AvatarData TradersAvatarData = AvatarData.Instance;
 

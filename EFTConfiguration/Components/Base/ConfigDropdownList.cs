@@ -40,7 +40,7 @@ namespace EFTConfiguration.Components.Base
 
             dropdown.interactable = !readOnly;
 
-            base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
+            Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
                 hideReset, currentValue);
         }
 

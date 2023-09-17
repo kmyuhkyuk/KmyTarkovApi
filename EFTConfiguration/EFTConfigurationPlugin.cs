@@ -432,7 +432,7 @@ namespace EFTConfiguration
                     new ConfigDescription(
                         "Save Console Log Path"));
                 KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
-                KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29999);
+                KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29998);
             }
         }
     }

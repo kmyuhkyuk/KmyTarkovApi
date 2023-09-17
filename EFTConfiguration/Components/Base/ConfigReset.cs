@@ -2,7 +2,6 @@
 using EFTConfiguration.Helpers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace EFTConfiguration.Components.Base

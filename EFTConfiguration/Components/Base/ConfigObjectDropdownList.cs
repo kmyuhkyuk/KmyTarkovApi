@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EFTConfiguration.Components.Base
 {
-    public abstract class ConfigDropdownObjectList : ConfigGetValue<object>
+    public abstract class ConfigObjectDropdownList : ConfigGetValue<object>
     {
         [SerializeField] protected TMP_Dropdown dropdown;
 

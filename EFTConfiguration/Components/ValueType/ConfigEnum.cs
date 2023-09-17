@@ -3,7 +3,7 @@ using EFTConfiguration.Components.Base;
 
 namespace EFTConfiguration.Components.ValueType
 {
-    public class ConfigEnum : ConfigDropdownObjectList
+    public class ConfigEnum : ConfigObjectDropdownList
     {
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
             bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,

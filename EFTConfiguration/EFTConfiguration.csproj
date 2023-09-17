@@ -118,7 +118,7 @@
     <Compile Include="Components\ValueType\ConfigFloatSlider.cs" />
     <Compile Include="Components\ValueType\ConfigInt.cs" />
     <Compile Include="Components\ConfigHeader.cs" />
-    <Compile Include="Components\Base\ConfigRest.cs" />
+    <Compile Include="Components\Base\ConfigReset.cs" />
     <Compile Include="Components\ValueType\ConfigIntSlider.cs" />
     <Compile Include="Components\ValueType\ConfigKeyboardShortcut.cs" />
     <Compile Include="Components\ValueType\ConfigQuaternion.cs" />

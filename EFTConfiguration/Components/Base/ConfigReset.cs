@@ -2,6 +2,7 @@
 using EFTConfiguration.Helpers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace EFTConfiguration.Components.Base
@@ -10,21 +11,21 @@ namespace EFTConfiguration.Components.Base
     {
         private const string ResetNameKey = "Reset";
 
-        [SerializeField] protected TMP_Text ResetName;
+        [SerializeField] protected TMP_Text resetName;
 
-        [SerializeField] protected Button Reset;
+        [SerializeField] protected Button reset;
 
         public void Init<T>(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
             bool readOnly, T defaultValue, Action<T> onValueChanged, bool hideReset)
         {
             Init(modName, configNameKey, descriptionNameKey, isAdvanced);
 
-            Reset.onClick.AddListener(() => onValueChanged(defaultValue));
-            Reset.interactable = !readOnly;
+            reset.onClick.AddListener(() => onValueChanged(defaultValue));
+            reset.interactable = !readOnly;
 
             if (hideReset)
             {
-                Reset.gameObject.SetActive(false);
+                reset.gameObject.SetActive(false);
             }
         }
 
@@ -33,7 +34,7 @@ namespace EFTConfiguration.Components.Base
 #if !UNITY_EDITOR
             base.UpdateLocalized();
 
-            ResetName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
+            resetName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
 #endif
         }
 

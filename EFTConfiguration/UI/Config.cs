@@ -8,6 +8,7 @@ using EFTConfiguration.Components.ClassType;
 using EFTConfiguration.Components.ValueType;
 using UnityEngine;
 #if !UNITY_EDITOR
+using HarmonyLib;
 using static EFTConfiguration.EFTConfigurationPlugin;
 #endif
 
@@ -146,18 +147,34 @@ namespace EFTConfiguration.UI
 
                 AddConfig(section, configToggle);
             }
+            else if (configData.AcceptableValueBase != null &&
+                     configData.AcceptableValueBase.GetType().GetGenericTypeDefinition() ==
+                     typeof(AcceptableValueList<>))
+            {
+                var configEnum = Instantiate(EFTConfigurationPlugin.PrefabManager.@enum, transform)
+                    .GetComponent<ConfigEnum>();
+
+                configEnum.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                    attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
+                    configData.GetValue,
+                    Traverse.Create(configData.AcceptableValueBase).Property("AcceptableValues").GetValue<Array>());
+
+                AddConfig(section, configEnum);
+            }
             else if (type == typeof(int))
             {
-                var acceptableValueRange = (AcceptableValueRange<int>)configData.AcceptableValueBase;
-
-                if (acceptableValueRange != null && !attributes.HideRange)
+                if (configData.AcceptableValueBase != null &&
+                    configData.AcceptableValueBase.GetType().GetGenericTypeDefinition() ==
+                    typeof(AcceptableValueRange<>) && !attributes.HideRange)
                 {
                     var configIntSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.intSlider, transform)
                         .GetComponent<ConfigIntSlider>();
 
                     configIntSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
                         attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
-                        configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
+                        configData.GetValue,
+                        Traverse.Create(configData.AcceptableValueBase).Property("MinValue").GetValue<int>(),
+                        Traverse.Create(configData.AcceptableValueBase).Property("MaxValue").GetValue<int>());
 
                     AddConfig(section, configIntSlider);
                 }
@@ -175,16 +192,18 @@ namespace EFTConfiguration.UI
             }
             else if (type == typeof(float))
             {
-                var acceptableValueRange = (AcceptableValueRange<float>)configData.AcceptableValueBase;
-
-                if (acceptableValueRange != null && !attributes.HideRange)
+                if (configData.AcceptableValueBase != null &&
+                    configData.AcceptableValueBase.GetType().GetGenericTypeDefinition() ==
+                    typeof(AcceptableValueRange<>) && !attributes.HideRange)
                 {
                     var configFloatSlider = Instantiate(EFTConfigurationPlugin.PrefabManager.floatSlider, transform)
                         .GetComponent<ConfigFloatSlider>();
 
                     configFloatSlider.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
                         attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
-                        configData.GetValue, acceptableValueRange.MinValue, acceptableValueRange.MaxValue);
+                        configData.GetValue,
+                        Traverse.Create(configData.AcceptableValueBase).Property("MinValue").GetValue<float>(),
+                        Traverse.Create(configData.AcceptableValueBase).Property("MaxValue").GetValue<float>());
 
                     AddConfig(section, configFloatSlider);
                 }
@@ -214,9 +233,7 @@ namespace EFTConfiguration.UI
                 }
                 else
                 {
-                    var acceptableValueList = (AcceptableValueList<string>)configData.AcceptableValueBase;
-
-                    if (acceptableValueList != null)
+                    if (configData.AcceptableValueBase is AcceptableValueList<string> acceptableValueList)
                     {
                         var configStringDropdown =
                             Instantiate(EFTConfigurationPlugin.PrefabManager.stringDropdown, transform)

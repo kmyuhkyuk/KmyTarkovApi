@@ -123,11 +123,11 @@ namespace EFTConfiguration
                 if (!new DirectoryInfo(path).Exists)
                 {
                     LogSource.LogError($"{path} Directory not Exists");
-
-                    return;
                 }
-
-                File.WriteAllText($"{path}/FullLogOutput.log", console.text);
+                else
+                {
+                    File.WriteAllText($"{path}/FullLogOutput.log", console.text);
+                }
             });
 
             EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>

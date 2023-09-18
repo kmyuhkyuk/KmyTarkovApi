@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -113,14 +112,7 @@ namespace EFTConfiguration
 
                 if (consoleScrollRect.verticalNormalizedPosition == 0)
                 {
-                    if (_consolePanelTransform.gameObject.activeInHierarchy)
-                    {
-                        StartCoroutine(ResetConsoleScrollRect());
-                    }
-                    else
-                    {
-                        consoleCache = true;
-                    }
+                    consoleCache = true;
                 }
             };
 
@@ -418,13 +410,6 @@ namespace EFTConfiguration
 
                 configuration.Key.gameObject.SetActive(change.Active);
             }
-        }
-
-        private IEnumerator ResetConsoleScrollRect()
-        {
-            yield return new WaitForEndOfFrame();
-
-            consoleScrollRect.verticalNormalizedPosition = 0;
         }
 #endif
     }

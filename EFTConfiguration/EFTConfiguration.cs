@@ -135,7 +135,7 @@ namespace EFTConfiguration
                     return;
                 }
 
-                File.WriteAllText($"{path}/FullLogOutput.log", stringBuilder.ToString());
+                File.WriteAllText($"{path}/FullLogOutput.log", console.text);
             });
 
             EFTConfigurationPlugin.SetData.KeySearch.SettingChanged += (value1, value2) =>

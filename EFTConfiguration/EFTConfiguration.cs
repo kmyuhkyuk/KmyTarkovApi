@@ -41,7 +41,7 @@ namespace EFTConfiguration
 
         [SerializeField] private TMP_Text advancedName;
 
-        [SerializeField] private TMP_Text console;
+        [SerializeField] private TMP_InputField console;
 
         [SerializeField] private ScrollRect consoleScrollRect;
 
@@ -104,12 +104,12 @@ namespace EFTConfiguration
                 stringBuilder.Append(LogToString(log));
             }
 
-            console.SetText(stringBuilder);
+            console.text = stringBuilder.ToString();
 
             EFTLogListener.OnLog += log =>
             {
                 stringBuilder.Append(LogToString(log));
-                console.SetText(stringBuilder);
+                console.text = stringBuilder.ToString();
 
                 if (consoleScrollRect.verticalNormalizedPosition == 0)
                 {
@@ -221,7 +221,7 @@ namespace EFTConfiguration
                     break;
             }
 
-            return $"<color={color}>{log.EventArgs.ToStringLine()}</color>";
+            return $"<color={color}>{log.EventArgs}</color>{Environment.NewLine}";
         }
 
         private void CreateUI()

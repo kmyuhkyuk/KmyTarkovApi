@@ -113,7 +113,7 @@ namespace EFTConfiguration
 
                 if (consoleScrollRect.verticalNormalizedPosition == 0)
                 {
-                    if (_consolePanelTransform.gameObject.activeSelf)
+                    if (_consolePanelTransform.gameObject.activeInHierarchy)
                     {
                         StartCoroutine(ResetConsoleScrollRect());
                     }
@@ -180,7 +180,7 @@ namespace EFTConfiguration
 
         private void Update()
         {
-            if (_consolePanelTransform.gameObject.activeSelf && consoleCache)
+            if (_consolePanelTransform.gameObject.activeInHierarchy && consoleCache)
             {
                 consoleScrollRect.verticalNormalizedPosition = 0;
 

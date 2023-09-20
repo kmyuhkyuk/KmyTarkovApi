@@ -18,9 +18,7 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Get original methods
         /// </summary>
-        /// <returns>
-        ///     <see cref="IEnumerable{MethodBase}" />
-        /// </returns>
+        /// <returns></returns>
         protected abstract IEnumerable<MethodBase> GetTargetMethods();
 
         /// <summary>

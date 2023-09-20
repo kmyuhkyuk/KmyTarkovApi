@@ -64,14 +64,14 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Get original method
         /// </summary>
-        /// <returns>Method</returns>
+        /// <returns></returns>
         protected abstract MethodBase GetTargetMethod();
 
         /// <summary>
         ///     Get HarmonyMethod from string
         /// </summary>
         /// <param name="attributeType">Attribute type</param>
-        /// <returns>Method</returns>
+        /// <returns></returns>
         protected List<HarmonyMethod> GetPatchMethods(Type attributeType)
         {
             var T = GetType();

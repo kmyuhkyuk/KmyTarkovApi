@@ -17,7 +17,7 @@ namespace EFTReflection
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
         /// <param name="fieldInfo"></param>
-        /// <returns><see cref="Func{T, F}" /> from <paramref name="fieldInfo" /></returns>
+        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Func<T, TF> ObjectFieldGetAccess<T, TF>(FieldInfo fieldInfo)
         {
@@ -84,7 +84,7 @@ namespace EFTReflection
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Target</typeparam>
         /// <param name="fieldInfo"></param>
-        /// <returns><see cref="Action{T, F}" /> from <paramref name="fieldInfo" /></returns>
+        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Action<T, TF> ObjectFieldSetAccess<T, TF>(FieldInfo fieldInfo)
         {
@@ -164,7 +164,7 @@ namespace EFTReflection
         /// <remarks>Solve <see cref="AccessTools.MethodDelegate{DelegateType}" /> Cannot create delegate with object parameters</remarks>
         /// <typeparam name="TDelegateType"></typeparam>
         /// <param name="method"></param>
-        /// <returns><see cref="Delegate" /> from <paramref name="method" /></returns>
+        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static TDelegateType ObjectMethodDelegate<TDelegateType>(MethodInfo method)
             where TDelegateType : Delegate

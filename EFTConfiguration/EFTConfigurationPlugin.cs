@@ -27,10 +27,10 @@ namespace EFTConfiguration
     {
         private static Dictionary<string, PluginInfo> PluginInfos => Chainloader.PluginInfos;
 
-        private readonly GameObject _eftConfigurationPublic = new GameObject("EFTConfigurationPublic", typeof(Canvas),
+        private static readonly GameObject EFTConfigurationPublic = new GameObject("EFTConfigurationPublic", typeof(Canvas),
             typeof(CanvasScaler), typeof(GraphicRaycaster));
 
-        private readonly PropertyInfo _coreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig",
+        private static readonly PropertyInfo CoreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig",
             BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
         private static readonly FieldInfo[] EFTConfigurationPluginAttributesFields =
@@ -54,7 +54,7 @@ namespace EFTConfiguration
         {
             ModName = GetType().GetCustomAttribute<BepInPlugin>().Name;
 
-            var canvas = _eftConfigurationPublic.GetComponent<Canvas>();
+            var canvas = EFTConfigurationPublic.GetComponent<Canvas>();
 
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.additionalShaderChannels = AdditionalCanvasShaderChannels.TexCoord1 |
@@ -62,9 +62,9 @@ namespace EFTConfiguration
                                               AdditionalCanvasShaderChannels.Tangent;
 
             new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).transform.SetParent(
-                _eftConfigurationPublic.transform);
+                EFTConfigurationPublic.transform);
 
-            DontDestroyOnLoad(_eftConfigurationPublic);
+            DontDestroyOnLoad(EFTConfigurationPublic);
 
             SetData = new SettingsData(Config);
 
@@ -102,7 +102,7 @@ namespace EFTConfiguration
 
                 PrefabManager = prefabManager;
 
-                Instantiate(prefabManager.eftConfiguration, _eftConfigurationPublic.transform);
+                Instantiate(prefabManager.eftConfiguration, EFTConfigurationPublic.transform);
 
                 assetBundle.Unload(false);
             }
@@ -181,9 +181,9 @@ namespace EFTConfiguration
             return new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);
         }
 
-        private ConfigurationData GetCoreConfigurationData()
+        private static ConfigurationData GetCoreConfigurationData()
         {
-            var configFile = (ConfigFile)_coreConfigInfo.GetValue(null);
+            var configFile = (ConfigFile)CoreConfigInfo.GetValue(null);
 
             var metaData = new BepInPlugin("BepInEx", "BepInEx",
                 typeof(BaseUnityPlugin).Assembly.GetName().Version.ToString());

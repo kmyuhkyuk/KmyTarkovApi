@@ -263,7 +263,7 @@ namespace EFTReflection
         ///     Find Type from Plugin by Path
         /// </summary>
         /// <param name="plugin">Plugin</param>
-        /// <param name="typePath">Path</param>
+        /// <param name="typePath">Type Path</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Type GetPluginType(BaseUnityPlugin plugin, string typePath)

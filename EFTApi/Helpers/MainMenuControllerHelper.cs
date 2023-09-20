@@ -18,8 +18,10 @@ namespace EFTApi.Helpers
 
         private MainMenuControllerHelper()
         {
-            Unsubscribe = new RefHelper.HookRef(typeof(MainMenuController), "Unsubscribe");
-            Execute = new RefHelper.HookRef(typeof(MainMenuController), "Execute");
+            var mainMenuControllerType = typeof(MainMenuController);
+
+            Unsubscribe = new RefHelper.HookRef(mainMenuControllerType, "Unsubscribe");
+            Execute = new RefHelper.HookRef(mainMenuControllerType, "Execute");
 
             Execute.Add(this, nameof(OnExecute));
         }

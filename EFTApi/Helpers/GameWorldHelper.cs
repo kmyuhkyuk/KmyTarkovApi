@@ -56,9 +56,11 @@ namespace EFTApi.Helpers
 
         private GameWorldHelper()
         {
-            Awake = new RefHelper.HookRef(typeof(GameWorld), "Awake");
-            OnGameStarted = new RefHelper.HookRef(typeof(GameWorld), "OnGameStarted");
-            Dispose = new RefHelper.HookRef(typeof(GameWorld), "Dispose");
+            var gameWorldType = typeof(GameWorld);
+
+            Awake = new RefHelper.HookRef(gameWorldType, "Awake");
+            OnGameStarted = new RefHelper.HookRef(gameWorldType, "OnGameStarted");
+            Dispose = new RefHelper.HookRef(gameWorldType, "Dispose");
 
             Awake.Add(this, nameof(OnAwake));
             Dispose.Add(this, nameof(OnDispose));

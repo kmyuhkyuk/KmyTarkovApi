@@ -42,6 +42,8 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef OnBeenKilledByAggressor;
 
+        public readonly RefHelper.HookRef OnPhraseTold;
+
         /// <summary>
         ///     InfoClass.Settings
         /// </summary>
@@ -65,11 +67,14 @@ namespace EFTApi.Helpers
 
         private PlayerHelper()
         {
-            Init = new RefHelper.HookRef(typeof(Player), "Init");
-            Dispose = new RefHelper.HookRef(typeof(Player), "Dispose");
-            OnDead = new RefHelper.HookRef(typeof(Player), "OnDead");
-            ApplyDamageInfo = new RefHelper.HookRef(typeof(Player), "ApplyDamageInfo");
-            OnBeenKilledByAggressor = new RefHelper.HookRef(typeof(Player), "OnBeenKilledByAggressor");
+            var playerType = typeof(Player);
+
+            Init = new RefHelper.HookRef(playerType, "Init");
+            Dispose = new RefHelper.HookRef(playerType, "Dispose");
+            OnDead = new RefHelper.HookRef(playerType, "OnDead");
+            ApplyDamageInfo = new RefHelper.HookRef(playerType, "ApplyDamageInfo");
+            OnBeenKilledByAggressor = new RefHelper.HookRef(playerType, "OnBeenKilledByAggressor");
+            OnPhraseTold = new RefHelper.HookRef(playerType, "OnPhraseTold");
 
             Init.Add(this, nameof(OnInit));
 

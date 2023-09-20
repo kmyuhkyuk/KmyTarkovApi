@@ -71,6 +71,7 @@
     <Compile Include="EFTHelpers.cs" />
     <Compile Include="EFTVersion.cs" />
     <Compile Include="Helpers\AirdropHelper.cs" />
+    <Compile Include="Helpers\EnvironmentUIRootHelper.cs" />
     <Compile Include="Helpers\GameUIHelper.cs" />
     <Compile Include="Helpers\GameWorldHelper.cs" />
     <Compile Include="Helpers\MainMenuControllerHelper.cs" />

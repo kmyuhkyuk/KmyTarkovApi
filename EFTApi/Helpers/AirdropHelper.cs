@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using EFTReflection;
 using JetBrains.Annotations;
 
@@ -26,11 +25,11 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion > new Version("3.5.0"))
+                if (EFTVersion.AkiVersion > new Version("3.5.0") &&
+                    RefTool.TryGetPlugin("com.spt-aki.custom", out var plugin))
                 {
-                    OnBoxLand = new RefHelper.HookRef(AppDomain.CurrentDomain.GetAssemblies()
-                        .Single(x => x.ManifestModule.Name == "aki-custom.dll")
-                        .GetTypes().Single(x => x.Name == "AirdropBox"), "OnBoxLand");
+                    OnBoxLand = new RefHelper.HookRef(RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
+                        "OnBoxLand");
                 }
             }
         }

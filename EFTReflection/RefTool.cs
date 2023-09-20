@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using Aki.Reflection.Utils;
+using BepInEx;
+using BepInEx.Bootstrap;
 using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -240,6 +242,55 @@ namespace EFTReflection
             var realMethod = methodBase.IsAsync() ? GetAsyncMoveNext(methodBase) : methodBase;
 
             return PatchProcessor.ReadMethodBody(realMethod).Any(il => il.Key == opcode && il.Value == operand);
+        }
+
+        /// <summary>
+        ///     Try Find BepInEx Plugin Type
+        /// </summary>
+        /// <param name="pluginGUID">Plugin GUID</param>
+        /// <param name="plugin">Plugin</param>
+        /// <returns></returns>
+        public static bool TryGetPlugin(string pluginGUID, out BaseUnityPlugin plugin)
+        {
+            var hasPluginInfo = Chainloader.PluginInfos.TryGetValue(pluginGUID, out var pluginInfo);
+
+            plugin = hasPluginInfo ? pluginInfo.Instance : null;
+
+            return hasPluginInfo;
+        }
+
+        /// <summary>
+        ///     Find Type from Plugin by Path
+        /// </summary>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="typePath">Path</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Type GetPluginType(BaseUnityPlugin plugin, string typePath)
+        {
+            if (plugin == null)
+            {
+                throw new ArgumentNullException(nameof(plugin));
+            }
+
+            return plugin.GetType().Assembly.GetType(typePath, true);
+        }
+
+        /// <summary>
+        ///     Find Plugin Type by Lambda
+        /// </summary>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="typePredicate">Type Lambda</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Type GetPluginType(BaseUnityPlugin plugin, Func<Type, bool> typePredicate)
+        {
+            if (plugin == null)
+            {
+                throw new ArgumentNullException(nameof(plugin));
+            }
+
+            return plugin.GetType().Assembly.GetTypes().Single(typePredicate);
         }
     }
 }

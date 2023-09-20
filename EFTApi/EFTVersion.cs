@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using BepInEx;
+using EFTReflection;
 
 namespace EFTApi
 {
@@ -95,11 +95,10 @@ namespace EFTApi
             {
                 return new Version("3.5.7");
             }
-            else if (GameVersion > new Version("0.13.0.23399"))
+            else if (GameVersion > new Version("0.13.0.23399") &&
+                     RefTool.TryGetPlugin("com.spt-aki.core", out var plugin))
             {
-                return AppDomain.CurrentDomain.GetAssemblies()
-                    .Single(x => x.ManifestModule.Name == "aki-core.dll")
-                    .GetTypes().Single(x => x.Name == "AkiCorePlugin").GetCustomAttribute<BepInPlugin>().Version;
+                return plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
             }
             else
             {

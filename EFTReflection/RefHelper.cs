@@ -441,7 +441,7 @@ namespace EFTReflection
         ///     <para>More convenient and fast Get or Set Field Value</para>
         ///     <para>
         ///         If <typeparamref name="T" /> is object then use <see cref="ObjectFieldGetAccess{T,F}" /> and
-        ///         <see cref="RefHelper.ObjectFieldSetAccess{T,F}" />
+        ///         <see cref="ObjectFieldSetAccess{T,F}" />
         ///     </para>
         ///     <para>else use <see cref="AccessTools.FieldRefAccess{T, F}(System.Reflection.FieldInfo)" /> Generate Delegate</para>
         /// </summary>

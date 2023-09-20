@@ -33,11 +33,8 @@ namespace EFTConfiguration
         private readonly PropertyInfo _coreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig",
             BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
-        private readonly FieldInfo[] _eftConfigurationPluginAttributesFields =
+        private static readonly FieldInfo[] EFTConfigurationPluginAttributesFields =
             typeof(EFTConfigurationPluginAttributes).GetFields();
-
-        private readonly (string, Type)[] _eftConfigurationPluginAttributesFieldsTuple =
-            typeof(EFTConfigurationPluginAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
 
         private static readonly ManualLogSource ModVerifyLogger = BepInEx.Logging.Logger.CreateLogSource("ModVerify");
 
@@ -130,13 +127,13 @@ namespace EFTConfiguration
             Configurations = configurationList.ToArray();
         }
 
-        private ConfigurationData GetConfigurationData(PluginInfo pluginInfo)
+        private static ConfigurationData GetConfigurationData(PluginInfo pluginInfo)
         {
             var instance = pluginInfo.Instance;
 
             var type = instance.GetType();
 
-            var attributes = new EFTConfigurationPluginAttributes(string.Empty);
+            var eftConfigurationPluginAttributes = new EFTConfigurationPluginAttributes(string.Empty);
 
             var hasAttributes = false;
             foreach (var attribute in type.GetCustomAttributes())
@@ -145,32 +142,33 @@ namespace EFTConfiguration
 
                 if (attributeType.Name == nameof(EFTConfigurationPluginAttributes))
                 {
-                    var attributeFieldInfos = attributeType.GetFields();
+                    var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
 
-                    if (attributeFieldInfos.Select(x => (x.Name, x.FieldType))
-                        .SequenceEqual(_eftConfigurationPluginAttributesFieldsTuple))
+                    hasAttributes = true;
+
+                    foreach (var eftConfigurationPluginExternalAttributesFieldInfo in
+                             eftConfigurationPluginExternalAttributesFieldInfos)
                     {
-                        hasAttributes = true;
+                        var eftConfigurationPluginAttributesFieldInfo =
+                            EFTConfigurationPluginAttributesFields.SingleOrDefault(x =>
+                                x.Name == eftConfigurationPluginExternalAttributesFieldInfo.Name && x.FieldType ==
+                                eftConfigurationPluginExternalAttributesFieldInfo.FieldType);
 
-                        for (var i = 0; i < _eftConfigurationPluginAttributesFields.Length; i++)
-                        {
-                            var eftConfigurationPluginAttributesField = _eftConfigurationPluginAttributesFields[i];
+                        if (eftConfigurationPluginAttributesFieldInfo == null)
+                            continue;
 
-                            var attributeFieldInfo = attributeFieldInfos[i];
-
-                            eftConfigurationPluginAttributesField.SetValue(attributes,
-                                attributeFieldInfo.GetValue(attribute));
-                        }
-
-                        break;
+                        eftConfigurationPluginAttributesFieldInfo.SetValue(eftConfigurationPluginAttributes,
+                            eftConfigurationPluginExternalAttributesFieldInfo.GetValue(attribute));
                     }
                 }
             }
 
             if (!hasAttributes)
             {
-                attributes.ModURL = FileVersionInfo.GetVersionInfo(pluginInfo.Location).CompanyName;
-                attributes.HidePlugin = type.GetCustomAttributes<BrowsableAttribute>().Any(x => !x.Browsable);
+                eftConfigurationPluginAttributes.ModURL =
+                    FileVersionInfo.GetVersionInfo(pluginInfo.Location).CompanyName;
+                eftConfigurationPluginAttributes.HidePlugin =
+                    type.GetCustomAttributes<BrowsableAttribute>().Any(x => !x.Browsable);
             }
 
             var configFile = instance.Config;
@@ -178,9 +176,9 @@ namespace EFTConfiguration
             var metaData = pluginInfo.Metadata;
 
             CustomLocalizedHelper.LanguageList.Add(metaData.Name,
-                GetLanguageDictionary(pluginInfo, attributes.LocalizedPath));
+                GetLanguageDictionary(pluginInfo, eftConfigurationPluginAttributes.LocalizedPath));
 
-            return new ConfigurationData(configFile, metaData, attributes);
+            return new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);
         }
 
         private ConfigurationData GetCoreConfigurationData()
@@ -284,105 +282,90 @@ namespace EFTConfiguration
             private static readonly FieldInfo[] EFTConfigurationAttributesFields =
                 typeof(EFTConfigurationAttributes).GetFields();
 
-            private static readonly (string, Type)[] EFTConfigurationAttributesFieldsTuple =
-                typeof(EFTConfigurationAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
-
-            private static readonly FieldInfo[] ConfigurationManagerAttributesFields =
-                typeof(ConfigurationManagerAttributes).GetFields();
-
-            private static readonly (string, Type)[] ConfigurationManagerAttributesFieldsTuple =
-                typeof(ConfigurationManagerAttributes).GetFields().Select(x => (x.Name, x.FieldType)).ToArray();
-
             public ConfigData(ConfigDefinition configDefinition, ConfigEntryBase configEntryBase, bool isCore)
             {
                 _configDefinition = configDefinition;
                 _configEntryBase = configEntryBase;
 
-                if (!isCore)
-                {
-                    object eftConfigurationAttributes = null;
-                    var eftConfigurationAttributesFieldInfos = Array.Empty<FieldInfo>();
-
-                    object configurationManagerAttributes = null;
-                    var configurationManagerAttributesFieldInfos = Array.Empty<FieldInfo>();
-
-                    foreach (var tag in ConfigDescription.Tags)
-                    {
-                        var tagType = tag.GetType();
-
-                        switch (tagType.Name)
-                        {
-                            case nameof(EFTConfigurationAttributes):
-                            {
-                                var tagFieldInfos = tagType.GetFields();
-
-                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
-                                    .SequenceEqual(EFTConfigurationAttributesFieldsTuple))
-                                {
-                                    eftConfigurationAttributes = tag;
-                                    eftConfigurationAttributesFieldInfos = tagFieldInfos;
-                                }
-
-                                break;
-                            }
-                            case nameof(ConfigurationManagerAttributes):
-                            {
-                                var tagFieldInfos = tagType.GetFields();
-
-                                if (tagFieldInfos.Select(x => (x.Name, x.FieldType))
-                                    .SequenceEqual(ConfigurationManagerAttributesFieldsTuple))
-                                {
-                                    configurationManagerAttributes = tag;
-                                    configurationManagerAttributesFieldInfos = tagFieldInfos;
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    if (eftConfigurationAttributes != null)
-                    {
-                        for (var i = 0; i < EFTConfigurationAttributesFields.Length; i++)
-                        {
-                            var configurationAttributesFields = EFTConfigurationAttributesFields[i];
-
-                            var tagFieldInfo = eftConfigurationAttributesFieldInfos[i];
-
-                            configurationAttributesFields.SetValue(ConfigurationAttributes,
-                                tagFieldInfo.GetValue(eftConfigurationAttributes));
-                        }
-                    }
-                    else if (configurationManagerAttributes != null)
-                    {
-                        ConfigurationAttributes.HideSetting = !(bool?)configurationManagerAttributesFieldInfos
-                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
-                            .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.HideReset = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
-                                x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
-                            .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.HideRange = (bool?)configurationManagerAttributesFieldInfos.Single(x =>
-                                x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent))
-                            .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.Advanced = (bool?)configurationManagerAttributesFieldInfos
-                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced))
-                            .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.ReadOnly = (bool?)configurationManagerAttributesFieldInfos
-                            .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly))
-                            .GetValue(configurationManagerAttributes) ?? false;
-                        ConfigurationAttributes.CustomToString =
-                            (Func<object, string>)configurationManagerAttributesFieldInfos
-                                .Single(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr))
-                                .GetValue(configurationManagerAttributes);
-                        ConfigurationAttributes.CustomToObject =
-                            (Func<string, object>)configurationManagerAttributesFieldInfos
-                                .Single(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj))
-                                .GetValue(configurationManagerAttributes);
-                    }
-                }
-                else
+                if (isCore)
                 {
                     ConfigurationAttributes.Advanced = true;
+                    return;
+                }
+
+                object eftConfigurationExternalAttributes = null;
+                var eftConfigurationExternalAttributesFieldInfos = Array.Empty<FieldInfo>();
+
+                object configurationManagerExternalAttributes = null;
+                var configurationManagerExternalAttributesFieldInfos = Array.Empty<FieldInfo>();
+
+                foreach (var tag in ConfigDescription.Tags)
+                {
+                    var tagType = tag.GetType();
+
+                    switch (tagType.Name)
+                    {
+                        case nameof(EFTConfigurationAttributes):
+                        {
+                            eftConfigurationExternalAttributes = tag;
+                            eftConfigurationExternalAttributesFieldInfos = tagType.GetFields();
+
+                            break;
+                        }
+                        case nameof(ConfigurationManagerAttributes):
+                        {
+                            configurationManagerExternalAttributes = tag;
+                            configurationManagerExternalAttributesFieldInfos = tagType.GetFields();
+
+                            break;
+                        }
+                    }
+                }
+
+                if (eftConfigurationExternalAttributes != null)
+                {
+                    foreach (var eftConfigurationExternalAttributesFieldInfo in
+                             eftConfigurationExternalAttributesFieldInfos)
+                    {
+                        var eftConfigurationAttributes = EFTConfigurationAttributesFields.SingleOrDefault(x =>
+                            x.Name == eftConfigurationExternalAttributesFieldInfo.Name &&
+                            x.FieldType == eftConfigurationExternalAttributesFieldInfo.FieldType);
+
+                        if (eftConfigurationAttributes == null)
+                            continue;
+
+                        eftConfigurationAttributes.SetValue(ConfigurationAttributes,
+                            eftConfigurationExternalAttributesFieldInfo.GetValue(
+                                eftConfigurationExternalAttributes));
+                    }
+                }
+                else if (configurationManagerExternalAttributes != null)
+                {
+                    ConfigurationAttributes.HideSetting = !(bool?)configurationManagerExternalAttributesFieldInfos
+                        .SingleOrDefault(x => x.Name == nameof(ConfigurationManagerAttributes.Browsable))
+                        ?.GetValue(configurationManagerExternalAttributes) ?? false;
+                    ConfigurationAttributes.HideReset = (bool?)configurationManagerExternalAttributesFieldInfos
+                        .SingleOrDefault(x =>
+                            x.Name == nameof(ConfigurationManagerAttributes.HideDefaultButton))
+                        ?.GetValue(configurationManagerExternalAttributes) ?? false;
+                    ConfigurationAttributes.HideRange = (bool?)configurationManagerExternalAttributesFieldInfos
+                        .SingleOrDefault(x =>
+                            x.Name == nameof(ConfigurationManagerAttributes.ShowRangeAsPercent))
+                        ?.GetValue(configurationManagerExternalAttributes) ?? false;
+                    ConfigurationAttributes.Advanced = (bool?)configurationManagerExternalAttributesFieldInfos
+                        .SingleOrDefault(x => x.Name == nameof(ConfigurationManagerAttributes.IsAdvanced))
+                        ?.GetValue(configurationManagerExternalAttributes) ?? false;
+                    ConfigurationAttributes.ReadOnly = (bool?)configurationManagerExternalAttributesFieldInfos
+                        .SingleOrDefault(x => x.Name == nameof(ConfigurationManagerAttributes.ReadOnly))
+                        ?.GetValue(configurationManagerExternalAttributes) ?? false;
+                    ConfigurationAttributes.CustomToString =
+                        (Func<object, string>)configurationManagerExternalAttributesFieldInfos
+                            .SingleOrDefault(x => x.Name == nameof(ConfigurationManagerAttributes.ObjToStr))
+                            ?.GetValue(configurationManagerExternalAttributes);
+                    ConfigurationAttributes.CustomToObject =
+                        (Func<string, object>)configurationManagerExternalAttributesFieldInfos
+                            .SingleOrDefault(x => x.Name == nameof(ConfigurationManagerAttributes.StrToObj))
+                            ?.GetValue(configurationManagerExternalAttributes);
                 }
             }
 

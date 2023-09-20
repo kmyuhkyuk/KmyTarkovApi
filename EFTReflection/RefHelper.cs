@@ -644,17 +644,30 @@ namespace EFTReflection
 
             public HookRef(MethodInfo targetMethod)
             {
+                if (targetMethod == null)
+                {
+                    throw new ArgumentNullException(nameof(targetMethod));
+                }
+
                 TargetMethod = targetMethod;
             }
 
             public HookRef(Type targetType, string targetMethodName)
             {
-                TargetMethod = targetType.GetMethod(targetMethodName, AccessTools.allDeclared);
+                TargetMethod = targetType.GetMethod(targetMethodName, AccessTools.allDeclared) ??
+                               throw new Exception($"{targetType} can't find {targetMethodName} method");
             }
 
             public HookRef(Type targetType, Func<MethodInfo, bool> targetMethodPredicate)
             {
-                TargetMethod = targetType.GetMethods(AccessTools.allDeclared).Single(targetMethodPredicate);
+                TargetMethod = targetType.GetMethods(AccessTools.allDeclared).SingleOrDefault(targetMethodPredicate) ??
+                               throw new Exception($"{targetType} can't find {targetMethodPredicate}");
+            }
+
+            public void Add(object hookObject, string hookMethodName,
+                HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            {
+                Add(hookObject.GetType().GetMethod(hookMethodName, AccessTools.allDeclared), patchType);
             }
 
             public void Add(Delegate hookDelegate, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
@@ -665,13 +678,6 @@ namespace EFTReflection
             public void Add(MethodInfo hookMethod, HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {
                 HookPatch.Add(TargetMethod, hookMethod, patchType);
-            }
-
-            public void Add(object hookObject, string hookMethodName,
-                HarmonyPatchType patchType = HarmonyPatchType.Postfix)
-            {
-                HookPatch.Add(TargetMethod, hookObject.GetType().GetMethod(hookMethodName, AccessTools.allDeclared),
-                    patchType);
             }
 
             public void Remove(Delegate hookDelegate)

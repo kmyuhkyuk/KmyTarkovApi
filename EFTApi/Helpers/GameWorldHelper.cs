@@ -52,6 +52,9 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef OnGameStarted;
 
+        /// <summary>
+        /// Dispose Action
+        /// </summary>
         public readonly RefHelper.HookRef Dispose;
 
         private GameWorldHelper()

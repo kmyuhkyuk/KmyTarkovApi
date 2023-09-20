@@ -14,6 +14,9 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef Unsubscribe;
 
+        /// <summary>
+        /// Dispose Action
+        /// </summary>
         public readonly RefHelper.HookRef Execute;
 
         private MainMenuControllerHelper()

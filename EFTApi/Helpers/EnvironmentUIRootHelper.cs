@@ -14,6 +14,9 @@ namespace EFTApi.Helpers
 
         public EnvironmentUIRoot EnvironmentUIRoot { get; private set; }
 
+        /// <summary>
+        ///     Init Action
+        /// </summary>
         public readonly RefHelper.HookRef Init;
         
         private EnvironmentUIRootHelper()

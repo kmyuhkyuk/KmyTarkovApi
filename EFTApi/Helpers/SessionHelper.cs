@@ -22,6 +22,9 @@ namespace EFTApi.Helpers
 
         public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
 
+        /// <summary>
+        ///     Init Action
+        /// </summary>
         public readonly RefHelper.HookRef CreateBackend;
 
         private SessionHelper()

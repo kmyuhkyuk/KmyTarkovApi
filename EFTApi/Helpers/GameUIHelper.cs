@@ -9,8 +9,14 @@ namespace EFTApi.Helpers
 
         public GameUI GameUI { get; private set; }
 
+        /// <summary>
+        ///     Init Action
+        /// </summary>
         public readonly RefHelper.HookRef Awake;
 
+        /// <summary>
+        /// Destroy Action
+        /// </summary>
         public readonly RefHelper.HookRef OnDestroy;
 
         private GameUIHelper()

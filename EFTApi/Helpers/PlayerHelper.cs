@@ -34,6 +34,9 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef Init;
 
+        /// <summary>
+        /// Dispose Action
+        /// </summary>
         public readonly RefHelper.HookRef Dispose;
 
         public readonly RefHelper.HookRef OnDead;

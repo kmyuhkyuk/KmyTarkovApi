@@ -35,7 +35,7 @@ namespace EFTReflection
         #endregion
 
         /// <summary>
-        ///     Find Single Eft Type by Lambda
+        ///     Find Single <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
         /// <returns></returns>
@@ -45,7 +45,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Single Eft Type by Lambda
+        ///     Try Find Single <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
         /// <param name="eftType">Out Eft Type</param>
@@ -60,7 +60,7 @@ namespace EFTReflection
         #region GetMethod
 
         /// <summary>
-        ///     Find Single Eft Method by Lambda
+        ///     Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="type">Type</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
@@ -77,7 +77,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Find Single Eft Method by Lambda
+        ///     Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
@@ -94,7 +94,7 @@ namespace EFTReflection
         #region TryGetMethod
 
         /// <summary>
-        ///     Try Find Single Eft Method by Lambda
+        ///     Try Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="type">Type</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
@@ -116,7 +116,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Single Eft Method by Lambda
+        ///     Try Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="typePredicate">Type Lambda</param>
         /// <param name="flags">MethodInfo BindingFlags</param>
@@ -140,7 +140,7 @@ namespace EFTReflection
         #endregion
 
         /// <summary>
-        ///     If Method is Async then return <see langword="true" />
+        ///     If <see cref="MethodBase" /> is Async then return <see langword="true" />
         /// </summary>
         /// <param name="methodBase">Method</param>
         /// <returns></returns>
@@ -158,7 +158,7 @@ namespace EFTReflection
         #region IsCompilerGenerated
 
         /// <summary>
-        ///     If Type is Compiler Generate then return <see langword="true" />
+        ///     If <see cref="Type" /> is Compiler Generate then return <see langword="true" />
         /// </summary>
         /// <param name="type">Type</param>
         /// <returns></returns>
@@ -174,7 +174,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     If Method is Compiler Generate then return <see langword="true" />
+        ///     If <see cref="MethodBase" /> is Compiler Generate then return <see langword="true" />
         /// </summary>
         /// <param name="methodBase">Method</param>
         /// <returns></returns>
@@ -192,7 +192,7 @@ namespace EFTReflection
         #endregion
 
         /// <summary>
-        ///     Get Async Struct from MethodInfo
+        ///     Get Async Struct from <see cref="MethodBase" />
         /// </summary>
         /// <param name="methodBase">Async Method</param>
         /// <returns></returns>
@@ -219,7 +219,7 @@ namespace EFTReflection
 
         // ReSharper disable once InvalidXmlDocComment
         /// <summary>
-        ///     Get Async MoveNext from MethodInfo, Harmony have been added this feature on Newer versions
+        ///     Get Async MoveNext from <see cref="MethodBase" />, Harmony have been added this feature on Newer versions
         ///     <see cref="AccessTools.AsyncMoveNext" />
         /// </summary>
         /// <param name="methodBase">Async Method</param>
@@ -252,17 +252,17 @@ namespace EFTReflection
         #endregion
 
         /// <summary>
-        ///     If Method is Async then return <see cref="GetAsyncMoveNext(MethodBase)" />
+        ///     If <see cref="MethodBase" /> is Async then return <see cref="GetAsyncMoveNext(MethodBase)" />
         /// </summary>
-        /// <param name="methodInfo">Method</param>
+        /// <param name="methodBase">Method</param>
         /// <returns></returns>
-        public static MethodBase GetRealMethod(this MethodBase methodInfo)
+        public static MethodBase GetRealMethod(this MethodBase methodBase)
         {
-            return methodInfo.IsAsync() ? GetAsyncMoveNext(methodInfo) : methodInfo;
+            return methodBase.IsAsync() ? GetAsyncMoveNext(methodBase) : methodBase;
         }
 
         /// <summary>
-        ///     Get Nested Methods from MethodInfo
+        ///     Get Nested Methods from <see cref="MethodBase" />
         /// </summary>
         /// <param name="methodBase">Method</param>
         /// <returns></returns>
@@ -285,7 +285,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     If Method Contains this IL then return <see langword="true" />
+        ///     If <see cref="MethodBase" /> Contains this IL then return <see langword="true" />
         /// </summary>
         /// <param name="methodBase">Method</param>
         /// <param name="opcode">OpCode</param>
@@ -304,7 +304,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Method
+        ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="MethodBase" />
         /// </summary>
         /// <param name="methodBase">Method</param>
         /// <returns></returns>
@@ -322,7 +322,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find BepInEx Plugin Type
+        ///     Try Find BepInEx Plugin <see cref="Type" />
         /// </summary>
         /// <param name="pluginGUID">Plugin GUID</param>
         /// <param name="plugin">Plugin</param>
@@ -339,7 +339,7 @@ namespace EFTReflection
         #region GetPluginType
 
         /// <summary>
-        ///     Find Type from Plugin by Path
+        ///     Find <see cref="Type" /> from Plugin by Path
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePath">Type Path</param>
@@ -356,7 +356,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Find Plugin Type by Lambda
+        ///     Find Plugin <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePredicate">Type Lambda</param>
@@ -377,7 +377,7 @@ namespace EFTReflection
         #region TryGetPluginType
 
         /// <summary>
-        ///     Try Find Type from Plugin by Path
+        ///     Try Find <see cref="Type" /> from Plugin by Path
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePath">Type Path</param>
@@ -397,7 +397,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Plugin Type by Lambda
+        ///     Try Find Plugin <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePredicate">Type Lambda</param>

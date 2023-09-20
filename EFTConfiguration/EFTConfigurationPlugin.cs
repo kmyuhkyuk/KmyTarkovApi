@@ -27,7 +27,8 @@ namespace EFTConfiguration
     {
         private static Dictionary<string, PluginInfo> PluginInfos => Chainloader.PluginInfos;
 
-        private static readonly GameObject EFTConfigurationPublic = new GameObject("EFTConfigurationPublic", typeof(Canvas),
+        private static readonly GameObject EFTConfigurationPublic = new GameObject("EFTConfigurationPublic",
+            typeof(Canvas),
             typeof(CanvasScaler), typeof(GraphicRaycaster));
 
         private static readonly PropertyInfo CoreConfigInfo = typeof(ConfigFile).GetProperty("CoreConfig",

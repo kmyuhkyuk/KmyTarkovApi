@@ -249,7 +249,9 @@ namespace EFTReflection
         /// </summary>
         /// <param name="pluginGUID">Plugin GUID</param>
         /// <param name="plugin">Plugin</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     <see cref="bool" />
+        /// </returns>
         public static bool TryGetPlugin(string pluginGUID, out BaseUnityPlugin plugin)
         {
             var hasPluginInfo = Chainloader.PluginInfos.TryGetValue(pluginGUID, out var pluginInfo);
@@ -264,7 +266,9 @@ namespace EFTReflection
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePath">Type Path</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     <see cref="Type" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Type GetPluginType(BaseUnityPlugin plugin, string typePath)
         {
@@ -281,7 +285,9 @@ namespace EFTReflection
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="typePredicate">Type Lambda</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     <see cref="Type" />
+        /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Type GetPluginType(BaseUnityPlugin plugin, Func<Type, bool> typePredicate)
         {

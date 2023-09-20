@@ -108,7 +108,7 @@ namespace EFTApi
 
         public static bool VersionRange(string minVersion, string maxVersion)
         {
-            return GameVersion >= new Version(minVersion) && GameVersion <= new Version(maxVersion);
+            return GameVersion >= new Version(minVersion) && GameVersion < new Version(maxVersion);
         }
     }
 }

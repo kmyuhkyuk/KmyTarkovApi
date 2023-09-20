@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
+using EFT;
 
 namespace EFTApi
 {
@@ -34,72 +35,82 @@ namespace EFTApi
 
             GameVersion = gameVersion;
 
-            if (gameVersion >= new Version("0.12.12.17107") && gameVersion < new Version("0.12.12.17349"))
+            AkiVersion = GetAkiVersion();
+        }
+
+        private static Version GetAkiVersion()
+        {
+            if (VersionRange("0.12.12.17107", "0.12.12.17349"))
             {
-                AkiVersion = new Version("2.3.0");
+                return new Version("2.3.0");
             }
-            else if (gameVersion >= new Version("0.12.12.17349") && gameVersion < new Version("0.12.12.18346"))
+            else if (VersionRange("0.12.12.17349", "0.12.12.18346"))
             {
-                AkiVersion = new Version("2.3.1");
+                return new Version("2.3.1");
             }
-            else if (gameVersion >= new Version("0.12.12.18346") && gameVersion < new Version("0.12.12.19078"))
+            else if (VersionRange("0.12.12.18346", "0.12.12.19078"))
             {
-                AkiVersion = new Version("3.0.0");
+                return new Version("3.0.0");
             }
-            else if (gameVersion >= new Version("0.12.12.19078") && gameVersion < new Version("0.12.12.19428"))
+            else if (VersionRange("0.12.12.19078", "0.12.12.19428"))
             {
-                AkiVersion = new Version("3.2.1");
+                return new Version("3.2.1");
             }
-            else if (gameVersion >= new Version("0.12.12.19428") && gameVersion < new Version("0.12.12.19904"))
+            else if (VersionRange("0.12.12.19428", "0.12.12.19904"))
             {
-                AkiVersion = new Version("3.2.4");
+                return new Version("3.2.4");
             }
-            else if (gameVersion >= new Version("0.12.12.19904") && gameVersion < new Version("0.12.12.20243"))
+            else if (VersionRange("0.12.12.19904", "0.12.12.20243"))
             {
-                AkiVersion = new Version("3.2.5");
+                return new Version("3.2.5");
             }
-            else if (gameVersion >= new Version("0.12.12.20243") && gameVersion < new Version("0.12.12.20765"))
+            else if (VersionRange("0.12.12.20243", "0.12.12.20765"))
             {
-                AkiVersion = new Version("3.3.0");
+                return new Version("3.3.0");
             }
-            else if (gameVersion >= new Version("0.12.12.20765") && gameVersion < new Version("0.13.0.21734"))
+            else if (VersionRange("0.12.12.20765", "0.13.0.21734"))
             {
-                AkiVersion = new Version("3.4.1");
+                return new Version("3.4.1");
             }
-            else if (gameVersion >= new Version("0.13.0.21734") && gameVersion < new Version("0.13.0.22032"))
+            else if (VersionRange("0.13.0.21734", "0.13.0.22032"))
             {
-                AkiVersion = new Version("3.5.0");
+                return new Version("3.5.0");
             }
-            else if (gameVersion >= new Version("0.13.0.22032") && gameVersion < new Version("0.13.0.22173"))
+            else if (VersionRange("0.13.0.22032", "0.13.0.22173"))
             {
-                AkiVersion = new Version("3.5.1");
+                return new Version("3.5.1");
             }
-            else if (gameVersion >= new Version("0.13.0.22173") && gameVersion < new Version("0.13.0.22617"))
+            else if (VersionRange("0.13.0.22173", "0.13.0.22617"))
             {
-                AkiVersion = new Version("3.5.4");
+                return new Version("3.5.4");
             }
-            else if (gameVersion >= new Version("0.13.0.22617") && gameVersion < new Version("0.13.0.23043"))
+            else if (VersionRange("0.13.0.22617", "0.13.0.23043"))
             {
-                AkiVersion = new Version("3.5.5");
+                return new Version("3.5.5");
             }
-            else if (gameVersion >= new Version("0.13.0.23043") && gameVersion < new Version("0.13.0.23399"))
+            else if (VersionRange("0.13.0.23043", "0.13.0.23399"))
             {
-                AkiVersion = new Version("3.5.6");
+                return new Version("3.5.6");
             }
-            else if (gameVersion >= new Version("0.13.0.23399") && gameVersion < new Version("0.13.1.25206"))
+            else if (VersionRange("0.13.0.23399", "0.13.1.25206"))
             {
-                AkiVersion = new Version("3.5.7");
+                return new Version("3.5.7");
             }
-            else if (gameVersion > new Version("0.13.0.23399"))
+            else if (GameVersion > new Version("0.13.0.23399"))
             {
-                AkiVersion = AppDomain.CurrentDomain.GetAssemblies()
+                return AppDomain.CurrentDomain.GetAssemblies()
                     .Single(x => x.ManifestModule.Name == "aki-core.dll")
                     .GetTypes().Single(x => x.Name == "AkiCorePlugin").GetCustomAttribute<BepInPlugin>().Version;
             }
             else
             {
-                AkiVersion = new Version("0.0.0");
+                return new Version("0.0.0");
             }
+        }
+
+        public static bool VersionRange(string minVersion, string maxVersion)
+        {
+            return GameVersion >= new Version(minVersion) && GameVersion <= new Version(maxVersion);
         }
     }
 }

@@ -23,13 +23,15 @@ namespace EFTApi.Helpers
 
             var localizedType = RefTool.GetEftType(x => x.GetMethod("ParseLocalization", flags) != null);
 
-            _refLocalized = AccessTools.MethodDelegate<Func<string, string, string>>(RefTool.GetEftMethod(localizedType, flags,
+            _refLocalized = AccessTools.MethodDelegate<Func<string, string, string>>(RefTool.GetEftMethod(localizedType,
+                flags,
                 x => x.Name == "Localized"
                      && x.GetParameters().Length == 2
                      && x.GetParameters()[0].ParameterType == typeof(string)
                      && x.GetParameters()[1].ParameterType == typeof(string)));
 
-            _refLocalizedCase = AccessTools.MethodDelegate<Func<string, EStringCase, string>>(RefTool.GetEftMethod(localizedType,
+            _refLocalizedCase = AccessTools.MethodDelegate<Func<string, EStringCase, string>>(RefTool.GetEftMethod(
+                localizedType,
                 flags,
                 x => x.Name == "Localized"
                      && x.GetParameters().Length == 2

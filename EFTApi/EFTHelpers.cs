@@ -47,7 +47,7 @@ namespace EFTApi
         public static readonly AirdropHelper _AirdropHelper = AirdropHelper.Instance;
 
         /// <summary>
-        /// EnvironmentUIRoot Helper
+        ///     EnvironmentUIRoot Helper
         /// </summary>
         public static readonly EnvironmentUIRootHelper _EnvironmentUIRootHelper = EnvironmentUIRootHelper.Instance;
     }

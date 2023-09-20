@@ -15,7 +15,7 @@ namespace EFTApi.Helpers
         public readonly RefHelper.HookRef Unsubscribe;
 
         /// <summary>
-        /// Dispose Action
+        ///     Dispose Action
         /// </summary>
         public readonly RefHelper.HookRef Execute;
 

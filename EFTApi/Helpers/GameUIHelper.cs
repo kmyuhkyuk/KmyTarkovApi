@@ -15,7 +15,7 @@ namespace EFTApi.Helpers
         public readonly RefHelper.HookRef Awake;
 
         /// <summary>
-        /// Destroy Action
+        ///     Destroy Action
         /// </summary>
         public readonly RefHelper.HookRef OnDestroy;
 

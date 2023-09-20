@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EFT.UI;
+﻿using EFT.UI;
 using EFTReflection;
 
 namespace EFTApi.Helpers
@@ -18,7 +13,7 @@ namespace EFTApi.Helpers
         ///     Init Action
         /// </summary>
         public readonly RefHelper.HookRef Init;
-        
+
         private EnvironmentUIRootHelper()
         {
             Init = new RefHelper.HookRef(typeof(EnvironmentUIRoot), "Init");

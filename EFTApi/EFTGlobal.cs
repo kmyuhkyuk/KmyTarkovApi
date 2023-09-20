@@ -63,5 +63,10 @@ namespace EFTApi
         ///     Current GameUI
         /// </summary>
         public static GameUI GameUI => GameUIHelper.Instance.GameUI;
+
+        /// <summary>
+        ///     Current EnvironmentUIRoot
+        /// </summary>
+        public static EnvironmentUIRoot EnvironmentUIRoot => EnvironmentUIRootHelper.Instance.EnvironmentUIRoot;
     }
 }

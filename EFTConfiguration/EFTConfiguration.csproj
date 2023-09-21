@@ -104,6 +104,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptableValue\AcceptableValueCustomList.cs" />
+    <Compile Include="AcceptableValue\AcceptableValueCustomRange.cs" />
     <Compile Include="Attributes\ConfigurationManagerAttributes.cs" />
     <Compile Include="Attributes\EFTConfigurationAttributes.cs" />
     <Compile Include="Components\Base\ConfigBase.cs" />

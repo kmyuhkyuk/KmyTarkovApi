@@ -10,6 +10,7 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using EFTConfiguration.AcceptableValue;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.Patches;
@@ -72,6 +73,13 @@ namespace EFTConfiguration
             canvas.sortingOrder = SetData.KeySortingOrder.Value;
             SetData.KeySortingOrder.SettingChanged +=
                 (value, value2) => canvas.sortingOrder = SetData.KeySortingOrder.Value;
+
+            var acceptableValueCustomList =
+                (AcceptableValueCustomList<string>)SetData.KeyLanguage.Description.AcceptableValues;
+            CustomLocalizedHelper.LanguageAdd += () =>
+            {
+                acceptableValueCustomList.AcceptableValuesSet = CustomLocalizedHelper.Languages;
+            };
 
             CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
             SetData.KeyLanguage.SettingChanged += (value, value2) =>
@@ -391,7 +399,7 @@ namespace EFTConfiguration
             public readonly ConfigEntry<Vector2> KeyDefaultPosition;
             public readonly ConfigEntry<Vector2> KeyDescriptionPositionOffset;
 
-            public readonly ConfigEntry<CustomLocalizedHelper.Language> KeyLanguage;
+            public readonly ConfigEntry<string> KeyLanguage;
 
             public readonly ConfigEntry<string> KeySearch;
 
@@ -410,10 +418,11 @@ namespace EFTConfiguration
                 KeyDefaultPosition = configFile.Bind<Vector2>(mainSettings, "Default Position", Vector2.zero);
                 KeyDescriptionPositionOffset = configFile.Bind<Vector2>(mainSettings, "Description Position Offset",
                     new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
-                KeyLanguage = configFile.Bind<CustomLocalizedHelper.Language>(mainSettings, "Language",
-                    CustomLocalizedHelper.Language.En,
+                KeyLanguage = configFile.Bind<string>(mainSettings, "Language",
+                    "En",
                     new ConfigDescription(
-                        "Preferred language, if not available will tried English, if still not available than return original text"));
+                        "Preferred language, if not available will tried English, if still not available than return original text",
+                        new AcceptableValueCustomList<string>(CustomLocalizedHelper.Languages)));
                 KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
                 KeySavePath = configFile.Bind<string>(mainSettings, "Save Path", Paths.BepInExRootPath,
                     new ConfigDescription(

@@ -2,7 +2,6 @@
 using BepInEx;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
-using EFTConfiguration.Helpers;
 using UnityEngine;
 
 namespace ConfigurationTest
@@ -12,6 +11,13 @@ namespace ConfigurationTest
     public class ConfigurationTest : BaseUnityPlugin
     {
         private bool _testLoopThrow;
+
+        public enum E
+        {
+            A,
+            B,
+            C
+        }
 
         private ConfigurationTest()
         {
@@ -44,7 +50,7 @@ namespace ConfigurationTest
                 new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
             Config.Bind<Color>(testSettings, "Color", Color.white,
                 new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
-            Config.Bind<CustomLocalizedHelper.Language>(testSettings, "Enum", CustomLocalizedHelper.Language.En,
+            Config.Bind<E>(testSettings, "Enum", E.A,
                 new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
             Config.Bind<KeyboardShortcut>(testSettings, "KeyboardShortcut", KeyboardShortcut.Empty,
                 new ConfigDescription(string.Empty, null, eftConfigurationAttributes));

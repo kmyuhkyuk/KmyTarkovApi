@@ -7,10 +7,12 @@
     public class AcceptableValueCustomList<T> : BepInEx.Configuration.AcceptableValueList<T>
         where T : System.IEquatable<T>
     {
-        public override T[] AcceptableValues => acceptableValuesCustom;
+        [System.Obsolete("Used AcceptableValuesCustom", true)]
+        public override T[] AcceptableValues => AcceptableValuesCustom;
 
-        public T[] AcceptableValuesSet
+        public T[] AcceptableValuesCustom
         {
+            get => acceptableValuesCustom;
             set
             {
                 if (acceptableValuesCustom.Length != 0)
@@ -24,6 +26,7 @@
 
         public AcceptableValueCustomList(params T[] acceptableValues) : base(acceptableValues)
         {
+            //Base constructor already checked
             acceptableValuesCustom = acceptableValues;
         }
     }

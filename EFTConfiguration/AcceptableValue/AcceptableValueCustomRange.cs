@@ -7,12 +7,15 @@
     public class AcceptableValueCustomRange<T> : BepInEx.Configuration.AcceptableValueRange<T>
         where T : System.IComparable
     {
-        public override T MinValue => minValueCustom;
+        [System.Obsolete("Used MinValueCustom", true)]
+        public override T MinValue => MinValueCustom;
 
-        public override T MaxValue => maxValueCustom;
+        [System.Obsolete("Used MaxValueCustom", true)]
+        public override T MaxValue => MaxValueCustom;
 
-        public T MinValueSet
+        public T MinValueCustom
         {
+            get => minValueCustom;
             set
             {
                 if (value.CompareTo(maxValueCustom) < 0)
@@ -24,8 +27,9 @@
 
         private T minValueCustom;
 
-        public T MaxValueSet
+        public T MaxValueCustom
         {
+            get => maxValueCustom;
             set => maxValueCustom = value;
         }
 
@@ -33,6 +37,7 @@
 
         public AcceptableValueCustomRange(T minValue, T maxValue) : base(minValue, maxValue)
         {
+            //Base constructor already checked
             maxValueCustom = maxValue;
             minValueCustom = minValue;
         }

@@ -78,7 +78,7 @@ namespace EFTConfiguration
                 (AcceptableValueCustomList<string>)SetData.KeyLanguage.Description.AcceptableValues;
             CustomLocalizedHelper.LanguageAdd += () =>
             {
-                acceptableValueCustomList.AcceptableValuesSet = CustomLocalizedHelper.Languages;
+                acceptableValueCustomList.AcceptableValuesCustom = CustomLocalizedHelper.Languages;
             };
 
             CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;

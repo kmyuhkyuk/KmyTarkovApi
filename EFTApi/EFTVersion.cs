@@ -106,27 +106,58 @@ namespace EFTApi
             }
         }
 
+        /// <summary>
+        /// Game Version greater or equal Min Version and less Max Version
+        /// </summary>
+        /// <param name="minVersion">Min Version</param>
+        /// <param name="maxVersion">Max Version</param>
+        /// <returns></returns>
         public static bool GameVersionRange(string minVersion, string maxVersion)
         {
             return GameVersionRange(new Version(minVersion), new Version(maxVersion));
         }
 
+        /// <summary>
+        /// Game Version greater or equal Min Version and less Max Version
+        /// </summary>
+        /// <param name="minVersion">Min Version</param>
+        /// <param name="maxVersion">Max Version</param>
+        /// <returns></returns>
         public static bool GameVersionRange(Version minVersion, Version maxVersion)
         {
             return VersionRange(GameVersion, minVersion, maxVersion);
         }
 
+        /// <summary>
+        /// Aki Version greater or equal Min Version and less Max Version
+        /// </summary>
+        /// <param name="minVersion">Min Version</param>
+        /// <param name="maxVersion">Max Version</param>
+        /// <returns></returns>
         public static bool AkiVersionRange(string minVersion, string maxVersion)
         {
             return AkiVersionRange(new Version(minVersion), new Version(maxVersion));
         }
 
+        /// <summary>
+        /// Aki Version greater or equal Min Version and less Max Version
+        /// </summary>
+        /// <param name="minVersion">Min Version</param>
+        /// <param name="maxVersion">Max Version</param>
+        /// <returns></returns>
         public static bool AkiVersionRange(Version minVersion, Version maxVersion)
         {
             return VersionRange(AkiVersion, minVersion, maxVersion);
         }
 
-        private static bool VersionRange(Version targetVersion, Version minVersion, Version maxVersion)
+        /// <summary>
+        /// Target Version greater or equal Min Version and less Max Version
+        /// </summary>
+        /// <param name="targetVersion">Target Version</param>
+        /// <param name="minVersion">Min Version</param>
+        /// <param name="maxVersion">Max Version</param>
+        /// <returns></returns>
+        public static bool VersionRange(Version targetVersion, Version minVersion, Version maxVersion)
         {
             return targetVersion >= minVersion && targetVersion < maxVersion;
         }

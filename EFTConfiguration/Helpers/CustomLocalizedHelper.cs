@@ -66,7 +66,7 @@ namespace EFTConfiguration.Helpers
         public static string Localized(string modName, string key)
         {
             if (LanguageList.TryGetValue(modName, out var language)
-                && (language.TryGetValue(CurrentLanguage.ToLower(), out var localizedDictionary) ||
+                && (language.TryGetValue(_currentLanguage.ToLower(), out var localizedDictionary) ||
                     language.TryGetValue("en", out localizedDictionary))
                 && localizedDictionary.TryGetValue(key, out var localized))
             {

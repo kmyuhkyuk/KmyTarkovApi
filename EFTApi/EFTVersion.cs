@@ -107,10 +107,10 @@ namespace EFTApi
         }
 
         /// <summary>
-        /// Game Version greater or equal Min Version and less Max Version
+        ///     Game Version greater or equal Min Version and less Max Version
         /// </summary>
-        /// <param name="minVersion">Min Version</param>
-        /// <param name="maxVersion">Max Version</param>
+        /// <param name="minVersion"></param>
+        /// <param name="maxVersion"></param>
         /// <returns></returns>
         public static bool GameVersionRange(string minVersion, string maxVersion)
         {
@@ -118,10 +118,10 @@ namespace EFTApi
         }
 
         /// <summary>
-        /// Game Version greater or equal Min Version and less Max Version
+        ///     Game Version greater or equal Min Version and less Max Version
         /// </summary>
-        /// <param name="minVersion">Min Version</param>
-        /// <param name="maxVersion">Max Version</param>
+        /// <param name="minVersion"></param>
+        /// <param name="maxVersion"></param>
         /// <returns></returns>
         public static bool GameVersionRange(Version minVersion, Version maxVersion)
         {
@@ -129,10 +129,10 @@ namespace EFTApi
         }
 
         /// <summary>
-        /// Aki Version greater or equal Min Version and less Max Version
+        ///     Aki Version greater or equal Min Version and less Max Version
         /// </summary>
-        /// <param name="minVersion">Min Version</param>
-        /// <param name="maxVersion">Max Version</param>
+        /// <param name="minVersion"></param>
+        /// <param name="maxVersion"></param>
         /// <returns></returns>
         public static bool AkiVersionRange(string minVersion, string maxVersion)
         {
@@ -140,10 +140,10 @@ namespace EFTApi
         }
 
         /// <summary>
-        /// Aki Version greater or equal Min Version and less Max Version
+        ///     Aki Version greater or equal Min Version and less Max Version
         /// </summary>
-        /// <param name="minVersion">Min Version</param>
-        /// <param name="maxVersion">Max Version</param>
+        /// <param name="minVersion"></param>
+        /// <param name="maxVersion"></param>
         /// <returns></returns>
         public static bool AkiVersionRange(Version minVersion, Version maxVersion)
         {
@@ -151,11 +151,11 @@ namespace EFTApi
         }
 
         /// <summary>
-        /// Target Version greater or equal Min Version and less Max Version
+        ///     Target Version greater or equal Min Version and less Max Version
         /// </summary>
-        /// <param name="targetVersion">Target Version</param>
-        /// <param name="minVersion">Min Version</param>
-        /// <param name="maxVersion">Max Version</param>
+        /// <param name="targetVersion"></param>
+        /// <param name="minVersion"></param>
+        /// <param name="maxVersion"></param>
         /// <returns></returns>
         public static bool VersionRange(Version targetVersion, Version minVersion, Version maxVersion)
         {

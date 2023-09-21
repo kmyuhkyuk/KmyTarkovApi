@@ -37,7 +37,7 @@ namespace EFTReflection
         /// <summary>
         ///     Find Single <see cref="Type" /> by Lambda
         /// </summary>
-        /// <param name="typePredicate">Type Lambda</param>
+        /// <param name="typePredicate"></param>
         /// <returns></returns>
         public static Type GetEftType(Func<Type, bool> typePredicate)
         {
@@ -47,8 +47,8 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find Single <see cref="Type" /> by Lambda
         /// </summary>
-        /// <param name="typePredicate">Type Lambda</param>
-        /// <param name="eftType">Out Eft Type</param>
+        /// <param name="typePredicate"></param>
+        /// <param name="eftType"></param>
         /// <returns></returns>
         public static bool TryGetEftType(Func<Type, bool> typePredicate, out Type eftType)
         {
@@ -62,9 +62,9 @@ namespace EFTReflection
         /// <summary>
         ///     Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
-        /// <param name="type">Type</param>
-        /// <param name="flags">MethodInfo BindingFlags</param>
-        /// <param name="methodPredicate">MethodInfo Lambda</param>
+        /// <param name="type"></param>
+        /// <param name="flags"></param>
+        /// <param name="methodPredicate"></param>
         /// <returns></returns>
         public static MethodInfo GetEftMethod(Type type, BindingFlags flags, Func<MethodInfo, bool> methodPredicate)
         {
@@ -79,9 +79,9 @@ namespace EFTReflection
         /// <summary>
         ///     Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
-        /// <param name="typePredicate">Type Lambda</param>
-        /// <param name="flags">MethodInfo BindingFlags</param>
-        /// <param name="methodPredicate">MethodInfo Lambda</param>
+        /// <param name="typePredicate"></param>
+        /// <param name="flags"></param>
+        /// <param name="methodPredicate"></param>
         /// <returns></returns>
         public static MethodInfo GetEftMethod(Func<Type, bool> typePredicate, BindingFlags flags,
             Func<MethodInfo, bool> methodPredicate)
@@ -96,10 +96,10 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
-        /// <param name="type">Type</param>
-        /// <param name="flags">MethodInfo BindingFlags</param>
-        /// <param name="methodPredicate">MethodInfo Lambda</param>
-        /// <param name="eftMethod">Out Eft Method</param>
+        /// <param name="type"></param>
+        /// <param name="flags"></param>
+        /// <param name="methodPredicate"></param>
+        /// <param name="eftMethod"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool TryGetEftMethod(Type type, BindingFlags flags, Func<MethodInfo, bool> methodPredicate,
@@ -118,10 +118,10 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
-        /// <param name="typePredicate">Type Lambda</param>
-        /// <param name="flags">MethodInfo BindingFlags</param>
+        /// <param name="typePredicate"></param>
+        /// <param name="flags"></param>
         /// <param name="methodPredicate"></param>
-        /// <param name="eftMethod">Out Eft Method</param>
+        /// <param name="eftMethod"></param>
         /// <returns></returns>
         public static bool TryGetEftMethod(Func<Type, bool> typePredicate, BindingFlags flags,
             Func<MethodInfo, bool> methodPredicate, out MethodInfo eftMethod)
@@ -142,7 +142,7 @@ namespace EFTReflection
         /// <summary>
         ///     If <see cref="MethodBase" /> is Async then return <see langword="true" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool IsAsync(this MethodBase methodBase)
@@ -160,7 +160,7 @@ namespace EFTReflection
         /// <summary>
         ///     If <see cref="Type" /> is Compiler Generate then return <see langword="true" />
         /// </summary>
-        /// <param name="type">Type</param>
+        /// <param name="type"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool IsCompilerGenerated(this Type type)
@@ -176,7 +176,7 @@ namespace EFTReflection
         /// <summary>
         ///     If <see cref="MethodBase" /> is Compiler Generate then return <see langword="true" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool IsCompilerGenerated(this MethodBase methodBase)
@@ -194,7 +194,7 @@ namespace EFTReflection
         /// <summary>
         ///     Get Async Struct from <see cref="MethodBase" />
         /// </summary>
-        /// <param name="methodBase">Async Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
@@ -222,7 +222,7 @@ namespace EFTReflection
         ///     Get Async MoveNext from <see cref="MethodBase" />, Harmony have been added this feature on Newer versions
         ///     <see cref="AccessTools.AsyncMoveNext" />
         /// </summary>
-        /// <param name="methodBase">Async Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         public static MethodInfo GetAsyncMoveNext(MethodBase methodBase)
         {
@@ -234,7 +234,7 @@ namespace EFTReflection
         /// <summary>
         ///     Get Async MoveNext from Struct
         /// </summary>
-        /// <param name="type">Async Struct</param>
+        /// <param name="type"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public static MethodInfo GetAsyncMoveNext(Type type)
@@ -254,7 +254,7 @@ namespace EFTReflection
         /// <summary>
         ///     If <see cref="MethodBase" /> is Async then return <see cref="GetAsyncMoveNext(MethodBase)" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         public static MethodBase GetRealMethod(this MethodBase methodBase)
         {
@@ -264,7 +264,7 @@ namespace EFTReflection
         /// <summary>
         ///     Get Nested Methods from <see cref="MethodBase" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static IEnumerable<MethodInfo> GetNestedMethods(MethodBase methodBase)
@@ -287,9 +287,9 @@ namespace EFTReflection
         /// <summary>
         ///     If <see cref="MethodBase" /> Contains this IL then return <see langword="true" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
-        /// <param name="opcode">OpCode</param>
-        /// <param name="operand">Operand</param>
+        /// <param name="methodBase"></param>
+        /// <param name="opcode"></param>
+        /// <param name="operand"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool ContainsIL(this MethodBase methodBase, OpCode opcode, object operand = null)
@@ -306,7 +306,7 @@ namespace EFTReflection
         /// <summary>
         ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="MethodBase" />
         /// </summary>
-        /// <param name="methodBase">Method</param>
+        /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static MethodInfo[] GetCallMethods(this MethodBase methodBase)
@@ -324,8 +324,8 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find BepInEx Plugin <see cref="Type" />
         /// </summary>
-        /// <param name="pluginGUID">Plugin GUID</param>
-        /// <param name="plugin">Plugin</param>
+        /// <param name="pluginGUID"></param>
+        /// <param name="plugin"></param>
         /// <returns></returns>
         public static bool TryGetPlugin(string pluginGUID, out BaseUnityPlugin plugin)
         {
@@ -341,8 +341,8 @@ namespace EFTReflection
         /// <summary>
         ///     Find <see cref="Type" /> from Plugin by Path
         /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="typePath">Type Path</param>
+        /// <param name="plugin"></param>
+        /// <param name="typePath"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Type GetPluginType(BaseUnityPlugin plugin, string typePath)
@@ -358,8 +358,8 @@ namespace EFTReflection
         /// <summary>
         ///     Find Plugin <see cref="Type" /> by Lambda
         /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="typePredicate">Type Lambda</param>
+        /// <param name="plugin"></param>
+        /// <param name="typePredicate"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static Type GetPluginType(BaseUnityPlugin plugin, Func<Type, bool> typePredicate)
@@ -379,9 +379,9 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find <see cref="Type" /> from Plugin by Path
         /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="typePath">Type Path</param>
-        /// <param name="pluginType">Out Plugin Type</param>
+        /// <param name="plugin"></param>
+        /// <param name="typePath"></param>
+        /// <param name="pluginType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool TryGetPluginType(BaseUnityPlugin plugin, string typePath, out Type pluginType)
@@ -399,9 +399,9 @@ namespace EFTReflection
         /// <summary>
         ///     Try Find Plugin <see cref="Type" /> by Lambda
         /// </summary>
-        /// <param name="plugin">Plugin</param>
-        /// <param name="typePredicate">Type Lambda</param>
-        /// <param name="pluginType">Out Plugin Type</param>
+        /// <param name="plugin"></param>
+        /// <param name="typePredicate"></param>
+        /// <param name="pluginType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool TryGetPluginType(BaseUnityPlugin plugin, Func<Type, bool> typePredicate, out Type pluginType)

@@ -20,6 +20,7 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Add a Hook Patch by <see cref="Delegate" />
         /// </summary>
+        /// <remarks>It can make your method parameter still output null if Original Method does not exist parameter</remarks>
         /// <param name="originalMethod"></param>
         /// <param name="hookDelegate"></param>
         /// <param name="patchType"></param>
@@ -34,6 +35,7 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Add a Hook Patch by <see cref="MethodInfo" />
         /// </summary>
+        /// <remarks>It can make your method parameter still output null if Original Method does not exist parameter</remarks>
         /// <param name="originalMethod"></param>
         /// <param name="hookMethod"></param>
         /// <param name="patchType"></param>

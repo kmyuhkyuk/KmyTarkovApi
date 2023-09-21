@@ -39,7 +39,7 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="name">Name</param>
+        /// <param name="name"></param>
         protected BaseModulePatch(string name = null)
         {
             Harmony = new Harmony(name ?? GetType().Name);
@@ -70,7 +70,7 @@ namespace EFTReflection.Patching
         /// <summary>
         ///     Get HarmonyMethod from string
         /// </summary>
-        /// <param name="attributeType">Attribute type</param>
+        /// <param name="attributeType"></param>
         /// <returns></returns>
         protected List<HarmonyMethod> GetPatchMethods(Type attributeType)
         {

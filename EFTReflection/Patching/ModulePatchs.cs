@@ -7,7 +7,8 @@ namespace EFTReflection.Patching
 {
     public abstract class ModulePatchs : BaseModulePatch
     {
-        private const string Tip = "Please do not override GetTargetMethod () in ModulePatchs, Used GetTargetMethods ()";
+        private const string Tip =
+            "Please do not override GetTargetMethod () in ModulePatchs, Used GetTargetMethods ()";
 
         [Obsolete(Tip, true)]
         protected override MethodBase GetTargetMethod()

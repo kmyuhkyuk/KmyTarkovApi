@@ -19,6 +19,8 @@ namespace EFTConfiguration.Helpers
 
         private static string _currentLanguage;
 
+        public static string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
+
         internal static readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> LanguageList =
             new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
 
@@ -26,34 +28,36 @@ namespace EFTConfiguration.Helpers
 
         public static event Action LanguageAdd;
 
-        public static string[] Languages => LanguagesHashSet.ToArray();
+        public static string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
 
-        private static readonly HashSet<string> LanguagesHashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "Cz",
-            "De",
-            "En",
-            "Es",
-            "Fr",
-            "Ge",
-            "Hu",
-            "It",
-            "Jp",
-            "Ko",
-            "Nl",
-            "Pl",
-            "Pt",
-            "Ru",
-            "Sk",
-            "Sv",
-            "Tr",
-            "Zh"
+        private static readonly Dictionary<string, string> LanguagesLowerDictionary = new Dictionary<string, string>
+        { 
+            {"Cz", "cz"},
+            {"De", "de"},
+            {"En", "en"},
+            {"Es", "es"},
+            {"Fr", "fr"},
+            {"Ge", "ge"},
+            {"Hu", "hu"},
+            {"It", "it"},
+            {"Jp", "jp"},
+            {"Ko", "ko"},
+            {"Nl", "nl"},
+            {"Pl", "pl"},
+            {"Pt", "pt"},
+            {"Ru", "ru"},
+            {"Sk", "sk"},
+            {"Sv", "sv"},
+            {"Tr", "tr"},
+            {"Zh", "zh"}
         };
 
         public static void AddLanguage(string name)
         {
-            if (LanguagesHashSet.Add(name))
+            if (!LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
             {
+                LanguagesLowerDictionary.Add(name, name.ToLower());
+
                 LanguageAdd?.Invoke();
             }
         }
@@ -66,7 +70,7 @@ namespace EFTConfiguration.Helpers
         public static string Localized(string modName, string key)
         {
             if (LanguageList.TryGetValue(modName, out var language)
-                && (language.TryGetValue(CurrentLanguage.ToLower(), out var localizedDictionary) ||
+                && (language.TryGetValue(CurrentLanguageLower, out var localizedDictionary) ||
                     language.TryGetValue("en", out localizedDictionary))
                 && localizedDictionary.TryGetValue(key, out var localized))
             {

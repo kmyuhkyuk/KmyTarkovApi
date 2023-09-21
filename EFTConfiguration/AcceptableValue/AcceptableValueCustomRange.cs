@@ -1,5 +1,9 @@
 ﻿namespace EFTConfiguration.AcceptableValue
 {
+    /// <summary>
+    ///     Can be Modify Range Value
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AcceptableValueCustomRange<T> : BepInEx.Configuration.AcceptableValueRange<T>
         where T : System.IComparable
     {

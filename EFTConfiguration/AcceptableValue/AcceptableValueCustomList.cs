@@ -1,5 +1,9 @@
 ﻿namespace EFTConfiguration.AcceptableValue
 {
+    /// <summary>
+    ///     Can be Modify Acceptable Values
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AcceptableValueCustomList<T> : BepInEx.Configuration.AcceptableValueList<T>
         where T : System.IEquatable<T>
     {

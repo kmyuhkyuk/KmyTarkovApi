@@ -31,25 +31,25 @@ namespace EFTConfiguration.Helpers
         public static string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
 
         private static readonly Dictionary<string, string> LanguagesLowerDictionary = new Dictionary<string, string>
-        { 
-            {"Cz", "cz"},
-            {"De", "de"},
-            {"En", "en"},
-            {"Es", "es"},
-            {"Fr", "fr"},
-            {"Ge", "ge"},
-            {"Hu", "hu"},
-            {"It", "it"},
-            {"Jp", "jp"},
-            {"Ko", "ko"},
-            {"Nl", "nl"},
-            {"Pl", "pl"},
-            {"Pt", "pt"},
-            {"Ru", "ru"},
-            {"Sk", "sk"},
-            {"Sv", "sv"},
-            {"Tr", "tr"},
-            {"Zh", "zh"}
+        {
+            { "Cz", "cz" },
+            { "De", "de" },
+            { "En", "en" },
+            { "Es", "es" },
+            { "Fr", "fr" },
+            { "Ge", "ge" },
+            { "Hu", "hu" },
+            { "It", "it" },
+            { "Jp", "jp" },
+            { "Ko", "ko" },
+            { "Nl", "nl" },
+            { "Pl", "pl" },
+            { "Pt", "pt" },
+            { "Ru", "ru" },
+            { "Sk", "sk" },
+            { "Sv", "sv" },
+            { "Tr", "tr" },
+            { "Zh", "zh" }
         };
 
         public static void AddLanguage(string name)

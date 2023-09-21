@@ -145,22 +145,24 @@ namespace EFTConfiguration
                 {
                     var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
 
-                    hasAttributes = true;
-
-                    foreach (var eftConfigurationPluginExternalAttributesFieldInfo in
-                             eftConfigurationPluginExternalAttributesFieldInfos)
+                    foreach (var eftConfigurationPluginAttributesFieldInfo in
+                             EFTConfigurationPluginAttributesFields)
                     {
-                        var eftConfigurationPluginAttributesFieldInfo =
-                            EFTConfigurationPluginAttributesFields.SingleOrDefault(x =>
-                                x.Name == eftConfigurationPluginExternalAttributesFieldInfo.Name && x.FieldType ==
-                                eftConfigurationPluginExternalAttributesFieldInfo.FieldType);
+                        var eftConfigurationPluginExternalAttributesFieldInfo =
+                            eftConfigurationPluginExternalAttributesFieldInfos.SingleOrDefault(x =>
+                                x.Name == eftConfigurationPluginAttributesFieldInfo.Name && x.FieldType ==
+                                eftConfigurationPluginAttributesFieldInfo.FieldType);
 
-                        if (eftConfigurationPluginAttributesFieldInfo == null)
+                        if (eftConfigurationPluginExternalAttributesFieldInfo == null)
                             continue;
 
                         eftConfigurationPluginAttributesFieldInfo.SetValue(eftConfigurationPluginAttributes,
                             eftConfigurationPluginExternalAttributesFieldInfo.GetValue(attribute));
                     }
+
+                    hasAttributes = true;
+
+                    break;
                 }
             }
 
@@ -325,14 +327,15 @@ namespace EFTConfiguration
 
                 if (eftConfigurationExternalAttributes != null)
                 {
-                    foreach (var eftConfigurationExternalAttributesFieldInfo in
-                             eftConfigurationExternalAttributesFieldInfos)
+                    foreach (var eftConfigurationAttributes in
+                             EFTConfigurationAttributesFields)
                     {
-                        var eftConfigurationAttributes = EFTConfigurationAttributesFields.SingleOrDefault(x =>
-                            x.Name == eftConfigurationExternalAttributesFieldInfo.Name &&
-                            x.FieldType == eftConfigurationExternalAttributesFieldInfo.FieldType);
+                        var eftConfigurationExternalAttributesFieldInfo =
+                            eftConfigurationExternalAttributesFieldInfos.SingleOrDefault(x =>
+                                x.Name == eftConfigurationAttributes.Name &&
+                                x.FieldType == eftConfigurationAttributes.FieldType);
 
-                        if (eftConfigurationAttributes == null)
+                        if (eftConfigurationExternalAttributesFieldInfo == null)
                             continue;
 
                         eftConfigurationAttributes.SetValue(ConfigurationAttributes,

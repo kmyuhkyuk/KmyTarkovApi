@@ -44,5 +44,7 @@ namespace EFTConfiguration
         [SerializeField] public GameObject stringAction;
 
         [SerializeField] public GameObject unknown;
+
+        [SerializeField] public GameObject unknownCustom;
     }
 }

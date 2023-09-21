@@ -5,32 +5,31 @@ using UnityEngine;
 
 namespace EFTConfiguration.Components
 {
-    public class ConfigUnknown : ConfigObject
+    public class ConfigUnknownCustom : ConfigObjectCustom
     {
-        [SerializeField] private TMP_InputField unknownValue;
+        [SerializeField] private TMP_InputField unknownCustomValue;
 
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
             bool readOnly, object defaultValue, Action<object> onValueChanged, bool hideReset,
-            Func<object> currentValue,
-            Type type)
+            Func<object> currentValue, Func<object, string> customToString, Func<string, object> customToObject)
         {
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
-                hideReset, currentValue, type);
+                hideReset, currentValue, customToString, customToObject);
 
-            unknownValue.onEndEdit.AddListener(value =>
+            unknownCustomValue.onEndEdit.AddListener(value =>
             {
-                var objectValue = Convert.ChangeType(value, type);
+                var objectValue = customToObject(value);
 
                 onValueChanged(objectValue);
             });
-            unknownValue.interactable = !readOnly;
+            unknownCustomValue.interactable = !readOnly;
         }
 
         public override void UpdateCurrentValue()
         {
             var currentValue = GetValue();
 
-            unknownValue.text = currentValue.ToString();
+            unknownCustomValue.text = CustomToString(currentValue);
         }
     }
 }

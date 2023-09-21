@@ -349,14 +349,14 @@ namespace EFTConfiguration.UI
             }
             else if (attributes.CustomToString != null && attributes.CustomToObject != null)
             {
-                var configUnknown = Instantiate(EFTConfigurationPlugin.PrefabManager.unknown, transform)
-                    .GetComponent<ConfigUnknown>();
+                var configUnknownCustom = Instantiate(EFTConfigurationPlugin.PrefabManager.unknownCustom, transform)
+                    .GetComponent<ConfigUnknownCustom>();
 
-                configUnknown.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
+                configUnknownCustom.Init(ModName, configData.Key, configData.Description, attributes.Advanced,
                     attributes.ReadOnly, configData.DefaultValue, configData.SetValue, attributes.HideReset,
-                    configData.GetValue, type, attributes.CustomToString, attributes.CustomToObject);
+                    configData.GetValue, attributes.CustomToString, attributes.CustomToObject);
 
-                AddConfig(section, configUnknown);
+                AddConfig(section, configUnknownCustom);
             }
         }
 

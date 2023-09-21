@@ -107,6 +107,7 @@
     <Compile Include="Attributes\ConfigurationManagerAttributes.cs" />
     <Compile Include="Attributes\EFTConfigurationAttributes.cs" />
     <Compile Include="Components\Base\ConfigBase.cs" />
+    <Compile Include="Components\Base\ConfigObjectCustom.cs" />
     <Compile Include="Components\Base\ConfigDescription.cs" />
     <Compile Include="Components\Base\ConfigDropdownList.cs" />
     <Compile Include="Components\Base\ConfigObjectDropdownList.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Components\Base\ConfigAction.cs" />
     <Compile Include="Components\ClassType\ConfigStringAction.cs" />
     <Compile Include="Components\ConfigUnknown.cs" />
+    <Compile Include="Components\ConfigUnknownCustom.cs" />
     <Compile Include="Components\ValueType\ConfigColor.cs" />
     <Compile Include="Components\ValueType\ConfigEnum.cs" />
     <Compile Include="Components\ValueType\ConfigFloat.cs" />

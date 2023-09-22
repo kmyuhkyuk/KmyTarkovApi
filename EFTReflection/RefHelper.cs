@@ -642,7 +642,7 @@ namespace EFTReflection
         {
             public readonly MethodBase TargetMethod;
 
-            public HookRef(MethodInfo targetMethod)
+            public HookRef(MethodBase targetMethod)
             {
                 if (targetMethod == null)
                 {
@@ -685,9 +685,9 @@ namespace EFTReflection
                 Remove(hookDelegate.Method);
             }
 
-            public void Remove(MethodInfo hookMethod)
+            public void Remove(MethodBase hookMethod)
             {
-                HookPatch.Remove(TargetMethod, hookMethod);
+                HookPatch.Remove(TargetMethod, (MethodInfo)hookMethod);
             }
         }
     }

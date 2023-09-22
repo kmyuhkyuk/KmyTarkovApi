@@ -256,9 +256,9 @@ namespace EFTReflection
         /// </summary>
         /// <param name="methodBase"></param>
         /// <returns></returns>
-        public static MethodBase GetRealMethod(this MethodBase methodBase)
+        public static MethodInfo GetRealMethod(this MethodBase methodBase)
         {
-            return methodBase.IsAsync() ? GetAsyncMoveNext(methodBase) : methodBase;
+            return methodBase.IsAsync() ? GetAsyncMoveNext(methodBase) : (MethodInfo)methodBase;
         }
 
         /// <summary>

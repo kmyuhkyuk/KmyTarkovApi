@@ -28,7 +28,8 @@ namespace EFTApi.Helpers
                 if (EFTVersion.AkiVersion > Version.Parse("3.5.0") &&
                     RefTool.TryGetPlugin("com.spt-aki.custom", out var plugin))
                 {
-                    OnBoxLand = RefHelper.HookRef.Create(RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
+                    OnBoxLand = RefHelper.HookRef.Create(
+                        RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
                         "OnBoxLand");
                 }
             }

@@ -226,11 +226,8 @@ namespace EFTConfiguration
 
             foreach (var localized in localizedDirectory.GetFiles("*.json"))
             {
-                using (var stream = File.OpenText(localized.FullName))
-                {
-                    localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name),
-                        JsonConvert.DeserializeObject<Dictionary<string, string>>(stream.ReadToEnd()));
-                }
+                localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name),
+                    JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(localized.FullName)));
             }
 
             return localizedDictionary;

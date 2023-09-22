@@ -51,10 +51,8 @@ namespace EFTConfiguration.Helpers
             }
             else
             {
-                using (var stream = File.OpenText(cacheFileInfo.FullName))
-                {
-                    IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(stream.ReadToEnd());
-                }
+                IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(
+                    File.ReadAllText(cacheFileInfo.FullName));
             }
         }
 

@@ -29,7 +29,7 @@ namespace EFTApi.Helpers
 
         private SessionHelper()
         {
-            CreateBackend = new RefHelper.HookRef(EFTVersion.AkiVersion > new Version("3.3.0")
+            CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > Version.Parse("3.3.0")
                     ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                     : RefTool.GetEftType(x => x.Name == "MainApplication"),
                 x => x.IsAsync() && x.ReturnType == typeof(Task) &&
@@ -42,7 +42,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            var session = EFTVersion.AkiVersion > new Version("3.3.0")
+            var session = EFTVersion.AkiVersion > Version.Parse("3.3.0")
                 ? Traverse.Create(__instance).Field("ClientBackEnd").Property("Session").GetValue<ISession>()
                 : Traverse.Create(__instance).Field("_backEnd").Property("Session").GetValue<ISession>();
 

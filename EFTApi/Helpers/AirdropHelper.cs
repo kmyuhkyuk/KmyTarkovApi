@@ -25,10 +25,10 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion > new Version("3.5.0") &&
+                if (EFTVersion.AkiVersion > Version.Parse("3.5.0") &&
                     RefTool.TryGetPlugin("com.spt-aki.custom", out var plugin))
                 {
-                    OnBoxLand = new RefHelper.HookRef(RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
+                    OnBoxLand = RefHelper.HookRef.Create(RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
                         "OnBoxLand");
                 }
             }
@@ -45,7 +45,7 @@ namespace EFTApi.Helpers
 
             private AirdropSynchronizableObjectData()
             {
-                if (EFTVersion.AkiVersion > new Version("3.5.0"))
+                if (EFTVersion.AkiVersion > Version.Parse("3.5.0"))
                 {
                     RefAirdropType =
                         RefHelper.FieldRef<object, int>.Create(

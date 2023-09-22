@@ -11,7 +11,7 @@ namespace EFTApi.Helpers
 
         private QuestHelper()
         {
-            OnConditionValueChanged = new RefHelper.HookRef(RefTool.GetEftType(x =>
+            OnConditionValueChanged = RefHelper.HookRef.Create(RefTool.GetEftType(x =>
                     x.GetMethod("OnConditionValueChanged", BindingFlags.DeclaredOnly | RefTool.NonPublic) != null),
                 "OnConditionValueChanged");
         }

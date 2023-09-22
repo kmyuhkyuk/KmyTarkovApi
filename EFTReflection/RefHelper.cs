@@ -664,6 +664,21 @@ namespace EFTReflection
                                throw new Exception($"{targetType} can't find {targetMethodPredicate}");
             }
 
+            public static HookRef Create(MethodBase targetMethod)
+            {
+                return new HookRef(targetMethod);
+            }
+
+            public static HookRef Create(Type targetType, string targetMethodName)
+            {
+                return new HookRef(targetType, targetMethodName);
+            }
+
+            public static HookRef Create(Type targetType, Func<MethodInfo, bool> targetMethodPredicate)
+            {
+                return new HookRef(targetType, targetMethodPredicate);
+            }
+
             public void Add(object hookObject, string hookMethodName,
                 HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {

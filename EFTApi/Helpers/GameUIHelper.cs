@@ -23,8 +23,8 @@ namespace EFTApi.Helpers
         {
             var gameUIType = typeof(GameUI);
 
-            Awake = new RefHelper.HookRef(gameUIType, "Awake");
-            OnDestroy = new RefHelper.HookRef(gameUIType, "OnDestroy");
+            Awake = RefHelper.HookRef.Create(gameUIType, "Awake");
+            OnDestroy = RefHelper.HookRef.Create(gameUIType, "OnDestroy");
 
             Awake.Add(this, nameof(OnAwake));
         }

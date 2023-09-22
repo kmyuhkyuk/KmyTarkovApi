@@ -72,12 +72,12 @@ namespace EFTApi.Helpers
         {
             var playerType = typeof(Player);
 
-            Init = new RefHelper.HookRef(playerType, "Init");
-            Dispose = new RefHelper.HookRef(playerType, "Dispose");
-            OnDead = new RefHelper.HookRef(playerType, "OnDead");
-            ApplyDamageInfo = new RefHelper.HookRef(playerType, "ApplyDamageInfo");
-            OnBeenKilledByAggressor = new RefHelper.HookRef(playerType, "OnBeenKilledByAggressor");
-            OnPhraseTold = new RefHelper.HookRef(playerType, "OnPhraseTold");
+            Init = RefHelper.HookRef.Create(playerType, "Init");
+            Dispose = RefHelper.HookRef.Create(playerType, "Dispose");
+            OnDead = RefHelper.HookRef.Create(playerType, "OnDead");
+            ApplyDamageInfo = RefHelper.HookRef.Create(playerType, "ApplyDamageInfo");
+            OnBeenKilledByAggressor = RefHelper.HookRef.Create(playerType, "OnBeenKilledByAggressor");
+            OnPhraseTold = RefHelper.HookRef.Create(playerType, "OnPhraseTold");
 
             Init.Add(this, nameof(OnInit));
 
@@ -90,7 +90,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            if (EFTVersion.AkiVersion > new Version("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
+            if (EFTVersion.AkiVersion > Version.Parse("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
             {
                 Instance.Player = __instance;
             }
@@ -108,7 +108,7 @@ namespace EFTApi.Helpers
 
             private FirearmControllerData()
             {
-                InitiateShot = new RefHelper.HookRef(typeof(Player.FirearmController), "InitiateShot");
+                InitiateShot = RefHelper.HookRef.Create(typeof(Player.FirearmController), "InitiateShot");
             }
         }
 
@@ -120,7 +120,7 @@ namespace EFTApi.Helpers
 
             private ArmorComponentData()
             {
-                ApplyDamage = new RefHelper.HookRef(typeof(ArmorComponent), "ApplyDamage");
+                ApplyDamage = RefHelper.HookRef.Create(typeof(ArmorComponent), "ApplyDamage");
             }
         }
 
@@ -437,7 +437,7 @@ namespace EFTApi.Helpers
                         x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null),
                     "Animator");
 
-                if (EFTVersion.AkiVersion > new Version("3.4.1"))
+                if (EFTVersion.AkiVersion > Version.Parse("3.4.1"))
                 {
                     RefUnderbarrelWeapon =
                         RefHelper.FieldRef<Player.FirearmController, Item>.Create("UnderbarrelWeapon");
@@ -479,7 +479,7 @@ namespace EFTApi.Helpers
             {
                 RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create(typeof(DamageInfo).GetField("Player"));
 
-                if (EFTVersion.AkiVersion > new Version("3.5.8"))
+                if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
                 {
                     RefIPlayer = RefHelper.PropertyRef<object, IAIDetails>.Create(RefPlayer.FieldType, "iPlayer");
                 }
@@ -487,7 +487,7 @@ namespace EFTApi.Helpers
 
             public Player GetPlayer(DamageInfo damageInfo)
             {
-                if (EFTVersion.AkiVersion > new Version("3.5.8"))
+                if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
                 {
                     return (Player)RefIPlayer?.GetValue(RefPlayer.GetValue(damageInfo));
                 }

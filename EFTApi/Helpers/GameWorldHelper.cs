@@ -61,9 +61,9 @@ namespace EFTApi.Helpers
         {
             var gameWorldType = typeof(GameWorld);
 
-            Awake = new RefHelper.HookRef(gameWorldType, "Awake");
-            OnGameStarted = new RefHelper.HookRef(gameWorldType, "OnGameStarted");
-            Dispose = new RefHelper.HookRef(gameWorldType, "Dispose");
+            Awake = RefHelper.HookRef.Create(gameWorldType, "Awake");
+            OnGameStarted = RefHelper.HookRef.Create(gameWorldType, "OnGameStarted");
+            Dispose = RefHelper.HookRef.Create(gameWorldType, "Dispose");
 
             Awake.Add(this, nameof(OnAwake));
             Dispose.Add(this, nameof(OnDispose));
@@ -91,8 +91,8 @@ namespace EFTApi.Helpers
 
             private LevelSettingsData()
             {
-                Awake = new RefHelper.HookRef(typeof(LevelSettings), "Awake");
-                OnDestroy = new RefHelper.HookRef(typeof(LevelSettings), "OnDestroy");
+                Awake = RefHelper.HookRef.Create(typeof(LevelSettings), "Awake");
+                OnDestroy = RefHelper.HookRef.Create(typeof(LevelSettings), "OnDestroy");
 
                 Awake.Add(this, nameof(OnAwake));
             }
@@ -174,7 +174,7 @@ namespace EFTApi.Helpers
 
             private SearchableItemClassData()
             {
-                if (EFTVersion.AkiVersion > new Version("3.5.0"))
+                if (EFTVersion.AkiVersion > Version.Parse("3.5.0"))
                 {
                     RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(
                         RefTool.GetEftType(x =>

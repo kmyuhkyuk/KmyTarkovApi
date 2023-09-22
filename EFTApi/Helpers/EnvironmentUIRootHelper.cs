@@ -16,7 +16,7 @@ namespace EFTApi.Helpers
 
         private EnvironmentUIRootHelper()
         {
-            Init = new RefHelper.HookRef(typeof(EnvironmentUIRoot), "Init");
+            Init = RefHelper.HookRef.Create(typeof(EnvironmentUIRoot), "Init");
 
             Init.Add(this, nameof(OnInit));
         }

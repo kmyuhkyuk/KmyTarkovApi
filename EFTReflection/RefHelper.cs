@@ -163,24 +163,24 @@ namespace EFTReflection
         /// </summary>
         /// <remarks>Solve <see cref="AccessTools.MethodDelegate{DelegateType}" /> Cannot create delegate with object parameters</remarks>
         /// <typeparam name="TDelegateType"></typeparam>
-        /// <param name="method"></param>
+        /// <param name="methodInfo"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static TDelegateType ObjectMethodDelegate<TDelegateType>(MethodInfo method)
+        public static TDelegateType ObjectMethodDelegate<TDelegateType>(MethodInfo methodInfo)
             where TDelegateType : Delegate
         {
-            if (method == null)
+            if (methodInfo == null)
             {
-                throw new ArgumentNullException(nameof(method));
+                throw new ArgumentNullException(nameof(methodInfo));
             }
 
-            var declaringType = method.DeclaringType;
+            var declaringType = methodInfo.DeclaringType;
             if (declaringType == null)
             {
                 throw new ArgumentNullException(nameof(declaringType));
             }
 
-            var returnType = method.ReturnType;
+            var returnType = methodInfo.ReturnType;
 
             var delegateType = typeof(TDelegateType);
             var delegateMethod = delegateType.GetMethod("Invoke");
@@ -196,18 +196,18 @@ namespace EFTReflection
             var delegateReturnType = delegateMethod.ReturnType;
             var returnNeedBox = delegateReturnType == typeof(object) && returnType.IsValueType;
 
-            var dmd = new DynamicMethod($"OpenInstanceDelegate_{method.Name}", delegateReturnType,
+            var dmd = new DynamicMethod($"OpenInstanceDelegate_{methodInfo.Name}", delegateReturnType,
                 delegateParameterTypes);
 
             var ilGen = dmd.GetILGenerator();
 
-            var isStatic = method.IsStatic;
+            var isStatic = methodInfo.IsStatic;
             var num = !isStatic ? 1 : 0;
 
             Type[] parameterTypes;
             if (!isStatic)
             {
-                var parameters = method.GetParameters();
+                var parameters = methodInfo.GetParameters();
                 var numParameters = parameters.Length;
                 parameterTypes = new Type[numParameters + 1];
                 for (var i = 0; i < numParameters; i++)
@@ -240,7 +240,7 @@ namespace EFTReflection
             }
             else
             {
-                parameterTypes = method.GetParameters().Select(x => x.ParameterType).ToArray();
+                parameterTypes = methodInfo.GetParameters().Select(x => x.ParameterType).ToArray();
             }
 
             for (var i = num; i < parameterTypes.Length; i++)
@@ -260,7 +260,7 @@ namespace EFTReflection
                 }
             }
 
-            ilGen.Emit(!isStatic ? OpCodes.Callvirt : OpCodes.Call, method);
+            ilGen.Emit(!isStatic ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
 
             if (returnNeedBox)
             {
@@ -298,7 +298,7 @@ namespace EFTReflection
 
             public Type PropertyType => _propertyInfo.PropertyType;
 
-            public PropertyRef(PropertyInfo propertyInfo, object instance)
+            public PropertyRef(PropertyInfo propertyInfo, object instance = null)
             {
                 if (propertyInfo == null)
                 {
@@ -308,7 +308,7 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, string propertyName, bool declaredOnly, object instance)
+            public PropertyRef(Type type, string propertyName, bool declaredOnly, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -322,7 +322,7 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, string[] propertyNames, bool declaredOnly, object instance)
+            public PropertyRef(Type type, string[] propertyNames, bool declaredOnly, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -465,7 +465,7 @@ namespace EFTReflection
 
             public Type FieldType => _fieldInfo.FieldType;
 
-            public FieldRef(FieldInfo fieldInfo, object instance)
+            public FieldRef(FieldInfo fieldInfo, object instance = null)
             {
                 if (fieldInfo == null)
                 {
@@ -475,7 +475,7 @@ namespace EFTReflection
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, string fieldName, bool declaredOnly, object instance)
+            public FieldRef(Type type, string fieldName, bool declaredOnly, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -489,7 +489,7 @@ namespace EFTReflection
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, string[] fieldNames, bool declaredOnly, object instance)
+            public FieldRef(Type type, string[] fieldNames, bool declaredOnly, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 

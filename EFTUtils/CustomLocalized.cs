@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EFTUtils
 {
-    public class CustomLocalized<T>
+    public abstract class CustomLocalized<T, TV>
     {
         public string CurrentLanguage
         {
@@ -19,18 +19,18 @@ namespace EFTUtils
 
         private string _currentLanguage;
 
-        public string CurrentLanguageLower => _languagesLowerDictionary[CurrentLanguage];
+        public string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
 
-        public readonly Dictionary<T, Dictionary<string, Dictionary<string, string>>> LanguageDictionary =
-            new Dictionary<T, Dictionary<string, Dictionary<string, string>>>();
+        public readonly Dictionary<T, TV> LanguageDictionary =
+            new Dictionary<T, TV>();
 
         public event Action LanguageChange;
 
         public event Action LanguageAdd;
 
-        public string[] Languages => _languagesLowerDictionary.Keys.ToArray();
+        public string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
 
-        private readonly Dictionary<string, string> _languagesLowerDictionary = new Dictionary<string, string>
+        protected virtual Dictionary<string, string> LanguagesLowerDictionary { get; } = new Dictionary<string, string>
         {
             { "Cz", "cz" },
             { "De", "de" },
@@ -52,29 +52,16 @@ namespace EFTUtils
             { "Zh", "zh" }
         };
 
-        public void AddLanguage(string name)
+        public virtual void AddLanguage(string name)
         {
-            if (!_languagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
+            if (!LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
             {
-                _languagesLowerDictionary.Add(name, name.ToLower());
+                LanguagesLowerDictionary.Add(name, name.ToLower());
 
                 LanguageAdd?.Invoke();
             }
         }
 
-        public virtual string Localized(T tKey, string key)
-        {
-            if (LanguageDictionary.TryGetValue(tKey, out var language)
-                && (language.TryGetValue(CurrentLanguageLower, out var localizedDictionary) ||
-                    language.TryGetValue("en", out localizedDictionary))
-                && localizedDictionary.TryGetValue(key, out var localized))
-            {
-                return localized;
-            }
-            else
-            {
-                return key;
-            }
-        }
+        public abstract string Localized(T tKey, TV key);
     }
 }

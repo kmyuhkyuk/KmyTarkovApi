@@ -20,7 +20,7 @@ namespace EFTConfiguration.Components.Base
 
         protected void Start()
         {
-            CustomLocalizedHelper.LanguageChange += UpdateLocalized;
+            LocalizedHelper.LanguageChange += UpdateLocalized;
         }
 
         public void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced)
@@ -49,12 +49,12 @@ namespace EFTConfiguration.Components.Base
 
         protected virtual void UpdateLocalized()
         {
-            configName.text = CustomLocalizedHelper.Localized(ModName, ConfigNameKey);
+            configName.text = LocalizedHelper.Localized(ModName, ConfigNameKey);
         }
 
         protected virtual void OnDestroy()
         {
-            CustomLocalizedHelper.LanguageChange -= UpdateLocalized;
+            LocalizedHelper.LanguageChange -= UpdateLocalized;
         }
     }
 }

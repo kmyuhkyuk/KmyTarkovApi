@@ -165,7 +165,7 @@ namespace EFTConfiguration
 
             SwitchPluginInfo = SwitchConfiguration;
 
-            CustomLocalizedHelper.LanguageChange += UpdateLocalized;
+            LocalizedHelper.LanguageChange += UpdateLocalized;
 
             CreateUI();
         }
@@ -306,12 +306,12 @@ namespace EFTConfiguration
 
         private void UpdateLocalized()
         {
-            modName.text = CustomLocalizedHelper.Localized(CurrentModName);
+            modName.text = LocalizedHelper.Localized(CurrentModName);
 
             ((TMP_Text)search.placeholder).text =
-                CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "EnterText");
+                LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "EnterText");
 
-            advancedName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "Advanced");
+            advancedName.text = LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, "Advanced");
         }
 
         private void Filter(bool isAdvanced, string searchName)

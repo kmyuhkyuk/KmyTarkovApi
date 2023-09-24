@@ -76,12 +76,12 @@ namespace EFTConfiguration.UI
 
             UpdateLocalized();
 
-            CustomLocalizedHelper.LanguageChange += UpdateLocalized;
+            LocalizedHelper.LanguageChange += UpdateLocalized;
         }
 
         private void UpdateLocalized()
         {
-            pluginName.text = CustomLocalizedHelper.Localized(modName);
+            pluginName.text = LocalizedHelper.Localized(modName);
         }
 
         private void Pressed()

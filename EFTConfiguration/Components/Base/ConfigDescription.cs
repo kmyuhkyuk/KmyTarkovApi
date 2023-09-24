@@ -13,7 +13,7 @@ namespace EFTConfiguration.Components.Base
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Description.Instance.Enable(CustomLocalizedHelper.Localized(modName, descriptionNameKey));
+            Description.Instance.Enable(LocalizedHelper.Localized(modName, descriptionNameKey));
         }
 
         public void OnPointerExit(PointerEventData eventData)

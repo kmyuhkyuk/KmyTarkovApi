@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EFTConfiguration.Helpers
 {
-    public static class CustomLocalizedHelper
+    public static class LocalizedHelper
     {
         public static string CurrentLanguage
         {

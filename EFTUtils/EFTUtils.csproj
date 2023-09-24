@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AssetBundleHelper.cs" />
     <Compile Include="ColorHelper.cs" />
+    <Compile Include="CustomLocalized.cs" />
     <Compile Include="EFTUtilsPlugin.cs" />
     <Compile Include="FileExtensions.cs" />
     <Compile Include="IUpdate.cs" />

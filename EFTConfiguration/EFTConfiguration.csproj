@@ -138,7 +138,7 @@
     <Compile Include="Components\ValueType\ConfigVector3.cs" />
     <Compile Include="Components\ValueType\ConfigVector4.cs" />
     <Compile Include="EFTLogListener.cs" />
-    <Compile Include="Helpers\CustomLocalizedHelper.cs" />
+    <Compile Include="Helpers\LocalizedHelper.cs" />
     <Compile Include="EFTConfiguration.cs" />
     <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />
     <Compile Include="EFTConfigurationPlugin.cs" />

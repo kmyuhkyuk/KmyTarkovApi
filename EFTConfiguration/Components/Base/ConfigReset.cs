@@ -33,7 +33,7 @@ namespace EFTConfiguration.Components.Base
 #if !UNITY_EDITOR
             base.UpdateLocalized();
 
-            resetName.text = CustomLocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
+            resetName.text = LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
 #endif
         }
 

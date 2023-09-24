@@ -76,14 +76,14 @@ namespace EFTConfiguration
 
             var acceptableValueCustomList =
                 (AcceptableValueCustomList<string>)SetData.KeyLanguage.Description.AcceptableValues;
-            CustomLocalizedHelper.LanguageAdd += () =>
+            LocalizedHelper.LanguageAdd += () =>
             {
-                acceptableValueCustomList.AcceptableValuesCustom = CustomLocalizedHelper.Languages;
+                acceptableValueCustomList.AcceptableValuesCustom = LocalizedHelper.Languages;
             };
 
-            CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
+            LocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
             SetData.KeyLanguage.SettingChanged += (value, value2) =>
-                CustomLocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
+                LocalizedHelper.CurrentLanguage = SetData.KeyLanguage.Value;
 
             BepInEx.Logging.Logger.Listeners.Add(new EFTLogListener());
         }
@@ -186,7 +186,7 @@ namespace EFTConfiguration
 
             var metaData = pluginInfo.Metadata;
 
-            CustomLocalizedHelper.LanguageDictionary.Add(metaData.Name,
+            LocalizedHelper.LanguageDictionary.Add(metaData.Name,
                 GetLanguageDictionary(pluginInfo, eftConfigurationPluginAttributes.LocalizedPath));
 
             return new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);
@@ -419,7 +419,7 @@ namespace EFTConfiguration
                     "En",
                     new ConfigDescription(
                         "Preferred language, if not available will tried English, if still not available than return original text",
-                        new AcceptableValueCustomList<string>(CustomLocalizedHelper.Languages)));
+                        new AcceptableValueCustomList<string>(LocalizedHelper.Languages)));
                 KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
                 KeySavePath = configFile.Bind<string>(mainSettings, "Save Path", Paths.BepInExRootPath,
                     new ConfigDescription(

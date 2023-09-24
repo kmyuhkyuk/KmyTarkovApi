@@ -186,7 +186,7 @@ namespace EFTConfiguration
 
             var metaData = pluginInfo.Metadata;
 
-            CustomLocalizedHelper.LanguageList.Add(metaData.Name,
+            CustomLocalizedHelper.LanguageDictionary.Add(metaData.Name,
                 GetLanguageDictionary(pluginInfo, eftConfigurationPluginAttributes.LocalizedPath));
 
             return new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);

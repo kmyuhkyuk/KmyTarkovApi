@@ -21,7 +21,7 @@ namespace EFTConfiguration.Helpers
 
         public static string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
 
-        internal static readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> LanguageList =
+        internal static readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> LanguageDictionary =
             new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
 
         public static event Action LanguageChange;
@@ -69,7 +69,7 @@ namespace EFTConfiguration.Helpers
 
         public static string Localized(string modName, string key)
         {
-            if (LanguageList.TryGetValue(modName, out var language)
+            if (LanguageDictionary.TryGetValue(modName, out var language)
                 && (language.TryGetValue(CurrentLanguageLower, out var localizedDictionary) ||
                     language.TryGetValue("en", out localizedDictionary))
                 && localizedDictionary.TryGetValue(key, out var localized))

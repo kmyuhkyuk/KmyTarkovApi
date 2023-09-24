@@ -8,16 +8,16 @@ namespace EFTUtils
     {
         public string CurrentLanguage
         {
-            get => _currentLanguage;
+            get => CustomCurrentLanguage;
             set
             {
-                _currentLanguage = value;
+                CustomCurrentLanguage = value;
 
                 LanguageChange?.Invoke();
             }
         }
 
-        private string _currentLanguage;
+        protected virtual string CustomCurrentLanguage { get; set; } = "En";
 
         public string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
 

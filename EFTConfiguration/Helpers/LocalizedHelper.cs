@@ -17,7 +17,7 @@ namespace EFTConfiguration.Helpers
             }
         }
 
-        private static string _currentLanguage;
+        private static string _currentLanguage = "En";
 
         public static string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
 

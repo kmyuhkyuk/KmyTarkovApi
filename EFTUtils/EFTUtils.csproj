@@ -43,6 +43,10 @@
     <Reference Include="BepInEx">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\EscapeFromTarkov_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
@@ -74,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AssetBundleHelper.cs" />
     <Compile Include="ColorHelper.cs" />
+    <Compile Include="CustomDictionaryConverter.cs" />
     <Compile Include="CustomLocalized.cs" />
     <Compile Include="EFTUtilsPlugin.cs" />
     <Compile Include="FileExtensions.cs" />

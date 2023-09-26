@@ -8,7 +8,6 @@ using EFTConfiguration.Components.ClassType;
 using EFTConfiguration.Components.ValueType;
 using UnityEngine;
 #if !UNITY_EDITOR
-
 using HarmonyLib;
 using static EFTConfiguration.EFTConfigurationPlugin;
 

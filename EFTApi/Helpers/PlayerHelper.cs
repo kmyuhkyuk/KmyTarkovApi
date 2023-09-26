@@ -8,6 +8,7 @@ using EFTReflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable NotAccessedField.Global
 
@@ -30,7 +31,7 @@ namespace EFTApi.Helpers
         public readonly InventoryData InventoryHelper = InventoryData.Instance;
 
         public readonly DamageInfoData DamageInfoHelper = DamageInfoData.Instance;
-        
+
         public readonly SpeakerData SpeakerHelper = SpeakerData.Instance;
 
         /// <summary>
@@ -507,12 +508,12 @@ namespace EFTApi.Helpers
             public static readonly SpeakerData Instance = new SpeakerData();
 
             /// <summary>
-            /// Player.Speaker
+            ///     Player.Speaker
             /// </summary>
             public readonly RefHelper.FieldRef<Player, object> RefSpeaker;
 
             /// <summary>
-            /// Player.Speaker.Speaking
+            ///     Player.Speaker.Speaking
             /// </summary>
             public readonly RefHelper.FieldRef<object, bool> RefSpeaking;
 

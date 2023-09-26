@@ -8,8 +8,10 @@ using EFTConfiguration.Components.ClassType;
 using EFTConfiguration.Components.ValueType;
 using UnityEngine;
 #if !UNITY_EDITOR
+
 using HarmonyLib;
 using static EFTConfiguration.EFTConfigurationPlugin;
+
 #endif
 
 namespace EFTConfiguration.UI
@@ -30,6 +32,7 @@ namespace EFTConfiguration.UI
         private string _searchName;
 
 #if !UNITY_EDITOR
+
         private ConfigurationData _configurationData;
 
         private string ModName => _configurationData.ModName;
@@ -389,6 +392,7 @@ namespace EFTConfiguration.UI
 
             _configDictionary.Clear();
         }
+
 #endif
     }
 }

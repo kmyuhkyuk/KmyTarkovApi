@@ -1,4 +1,5 @@
 ﻿#if !UNITY_EDITOR
+
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -162,4 +163,5 @@ namespace EFTConfiguration.Helpers
         }
     }
 }
+
 #endif

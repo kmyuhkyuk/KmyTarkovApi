@@ -23,8 +23,10 @@ namespace EFTConfiguration.UI
         private void UpdatePosition()
         {
 #if !UNITY_EDITOR
+
             transform.position = (Vector2)Input.mousePosition +
                                  EFTConfigurationPlugin.SetData.KeyDescriptionPositionOffset.Value;
+
 #endif
         }
 

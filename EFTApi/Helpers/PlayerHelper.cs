@@ -8,6 +8,8 @@ using EFTReflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
 
 namespace EFTApi.Helpers
 {
@@ -28,6 +30,8 @@ namespace EFTApi.Helpers
         public readonly InventoryData InventoryHelper = InventoryData.Instance;
 
         public readonly DamageInfoData DamageInfoHelper = DamageInfoData.Instance;
+        
+        public readonly SpeakerData SpeakerHelper = SpeakerData.Instance;
 
         /// <summary>
         ///     Init Action
@@ -495,6 +499,31 @@ namespace EFTApi.Helpers
                 {
                     return (Player)RefPlayer.GetValue(damageInfo);
                 }
+            }
+        }
+
+        public class SpeakerData
+        {
+            public static readonly SpeakerData Instance = new SpeakerData();
+
+            /// <summary>
+            /// Player.Speaker
+            /// </summary>
+            public readonly RefHelper.FieldRef<Player, object> RefSpeaker;
+
+            /// <summary>
+            /// Player.Speaker.Speaking
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, bool> RefSpeaking;
+
+            public object Speaker => RefSpeaker.GetValue(PlayerHelper.Instance.Player);
+
+            public bool Speaking => RefSpeaking.GetValue(Speaker);
+
+            private SpeakerData()
+            {
+                RefSpeaker = RefHelper.FieldRef<Player, object>.Create(typeof(Player), "Speaker");
+                RefSpeaking = RefHelper.FieldRef<object, bool>.Create(RefSpeaker.FieldType, "Speaking");
             }
         }
     }

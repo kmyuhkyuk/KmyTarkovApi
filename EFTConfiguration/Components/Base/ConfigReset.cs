@@ -31,9 +31,11 @@ namespace EFTConfiguration.Components.Base
         protected override void UpdateLocalized()
         {
 #if !UNITY_EDITOR
+
             base.UpdateLocalized();
 
             resetName.text = LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ResetNameKey);
+
 #endif
         }
 

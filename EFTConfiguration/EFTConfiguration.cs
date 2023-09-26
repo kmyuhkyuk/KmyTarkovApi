@@ -61,7 +61,9 @@ namespace EFTConfiguration
         private bool consoleCache;
 
 #if !UNITY_EDITOR
+
         private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("EFTConfiguration");
+
 #endif
 
         private bool State
@@ -70,12 +72,14 @@ namespace EFTConfiguration
             set
             {
 #if !UNITY_EDITOR
+
                 if (value)
                 {
                     _windowRect.anchoredPosition = EFTConfigurationPlugin.SetData.KeyDefaultPosition.Value;
 
                     CheckPluginInfo(advanced.isOn);
                 }
+
 #endif
 
                 windowRoot.gameObject.SetActive(value);
@@ -85,6 +89,7 @@ namespace EFTConfiguration
         internal static Action<PluginInfo> SwitchPluginInfo;
 
 #if !UNITY_EDITOR
+
         private static EFTConfigurationPlugin.ConfigurationData[] ConfigurationsData =>
             EFTConfigurationPlugin.Configurations;
 
@@ -411,6 +416,7 @@ namespace EFTConfiguration
                 configuration.Key.gameObject.SetActive(change.Active);
             }
         }
+
 #endif
     }
 }

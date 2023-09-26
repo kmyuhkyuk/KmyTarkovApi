@@ -1,4 +1,5 @@
 ﻿#if !UNITY_EDITOR
+
 namespace EFTConfiguration.Attributes
 {
     // ReSharper disable UnassignedField.Global
@@ -105,4 +106,5 @@ namespace EFTConfiguration.Attributes
         public System.Func<string, object> StrToObj;
     }
 }
+
 #endif

@@ -66,7 +66,9 @@ namespace EFTConfiguration.Components.ValueType
             var bindKeyCode = KeyCode.None;
 
 #if !UNITY_EDITOR
+
             bindName.text = LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, PressNameKey);
+
 #endif
 
             while (bindKeyCode == KeyCode.None)
@@ -102,7 +104,9 @@ namespace EFTConfiguration.Components.ValueType
             base.UpdateLocalized();
 
 #if !UNITY_EDITOR
+
             clearName.text = LocalizedHelper.Localized(EFTConfigurationPlugin.ModName, ClearNameKey);
+
 #endif
         }
 

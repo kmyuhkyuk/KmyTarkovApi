@@ -33,6 +33,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UNITY_EDITOR|AnyCPU'">
     <OutputPath>bin\UNITY_EDITOR\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,4 +67,14 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\bin\Release\EFTConfiguration.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTApi.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTUtils.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTReflection.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\HtmlAgilityPack.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\Crc32.NET.dll" "R:\Battlestate Games\Client.0.13.1.3.25206\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+
+xcopy "$(ProjectDir)\bin\UNITY_EDITOR\EFTConfiguration.dll" "C:\Users\24516\Documents\EFTConfiguration\Assets\Managed" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

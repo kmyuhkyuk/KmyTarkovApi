@@ -517,14 +517,31 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.FieldRef<object, bool> RefSpeaking;
 
+            /// <summary>
+            /// Player.Speaker.Clip
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, TaggedClip> RefClip;
+
+            /// <summary>
+            /// Player.Speaker.PlayerVoice
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, string> RefPlayerVoice;
+
             public object Speaker => RefSpeaker.GetValue(PlayerHelper.Instance.Player);
 
             public bool Speaking => RefSpeaking.GetValue(Speaker);
+
+            public TaggedClip Clip => RefClip.GetValue(Speaker);
+
+            public string PlayerVoice => RefPlayerVoice.GetValue(Speaker);
 
             private SpeakerData()
             {
                 RefSpeaker = RefHelper.FieldRef<Player, object>.Create(typeof(Player), "Speaker");
                 RefSpeaking = RefHelper.FieldRef<object, bool>.Create(RefSpeaker.FieldType, "Speaking");
+                RefClip = RefHelper.FieldRef<object, TaggedClip>.Create(RefSpeaker.FieldType, "Clip");
+
+                RefPlayerVoice = RefHelper.PropertyRef<object, string>.Create(RefSpeaker.FieldType, "PlayerVoice");
             }
         }
     }

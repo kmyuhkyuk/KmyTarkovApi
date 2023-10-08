@@ -4,8 +4,6 @@ using System.Reflection;
 using BepInEx;
 using EFTReflection;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace EFTApi
 {
     public static class EFTVersion

@@ -4,8 +4,6 @@ using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace ConfigurationTest
 {
     [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "kmyuhkyuk-ConfigurationTest", "1.1.6")]

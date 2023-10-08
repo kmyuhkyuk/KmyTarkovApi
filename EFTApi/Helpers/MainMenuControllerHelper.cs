@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EFTReflection;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace EFTApi.Helpers
 {
     public class MainMenuControllerHelper

@@ -5,6 +5,7 @@ using Aki.Reflection.Patching;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTReflection.Patching
 {

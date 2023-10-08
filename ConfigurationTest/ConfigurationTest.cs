@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 using UnityEngine;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace ConfigurationTest
 {
@@ -60,8 +61,13 @@ namespace ConfigurationTest
             Config.Bind(testSettings, "Action", string.Empty,
                 new ConfigDescription(string.Empty, null,
                     new EFTConfigurationAttributes { Advanced = true, ButtonAction = () => Logger.LogError("Work") }));
-        }
 
+            var keyTestLoopThrow = Config.Bind<bool>(testSettings, "Test Loop Throw", false,
+                new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
+
+            keyTestLoopThrow.SettingChanged += (sender, args) => _testLoopThrow = keyTestLoopThrow.Value;
+        }
+        
         private void Update()
         {
             if (_testLoopThrow)

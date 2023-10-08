@@ -518,12 +518,12 @@ namespace EFTApi.Helpers
             public readonly RefHelper.FieldRef<object, bool> RefSpeaking;
 
             /// <summary>
-            /// Player.Speaker.Clip
+            ///     Player.Speaker.Clip
             /// </summary>
             public readonly RefHelper.FieldRef<object, TaggedClip> RefClip;
 
             /// <summary>
-            /// Player.Speaker.PlayerVoice
+            ///     Player.Speaker.PlayerVoice
             /// </summary>
             public readonly RefHelper.PropertyRef<object, string> RefPlayerVoice;
 

@@ -19,7 +19,6 @@ namespace EFTConfiguration.UI
             UpdatePosition();
         }
 
-
         private void UpdatePosition()
         {
 #if !UNITY_EDITOR

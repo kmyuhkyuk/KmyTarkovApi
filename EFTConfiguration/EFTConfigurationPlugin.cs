@@ -21,8 +21,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace EFTConfiguration
 {
     [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.1.6")]

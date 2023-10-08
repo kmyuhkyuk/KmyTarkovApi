@@ -9,9 +9,6 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable NotAccessedField.Global
-
 namespace EFTApi.Helpers
 {
     public class PlayerHelper

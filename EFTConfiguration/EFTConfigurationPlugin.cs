@@ -89,7 +89,6 @@ namespace EFTConfiguration
             BepInEx.Logging.Logger.Listeners.Add(new EFTLogListener());
         }
 
-
         private void Start()
         {
             new CursorLockStatePatch().Enable();

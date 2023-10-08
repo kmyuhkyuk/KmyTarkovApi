@@ -9,6 +9,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration.Helpers

@@ -1,6 +1,7 @@
 ﻿using EFTConfiguration.Helpers;
 using TMPro;
 using UnityEngine;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration.Components.Base

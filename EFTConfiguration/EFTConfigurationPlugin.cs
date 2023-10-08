@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration

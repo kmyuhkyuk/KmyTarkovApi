@@ -8,6 +8,9 @@ using EFT.InventoryLogic;
 using EFTReflection;
 using JetBrains.Annotations;
 
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTApi.Helpers
 {
     public class GameWorldHelper

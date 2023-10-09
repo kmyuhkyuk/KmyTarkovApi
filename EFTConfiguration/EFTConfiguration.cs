@@ -278,7 +278,7 @@ namespace EFTConfiguration
             }
             catch (Exception e)
             {
-                LogSource.LogWarning(e.Message);
+                LogSource.LogWarning($"BindWeb:{e.Message}");
 
                 bindIcon(await CrawlerHelper.GetModIcon(modURL));
             }

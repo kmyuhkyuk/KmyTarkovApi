@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using EFT;
+using EFT.HealthSystem;
 using EFT.InventoryLogic;
 using EFTReflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using UnityEngine;
+
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
 
 namespace EFTApi.Helpers
 {
@@ -30,6 +34,8 @@ namespace EFTApi.Helpers
         public readonly DamageInfoData DamageInfoHelper = DamageInfoData.Instance;
 
         public readonly SpeakerData SpeakerHelper = SpeakerData.Instance;
+
+        public readonly HealthControllerData HealthControllerHelper = HealthControllerData.Instance;
 
         /// <summary>
         ///     Init Action
@@ -64,7 +70,9 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.FieldRef<object, int> RefExperience;
 
-        public object Settings => RefSettings.GetValue(Player.Profile.Info);
+#pragma warning disable IDE0031
+        public object Settings => RefSettings.GetValue(Player != null ? Player.Profile.Info : null);
+#pragma warning restore IDE0031
 
         public WildSpawnType Role => RefRole.GetValue(Settings);
 
@@ -184,10 +192,14 @@ namespace EFTApi.Helpers
         {
             public static readonly InventoryData Instance = new InventoryData();
 
-            public object Equipment => RefEquipment.GetValue(PlayerHelper.Instance.Player.Profile.Inventory);
+            public object Inventory =>
+                RefInventory.GetValue(
+                    PlayerHelper.Instance.Player != null ? PlayerHelper.Instance.Player.Profile : null);
+
+            public object Equipment => RefEquipment.GetValue(Inventory);
 
             public object QuestRaidItems =>
-                RefQuestRaidItems.GetValue(PlayerHelper.Instance.Player.Profile.Inventory);
+                RefQuestRaidItems.GetValue(Inventory);
 
             public Slot[] EquipmentSlots => RefSlots.GetValue(Equipment);
 
@@ -324,14 +336,19 @@ namespace EFTApi.Helpers
             }
 
             /// <summary>
+            ///     Profile.Inventory
+            /// </summary>
+            public readonly RefHelper.FieldRef<Profile, object> RefInventory;
+
+            /// <summary>
             ///     InventoryClass.Equipment
             /// </summary>
-            public readonly RefHelper.FieldRef<InventoryClass, object> RefEquipment;
+            public readonly RefHelper.FieldRef<object, object> RefEquipment;
 
             /// <summary>
             ///     InventoryClass.QuestRaidItems
             /// </summary>
-            public readonly RefHelper.FieldRef<InventoryClass, object> RefQuestRaidItems;
+            public readonly RefHelper.FieldRef<object, object> RefQuestRaidItems;
 
             /// <summary>
             ///     InventoryClass.Equipment.Slots
@@ -351,8 +368,9 @@ namespace EFTApi.Helpers
 
             private InventoryData()
             {
-                RefEquipment = RefHelper.FieldRef<InventoryClass, object>.Create("Equipment");
-                RefQuestRaidItems = RefHelper.FieldRef<InventoryClass, object>.Create("QuestRaidItems");
+                RefInventory = RefHelper.FieldRef<Profile, object>.Create("Inventory");
+                RefEquipment = RefHelper.FieldRef<object, object>.Create(RefInventory.FieldType, "Equipment");
+                RefQuestRaidItems = RefHelper.FieldRef<object, object>.Create(RefInventory.FieldType, "QuestRaidItems");
                 RefSlots = RefHelper.FieldRef<object, Slot[]>.Create(RefEquipment.FieldType, "Slots");
                 RefGrids = RefHelper.FieldRef<object, object[]>.Create(
                     RefTool.GetEftType(x =>
@@ -374,6 +392,8 @@ namespace EFTApi.Helpers
 
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 
+            public Slot[] Chambers => RefChambers.GetValue(Weapon);
+
             public Item UnderbarrelWeapon =>
                 RefUnderbarrelWeapon?.GetValue(FirearmControllerData.Instance.FirearmController);
 
@@ -391,6 +411,11 @@ namespace EFTApi.Helpers
             public int UnderbarrelChamberAmmoCount => RefUnderbarrelChamberAmmoCount?.GetValue(UnderbarrelWeapon) ?? 0;
 
             private readonly Func<Weapon, object> _refGetCurrentMagazine;
+
+            /// <summary>
+            ///     Weapon.Chambers
+            /// </summary>
+            public readonly RefHelper.RefBase<Weapon, Slot[]> RefChambers;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon
@@ -415,7 +440,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.Chambers
             /// </summary>
-            [CanBeNull] public readonly RefHelper.FieldRef<object, Slot[]> RefUnderbarrelChambers;
+            [CanBeNull] public readonly RefHelper.RefBase<object, Slot[]> RefUnderbarrelChambers;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.WeaponTemplate
@@ -449,11 +474,28 @@ namespace EFTApi.Helpers
                     var launcherType =
                         RefTool.GetEftType(x => x.GetMethod("GetCenterOfImpact", RefTool.Public) != null);
 
-                    RefUnderbarrelChambers = RefHelper.FieldRef<object, Slot[]>.Create(launcherType, "Chambers");
+                    if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                    {
+                        RefUnderbarrelChambers = RefHelper.PropertyRef<object, Slot[]>.Create(launcherType, "Chambers");
+                    }
+                    else
+                    {
+                        RefUnderbarrelChambers = RefHelper.FieldRef<object, Slot[]>.Create(launcherType, "Chambers");
+                    }
+
                     RefUnderbarrelWeaponTemplate =
                         RefHelper.PropertyRef<object, WeaponTemplate>.Create(launcherType, "WeaponTemplate");
                     RefUnderbarrelChamberAmmoCount =
                         RefHelper.PropertyRef<object, int>.Create(launcherType, "ChamberAmmoCount");
+                }
+
+                if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                {
+                    RefChambers = RefHelper.PropertyRef<Weapon, Slot[]>.Create("Chambers");
+                }
+                else
+                {
+                    RefChambers = RefHelper.FieldRef<Weapon, Slot[]>.Create("Chambers");
                 }
             }
 
@@ -475,7 +517,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     DamageInfo.Player.iPlayer
             /// </summary>
-            [CanBeNull] public readonly RefHelper.PropertyRef<object, IAIDetails> RefIPlayer;
+            [CanBeNull] public readonly RefHelper.PropertyRef<object, object> RefIPlayer;
 
             private DamageInfoData()
             {
@@ -483,7 +525,7 @@ namespace EFTApi.Helpers
 
                 if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
                 {
-                    RefIPlayer = RefHelper.PropertyRef<object, IAIDetails>.Create(RefPlayer.FieldType, "iPlayer");
+                    RefIPlayer = RefHelper.PropertyRef<object, object>.Create(RefPlayer.FieldType, "iPlayer");
                 }
             }
 
@@ -539,6 +581,88 @@ namespace EFTApi.Helpers
                 RefClip = RefHelper.FieldRef<object, TaggedClip>.Create(RefSpeaker.FieldType, "Clip");
 
                 RefPlayerVoice = RefHelper.PropertyRef<object, string>.Create(RefSpeaker.FieldType, "PlayerVoice");
+            }
+        }
+
+        public class HealthControllerData
+        {
+            public static readonly HealthControllerData Instance = new HealthControllerData();
+
+            public object HealthController => RefHealthController.GetValue(PlayerHelper.Instance.Player);
+
+            private readonly Func<object, EBodyPart, bool, ValueStruct> _refGetBodyPartHealth;
+
+            /// <summary>
+            ///     Player.HealthController
+            /// </summary>
+            public readonly RefHelper.PropertyRef<Player, object> RefHealthController;
+
+            /// <summary>
+            ///     Player.HealthController.Hydration
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, ValueStruct> RefHydration;
+
+            /// <summary>
+            ///     Player.HealthController.Energy
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, ValueStruct> RefEnergy;
+
+            /// <summary>
+            ///     Player.HealthController.HealthRate
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, float> RefHealthRate;
+
+            /// <summary>
+            ///     Player.HealthController.HydrationRate
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, float> RefHydrationRate;
+
+            /// <summary>
+            ///     Player.HealthController.EnergyRate
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, float> RefEnergyRate;
+
+            /// <summary>
+            ///     Player.HealthController.IsAlive
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, bool> RefIsAlive;
+
+            public ValueStruct Hydration => RefHydration.GetValue(HealthController);
+
+            public ValueStruct Energy => RefEnergy.GetValue(HealthController);
+
+            public float HealthRate => RefHealthRate.GetValue(HealthController);
+
+            public float HydrationRate => RefHydrationRate.GetValue(HealthController);
+
+            public float EnergyRate => RefEnergyRate.GetValue(HealthController);
+
+            public bool IsAlive => RefIsAlive.GetValue(HealthController);
+
+            private HealthControllerData()
+            {
+                _refGetBodyPartHealth = RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, bool, ValueStruct>>(
+                    RefTool.GetEftMethod(x => x.GetMethod("GetBodyPartHealth", RefTool.Public) != null && x.IsInterface,
+                        RefTool.Public,
+                        x => x.Name == "GetBodyPartHealth"));
+
+                RefHealthController = RefHelper.PropertyRef<Player, object>.Create("HealthController");
+                RefHydration =
+                    RefHelper.PropertyRef<object, ValueStruct>.Create(RefHealthController.PropertyType, "Hydration");
+                RefEnergy = RefHelper.PropertyRef<object, ValueStruct>.Create(RefHealthController.PropertyType,
+                    "Energy");
+                RefHealthRate =
+                    RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "HealthRate");
+                RefHydrationRate =
+                    RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "HydrationRate");
+                RefEnergyRate =
+                    RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "EnergyRate");
+                RefIsAlive = RefHelper.PropertyRef<object, bool>.Create(RefHealthController.PropertyType, "IsAlive");
+            }
+
+            public ValueStruct GetBodyPartHealth(object healthController, EBodyPart bodyPart, bool rounded = false)
+            {
+                return _refGetBodyPartHealth(healthController, bodyPart, rounded);
             }
         }
     }

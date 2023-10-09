@@ -8,6 +8,9 @@ using EFTReflection;
 using HarmonyLib;
 using UnityEngine;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTApi.Helpers
 {
     public class SessionHelper

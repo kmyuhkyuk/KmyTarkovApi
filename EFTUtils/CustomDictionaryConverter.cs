@@ -4,6 +4,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+// ReSharper disable UnusedType.Global
+
 namespace EFTUtils
 {
     public class CustomDictionaryConverter<TKey, TValue> : JsonConverter

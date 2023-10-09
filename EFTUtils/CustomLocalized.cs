@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedType.Global
+
 namespace EFTUtils
 {
     public abstract class CustomLocalized<T, TV>

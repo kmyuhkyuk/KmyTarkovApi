@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using EFTReflection;
 
+// ReSharper disable NotAccessedField.Global
+
 namespace EFTApi.Helpers
 {
     public class QuestHelper

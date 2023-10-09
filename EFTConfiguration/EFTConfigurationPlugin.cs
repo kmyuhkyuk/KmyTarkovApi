@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,7 @@ using UnityEngine.UI;
 
 namespace EFTConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.1.6")]
+    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.1.7")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {
@@ -120,7 +121,12 @@ namespace EFTConfiguration
         private void Init()
         {
             var configurationList = new List<ConfigurationData>
-                { GetCoreConfigurationData(), GetConfigurationData(Info) };
+                { GetCoreConfigurationData() };
+
+            if (TryGetConfigurationData(Info, out var selfConfigurationData))
+            {
+                configurationList.Add(selfConfigurationData);
+            }
 
             foreach (var pluginInfo in PluginInfos.Values)
             {
@@ -130,15 +136,23 @@ namespace EFTConfiguration
                 if (pluginInfo == Info)
                     continue;
 
-                configurationList.Add(GetConfigurationData(pluginInfo));
+                if (TryGetConfigurationData(pluginInfo, out var configurationData))
+                {
+                    configurationList.Add(configurationData);
+                }
             }
 
             Configurations = configurationList.ToArray();
         }
 
-        private static ConfigurationData GetConfigurationData(PluginInfo pluginInfo)
+        private static bool TryGetConfigurationData(PluginInfo pluginInfo, out ConfigurationData configurationData)
         {
+            configurationData = null;
+
             var instance = pluginInfo.Instance;
+
+            if (instance == null)
+                return false;
 
             var type = instance.GetType();
 
@@ -189,7 +203,9 @@ namespace EFTConfiguration
             LocalizedHelper.LanguageDictionary.Add(metaData.Name,
                 GetLanguageDictionary(pluginInfo, eftConfigurationPluginAttributes.LocalizedPath));
 
-            return new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);
+            configurationData = new ConfigurationData(configFile, metaData, eftConfigurationPluginAttributes);
+
+            return true;
         }
 
         private static ConfigurationData GetCoreConfigurationData()
@@ -265,6 +281,7 @@ namespace EFTConfiguration
             }
         }
 
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public class ConfigData
         {
             public string Section => _configDefinition.Section;

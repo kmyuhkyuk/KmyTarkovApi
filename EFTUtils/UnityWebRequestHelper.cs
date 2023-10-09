@@ -4,6 +4,8 @@ using BepInEx.Logging;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// ReSharper disable UnusedType.Global
+
 namespace EFTUtils
 {
     public static class UnityWebRequestHelper

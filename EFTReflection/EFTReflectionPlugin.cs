@@ -2,7 +2,7 @@
 
 namespace EFTReflection
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTReflection", "kmyuhkyuk-EFTReflection", "1.1.6")]
+    [BepInPlugin("com.kmyuhkyuk.EFTReflection", "kmyuhkyuk-EFTReflection", "1.1.7")]
     public class EFTReflectionPlugin : BaseUnityPlugin
     {
     }

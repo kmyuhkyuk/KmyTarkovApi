@@ -1,6 +1,8 @@
 ﻿using EFT.UI;
 using EFTReflection;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTApi.Helpers
 {
     public class EnvironmentUIRootHelper

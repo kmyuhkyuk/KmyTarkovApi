@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using BepInEx.Logging;
 
+// ReSharper disable UnusedType.Global
+
 namespace EFTUtils
 {
     public interface IUpdate

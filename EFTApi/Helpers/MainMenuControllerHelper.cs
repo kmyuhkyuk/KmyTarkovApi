@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using EFTReflection;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+
 namespace EFTApi.Helpers
 {
     public class MainMenuControllerHelper

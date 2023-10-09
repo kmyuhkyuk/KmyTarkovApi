@@ -2,6 +2,8 @@
 using EFTReflection;
 using JetBrains.Annotations;
 
+// ReSharper disable NotAccessedField.Global
+
 namespace EFTApi.Helpers
 {
     public class AirdropHelper

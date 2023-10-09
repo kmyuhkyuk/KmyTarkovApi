@@ -1,6 +1,9 @@
 ﻿using EFT.UI;
 using EFTReflection;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable NotAccessedField.Global
+
 namespace EFTApi.Helpers
 {
     public class GameUIHelper

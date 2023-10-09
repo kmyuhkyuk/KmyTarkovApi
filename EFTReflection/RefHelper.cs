@@ -272,6 +272,15 @@ namespace EFTReflection
             return (TDelegateType)dmd.CreateDelegate(delegateType);
         }
 
+        public abstract class RefBase<T, TF>
+        {
+            public abstract Type RefType { get; }
+
+            public abstract TF GetValue(T instance);
+
+            public abstract void SetValue(T instance, TF value);
+        }
+
         /// <summary>
         ///     A Wrapper Property Delegate Class
         ///     <para>More convenient and fast Get or Set Property Value</para>
@@ -280,7 +289,7 @@ namespace EFTReflection
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
-        public class PropertyRef<T, TF>
+        public class PropertyRef<T, TF> : RefBase<T, TF>
         {
             private Func<T, TF> _refGetValue;
 
@@ -297,6 +306,8 @@ namespace EFTReflection
             public Type DeclaringType { get; private set; }
 
             public Type PropertyType => _propertyInfo.PropertyType;
+
+            public override Type RefType => PropertyType;
 
             public PropertyRef(PropertyInfo propertyInfo, object instance = null)
             {
@@ -397,7 +408,7 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(type, propertyNames, declaredOnly, instance);
             }
 
-            public TF GetValue(T instance)
+            public override TF GetValue(T instance)
             {
                 if (_refGetValue == null)
                 {
@@ -418,7 +429,7 @@ namespace EFTReflection
                 }
             }
 
-            public void SetValue(T instance, TF value)
+            public override void SetValue(T instance, TF value)
             {
                 if (_refSetValue == null)
                 {
@@ -447,7 +458,7 @@ namespace EFTReflection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
-        public class FieldRef<T, TF>
+        public class FieldRef<T, TF> : RefBase<T, TF>
         {
             private AccessTools.FieldRef<T, TF> _harmonyFieldRef;
 
@@ -464,6 +475,8 @@ namespace EFTReflection
             public Type DeclaringType { get; private set; }
 
             public Type FieldType => _fieldInfo.FieldType;
+
+            public override Type RefType => FieldType;
 
             public FieldRef(FieldInfo fieldInfo, object instance = null)
             {
@@ -554,7 +567,7 @@ namespace EFTReflection
                 }
             }
 
-            public TF GetValue(T instance)
+            public override TF GetValue(T instance)
             {
                 if (_useHarmony)
                 {
@@ -598,7 +611,7 @@ namespace EFTReflection
                 }
             }
 
-            public void SetValue(T instance, TF value)
+            public override void SetValue(T instance, TF value)
             {
                 if (_useHarmony)
                 {

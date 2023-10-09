@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using BepInEx.Logging;
 
 namespace EFTConfiguration
@@ -49,6 +50,7 @@ namespace EFTConfiguration
             }
         }
 
+        [SuppressMessage("ReSharper", "NotAccessedField.Global")]
         public class LogData
         {
             public readonly object Sender;

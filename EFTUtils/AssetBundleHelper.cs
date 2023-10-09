@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using BepInEx.Logging;
 using UnityEngine;
 
+// ReSharper disable UnusedType.Global
+
 namespace EFTUtils
 {
     public static class AssetBundleHelper

@@ -1,4 +1,6 @@
-﻿namespace EFTUtils
+﻿// ReSharper disable UnusedType.Global
+
+namespace EFTUtils
 {
     public static class FileExtensions
     {

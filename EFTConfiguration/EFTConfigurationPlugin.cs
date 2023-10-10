@@ -230,12 +230,12 @@ namespace EFTConfiguration
             if (string.IsNullOrEmpty(localizedPath))
                 return localizedDictionary;
 
-            var assemblyPath = Path.GetDirectoryName(pluginInfo.Location);
+            var assemblyDirectoryPath = Path.GetDirectoryName(pluginInfo.Location);
 
-            if (string.IsNullOrEmpty(assemblyPath))
+            if (string.IsNullOrEmpty(assemblyDirectoryPath))
                 return localizedDictionary;
 
-            var localizedDirectory = new DirectoryInfo(Path.Combine(assemblyPath, localizedPath));
+            var localizedDirectory = new DirectoryInfo(Path.Combine(assemblyDirectoryPath, localizedPath));
 
             if (!localizedDirectory.Exists)
                 return localizedDictionary;

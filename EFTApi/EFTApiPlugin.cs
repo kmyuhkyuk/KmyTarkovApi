@@ -8,7 +8,8 @@ namespace EFTApi
     [BepInDependency("com.kmyuhkyuk.EFTReflection", "1.1.7")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
-        private static readonly ManualLogSource EFTVersionLogSource = BepInEx.Logging.Logger.CreateLogSource("EFTVersion");
+        private static readonly ManualLogSource EFTVersionLogSource =
+            BepInEx.Logging.Logger.CreateLogSource("EFTVersion");
 
         private void Start()
         {

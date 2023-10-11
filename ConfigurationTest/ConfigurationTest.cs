@@ -12,7 +12,7 @@ namespace ConfigurationTest
     {
         private bool _testLoopThrow;
 
-        public enum E
+        private enum E
         {
             A,
             B,
@@ -109,27 +109,27 @@ namespace ConfigurationTest
             throw new MemberAccessException();
         }
 
-        public static void MissingMemberException()
+        private static void MissingMemberException()
         {
             throw new MissingMemberException();
         }
 
-        public static void MethodAccessException()
+        private static void MethodAccessException()
         {
             throw new MethodAccessException();
         }
 
-        public static void MissingMethodException()
+        private static void MissingMethodException()
         {
             throw new MissingMethodException();
         }
 
-        public static void MissingFieldException()
+        private static void MissingFieldException()
         {
             throw new MissingFieldException();
         }
 
-        public static void FieldAccessException()
+        private static void FieldAccessException()
         {
             throw new FieldAccessException();
         }

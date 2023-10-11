@@ -31,7 +31,7 @@ namespace EFTConfiguration
 
         private const int MaxUpdateErrorCount = 3;
 
-        public enum ErrorType
+        private enum ErrorType
         {
             None,
             Update,

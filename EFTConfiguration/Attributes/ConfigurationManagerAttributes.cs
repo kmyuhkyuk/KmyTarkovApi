@@ -6,6 +6,7 @@ namespace EFTConfiguration.Attributes
     // ReSharper disable IdentifierTypo
     // ReSharper disable CommentTypo
     // ReSharper disable NotAccessedField.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     /// <summary>
     ///     Class that specifies how a setting should be displayed inside the ConfigurationManager settings window.
     ///     Usage:

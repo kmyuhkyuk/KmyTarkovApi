@@ -34,6 +34,9 @@
     <OutputPath>bin\UNITY_EDITOR\</OutputPath>
     <DefineConstants>TRACE;DEBUG;UNITY_EDITOR</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BepInEx">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\BepInEx.dll</HintPath>
@@ -58,4 +61,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\bin\Release\ConfigurationTest.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

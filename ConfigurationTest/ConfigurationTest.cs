@@ -65,6 +65,30 @@ namespace ConfigurationTest
                 new ConfigDescription(string.Empty, null, eftConfigurationAttributes));
 
             keyTestLoopThrow.SettingChanged += (sender, args) => _testLoopThrow = keyTestLoopThrow.Value;
+
+            Config.Bind(testSettings, "MemberAccessException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = MemberAccessException }));
+
+            Config.Bind(testSettings, "MissingMemberException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = MissingMemberException }));
+
+            Config.Bind(testSettings, "MethodAccessException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = MethodAccessException }));
+
+            Config.Bind(testSettings, "MissingMethodException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = MissingMethodException }));
+
+            Config.Bind(testSettings, "MissingFieldException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = MissingFieldException }));
+
+            Config.Bind(testSettings, "FieldAccessException", string.Empty,
+                new ConfigDescription(string.Empty, null,
+                    new EFTConfigurationAttributes { Advanced = true, ButtonAction = FieldAccessException }));
         }
 
         private void Update()
@@ -78,6 +102,36 @@ namespace ConfigurationTest
         private static void Test()
         {
             throw new NotImplementedException();
+        }
+
+        private static void MemberAccessException()
+        {
+            throw new MemberAccessException();
+        }
+
+        public static void MissingMemberException()
+        {
+            throw new MissingMemberException();
+        }
+
+        public static void MethodAccessException()
+        {
+            throw new MethodAccessException();
+        }
+
+        public static void MissingMethodException()
+        {
+            throw new MissingMethodException();
+        }
+
+        public static void MissingFieldException()
+        {
+            throw new MissingFieldException();
+        }
+
+        public static void FieldAccessException()
+        {
+            throw new FieldAccessException();
         }
 
         /*private void Start()

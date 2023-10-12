@@ -108,7 +108,7 @@ namespace EFTConfiguration
                 case ErrorType.MissingMethodException when _missingMethodExceptionCount == MaxUpdateErrorCount:
                 case ErrorType.MissingFieldException when _missingFieldExceptionCount == MaxUpdateErrorCount:
                 case ErrorType.FieldAccessException when _fieldAccessExceptionCount == MaxUpdateErrorCount:
-                    LogSource.LogError($"Major Error, Loop throw {error} error, Please contact dev");
+                    LogSource.LogError($"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
                 case ErrorType.None:
                     break;

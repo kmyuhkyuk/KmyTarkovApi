@@ -1,5 +1,6 @@
 ﻿namespace EFTConfiguration.AcceptableValue
 {
+    // ReSharper disable UnusedType.Global
     /// <summary>
     ///     Can be Modify Range Value
     /// </summary>

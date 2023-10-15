@@ -279,9 +279,9 @@ namespace EFTReflection
         /// <typeparam name="TF"></typeparam>
         public abstract class RefBase<T, TF>
         {
-            public abstract Type RefType { get; }
-
             public abstract Type RefDeclaringType { get; }
+
+            public abstract Type RefType { get; }
 
             public abstract TF GetValue(T instance);
 
@@ -312,9 +312,9 @@ namespace EFTReflection
 
             public Type DeclaringType { get; private set; }
 
-            public override Type RefDeclaringType => DeclaringType;
-
             public Type PropertyType => _propertyInfo.PropertyType;
+
+            public override Type RefDeclaringType => DeclaringType;
 
             public override Type RefType => PropertyType;
 
@@ -483,9 +483,9 @@ namespace EFTReflection
 
             public Type DeclaringType { get; private set; }
 
-            public override Type RefDeclaringType => DeclaringType;
-
             public Type FieldType => _fieldInfo.FieldType;
+
+            public override Type RefDeclaringType => DeclaringType;
 
             public override Type RefType => FieldType;
 

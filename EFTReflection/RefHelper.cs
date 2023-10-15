@@ -272,6 +272,11 @@ namespace EFTReflection
             return (TDelegateType)dmd.CreateDelegate(delegateType);
         }
 
+        /// <summary>
+        ///     Reflection Wrapper Base Class
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TF"></typeparam>
         public abstract class RefBase<T, TF>
         {
             public abstract Type RefType { get; }

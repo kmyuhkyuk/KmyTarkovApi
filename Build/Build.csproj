@@ -68,12 +68,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)\bin\Release\EFTConfiguration.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
-xcopy "$(ProjectDir)\bin\Release\EFTApi.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
-xcopy "$(ProjectDir)\bin\Release\EFTUtils.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
-xcopy "$(ProjectDir)\bin\Release\EFTReflection.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
-xcopy "$(ProjectDir)\bin\Release\HtmlAgilityPack.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
-xcopy "$(ProjectDir)\bin\Release\Crc32.NET.dll" "R:\Battlestate Games\Client.0.13.5.2.26282\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+    <PostBuildEvent>xcopy "$(ProjectDir)\bin\Release\EFTConfiguration.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTApi.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTUtils.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\EFTReflection.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\HtmlAgilityPack.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
+xcopy "$(ProjectDir)\bin\Release\Crc32.NET.dll" "R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi" /Y
 
 xcopy "$(ProjectDir)\bin\UNITY_EDITOR\EFTConfiguration.dll" "C:\Users\24516\Documents\EFTConfiguration\Assets\Managed" /Y</PostBuildEvent>
   </PropertyGroup>

@@ -276,6 +276,8 @@ namespace EFTReflection
         {
             public abstract Type RefType { get; }
 
+            public abstract Type RefDeclaringType { get; }
+
             public abstract TF GetValue(T instance);
 
             public abstract void SetValue(T instance, TF value);
@@ -304,6 +306,8 @@ namespace EFTReflection
             private T _instance;
 
             public Type DeclaringType { get; private set; }
+
+            public override Type RefDeclaringType => DeclaringType;
 
             public Type PropertyType => _propertyInfo.PropertyType;
 
@@ -473,6 +477,8 @@ namespace EFTReflection
             private bool _useHarmony;
 
             public Type DeclaringType { get; private set; }
+
+            public override Type RefDeclaringType => DeclaringType;
 
             public Type FieldType => _fieldInfo.FieldType;
 

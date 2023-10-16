@@ -324,7 +324,7 @@ namespace EFTReflection
             {
                 if (propertyInfo == null)
                 {
-                    throw new Exception("PropertyInfo is null");
+                    throw new ArgumentNullException(nameof(propertyInfo));
                 }
 
                 Init(propertyInfo, instance);
@@ -338,7 +338,7 @@ namespace EFTReflection
 
                 if (propertyInfo == null)
                 {
-                    throw new Exception($"{propertyName} is null");
+                    throw new Exception($"{propertyName} Property not exist");
                 }
 
                 Init(propertyInfo, instance);
@@ -352,7 +352,7 @@ namespace EFTReflection
 
                 if (propertyInfo == null)
                 {
-                    throw new Exception($"{propertyNames.First()} is null");
+                    throw new Exception($"{string.Join("|", propertyNames)} All Property not exist");
                 }
 
                 Init(propertyInfo, instance);
@@ -497,7 +497,7 @@ namespace EFTReflection
             {
                 if (fieldInfo == null)
                 {
-                    throw new Exception("FieldInfo is null");
+                    throw new ArgumentNullException(nameof(fieldInfo));
                 }
 
                 Init(fieldInfo, instance);
@@ -511,7 +511,7 @@ namespace EFTReflection
 
                 if (fieldInfo == null)
                 {
-                    throw new Exception($"{fieldName} is null");
+                    throw new Exception($"{fieldName} Field not exist");
                 }
 
                 Init(fieldInfo, instance);
@@ -525,7 +525,7 @@ namespace EFTReflection
 
                 if (fieldInfo == null)
                 {
-                    throw new Exception($"{fieldNames.First()} is null");
+                    throw new Exception($"{string.Join("|", fieldNames)} All Field not exist");
                 }
 
                 Init(fieldInfo, instance);

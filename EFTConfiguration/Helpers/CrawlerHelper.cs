@@ -9,6 +9,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration.Helpers
 {
@@ -28,19 +29,19 @@ namespace EFTConfiguration.Helpers
 
         static CrawlerHelper()
         {
-            var directory = new DirectoryInfo(CachePath);
+            var cacheDirectory = new DirectoryInfo(CachePath);
 
-            if (!directory.Exists)
+            if (!cacheDirectory.Exists)
             {
-                directory.Create();
+                cacheDirectory.Create();
             }
             else
             {
-                var files = directory.GetFiles("*.png");
+                var cacheFiles = cacheDirectory.GetFiles("*.png");
 
-                foreach (var file in files)
+                foreach (var cacheFile in cacheFiles)
                 {
-                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
+                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(cacheFile.Name), GetAsyncTexture(cacheFile.FullName));
                 }
             }
             

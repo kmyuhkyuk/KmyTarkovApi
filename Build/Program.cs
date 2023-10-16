@@ -19,10 +19,10 @@ namespace Build
             switch (configurationName)
             {
                 case "Release":
-                    const string path =
+                    const string releasePath =
                         "R:\\Battlestate Games\\Client.0.13.5.3.26535\\BepInEx\\plugins\\kmyuhkyuk-EFTApi";
 
-                    Copy(path, new[]
+                    Copy(releasePath, new[]
                     {
                         "EFTApi",
                         "EFTUtils",
@@ -32,10 +32,12 @@ namespace Build
                         "Crc32.NET"
                     });
 
-                    SevenZip(path);
+                    SevenZip(releasePath);
                     break;
                 case "UNITY_EDITOR":
-                    Copy("C:\\Users\\24516\\Documents\\EFTConfiguration\\Assets\\Managed",
+                    const string unityEditorPath = "C:\\Users\\24516\\Documents\\EFTConfiguration\\Assets\\Managed";
+
+                    Copy(unityEditorPath,
                         new[] { "EFTConfiguration" });
                     break;
             }

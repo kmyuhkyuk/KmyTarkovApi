@@ -43,17 +43,15 @@ namespace EFTConfiguration.Helpers
                     IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(file.Name), GetAsyncTexture(file.FullName));
                 }
             }
-
-            var cacheFileInfo = new FileInfo(CacheFilePath);
-
-            if (!cacheFileInfo.Exists)
+            
+            if (!File.Exists(CacheFilePath))
             {
                 IconURL = new ConcurrentDictionary<string, string>();
             }
             else
             {
                 IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(
-                    File.ReadAllText(cacheFileInfo.FullName));
+                    File.ReadAllText(CacheFilePath));
             }
         }
 

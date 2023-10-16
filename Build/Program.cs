@@ -22,7 +22,11 @@ namespace Build
                     const string releasePath =
                         "R:\\Battlestate Games\\Client.0.13.5.3.26535\\BepInEx\\plugins\\kmyuhkyuk-EFTApi";
 
-                    Directory.Delete(Path.Combine(releasePath, "cache"), true);
+                    var cacheDirectory = new DirectoryInfo(Path.Combine(releasePath, "cache"));
+                    if (cacheDirectory.Exists)
+                    {
+                        cacheDirectory.Delete(true);
+                    }
 
                     Copy(releasePath, new[]
                     {

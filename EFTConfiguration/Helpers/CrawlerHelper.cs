@@ -9,6 +9,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration.Helpers
@@ -41,10 +42,11 @@ namespace EFTConfiguration.Helpers
 
                 foreach (var cacheFile in cacheFiles)
                 {
-                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(cacheFile.Name), GetAsyncTexture(cacheFile.FullName));
+                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(cacheFile.Name),
+                        GetAsyncTexture(cacheFile.FullName));
                 }
             }
-            
+
             if (!File.Exists(CacheFilePath))
             {
                 IconURL = new ConcurrentDictionary<string, string>();

@@ -314,11 +314,9 @@ namespace EFTReflection
 
             public Type PropertyType => _propertyInfo.PropertyType;
 
-            [Obsolete("Used DeclaringType", true)]
-            public override Type RefDeclaringType => DeclaringType;
+            [Obsolete("Used DeclaringType", true)] public override Type RefDeclaringType => DeclaringType;
 
-            [Obsolete("Used PropertyType", true)]
-            public override Type RefType => PropertyType;
+            [Obsolete("Used PropertyType", true)] public override Type RefType => PropertyType;
 
             public PropertyRef(PropertyInfo propertyInfo, object instance = null)
             {
@@ -487,11 +485,9 @@ namespace EFTReflection
 
             public Type FieldType => _fieldInfo.FieldType;
 
-            [Obsolete("Used DeclaringType", true)]
-            public override Type RefDeclaringType => DeclaringType;
+            [Obsolete("Used DeclaringType", true)] public override Type RefDeclaringType => DeclaringType;
 
-            [Obsolete("Used FieldType", true)]
-            public override Type RefType => FieldType;
+            [Obsolete("Used FieldType", true)] public override Type RefType => FieldType;
 
             public FieldRef(FieldInfo fieldInfo, object instance = null)
             {

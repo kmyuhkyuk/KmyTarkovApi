@@ -125,7 +125,7 @@ namespace EFTConfiguration
             {
                 var path = EFTConfigurationPlugin.SetData.KeySavePath.Value;
 
-                if (!new DirectoryInfo(path).Exists)
+                if (!Directory.Exists(path))
                 {
                     LogSource.LogError($"{path} Directory not Exists");
                 }

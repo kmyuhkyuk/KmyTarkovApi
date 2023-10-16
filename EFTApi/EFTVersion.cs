@@ -116,7 +116,7 @@ namespace EFTApi
         /// <returns></returns>
         public static bool GameVersionRange(string minVersion, string maxVersion)
         {
-            return GameVersionRange(new Version(minVersion), new Version(maxVersion));
+            return GameVersionRange(Version.Parse(minVersion), Version.Parse(maxVersion));
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace EFTApi
         /// <returns></returns>
         public static bool AkiVersionRange(string minVersion, string maxVersion)
         {
-            return AkiVersionRange(new Version(minVersion), new Version(maxVersion));
+            return AkiVersionRange(Version.Parse(minVersion), Version.Parse(maxVersion));
         }
 
         /// <summary>

@@ -22,13 +22,6 @@ namespace Build
                     const string path =
                         "R:\\Battlestate Games\\Client.0.13.5.3.26535\\BepInEx\\plugins\\kmyuhkyuk-EFTApi";
 
-                    var directoryInfo = new DirectoryInfo(path);
-
-                    if (directoryInfo.Parent == null)
-                    {
-                        throw new ArgumentNullException(nameof(directoryInfo.Parent));
-                    }
-
                     Copy(path, new[]
                     {
                         "EFTApi",
@@ -39,21 +32,7 @@ namespace Build
                         "Crc32.NET"
                     });
 
-                    SevenZipBase.SetLibraryPath(
-                        $@"{Environment.CurrentDirectory}\{(IntPtr.Size == 4 ? "x86" : "x64")}\7z.dll");
-
-                    var compressor = new SevenZipCompressor();
-
-                    var filesDictionary = new Dictionary<string, string>();
-                    foreach (var fileInfo in directoryInfo.GetFiles("*", SearchOption.AllDirectories))
-                    {
-                        filesDictionary.Add(
-                            fileInfo.FullName.Replace(directoryInfo.Parent.FullName, "BepInEx\\plugins"),
-                            fileInfo.FullName);
-                    }
-
-                    compressor.CompressFileDictionary(filesDictionary,
-                        File.Create(Path.Combine(directoryInfo.Parent.FullName, $"{directoryInfo.Name}.7z")));
+                    SevenZip(path);
                     break;
                 case "UNITY_EDITOR":
                     Copy("C:\\Users\\24516\\Documents\\EFTConfiguration\\Assets\\Managed",
@@ -66,6 +45,32 @@ namespace Build
                 Console.WriteLine("\nPress any key to close console app...");
                 Console.ReadKey();
             }
+        }
+
+        private static void SevenZip(string path)
+        {
+            var directoryInfo = new DirectoryInfo(path);
+
+            if (directoryInfo.Parent == null)
+            {
+                throw new ArgumentNullException(nameof(directoryInfo.Parent));
+            }
+
+            SevenZipBase.SetLibraryPath(
+                $@"{Environment.CurrentDirectory}\{(IntPtr.Size == 4 ? "x86" : "x64")}\7z.dll");
+
+            var compressor = new SevenZipCompressor();
+
+            var filesDictionary = new Dictionary<string, string>();
+            foreach (var fileInfo in directoryInfo.GetFiles("*", SearchOption.AllDirectories))
+            {
+                filesDictionary.Add(
+                    fileInfo.FullName.Replace(directoryInfo.Parent.FullName, "BepInEx\\plugins"),
+                    fileInfo.FullName);
+            }
+
+            compressor.CompressFileDictionary(filesDictionary,
+                File.Create(Path.Combine(directoryInfo.Parent.FullName, $"{directoryInfo.Name}.7z")));
         }
 
         private static void Copy(string toPath, string[] dllNames)

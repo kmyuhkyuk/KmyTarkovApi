@@ -87,7 +87,7 @@ namespace EFTConfiguration
                         return;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
             var log = new LogData(sender, eventArgs);
@@ -114,7 +114,7 @@ namespace EFTConfiguration
                 case ErrorType.None:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
         }
 

@@ -341,7 +341,9 @@ namespace EFTConfiguration
 
                 if (configurationData.Configs.All(x =>
                         x.ConfigurationAttributes.HideSetting || !isAdvanced && x.ConfigurationAttributes.Advanced))
+                {
                     show = false;
+                }
 
                 changes.Add((i, show));
             }

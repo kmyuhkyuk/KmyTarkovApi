@@ -29,7 +29,7 @@ namespace EFTConfiguration
 
         private static int _fieldAccessExceptionCount;
 
-        private const int MaxUpdateErrorCount = 3;
+        private const int MaxErrorCount = 3;
 
         private enum ErrorType
         {
@@ -98,16 +98,16 @@ namespace EFTConfiguration
 
             switch (error)
             {
-                case ErrorType.Update when _updateErrorCount == MaxUpdateErrorCount:
+                case ErrorType.Update when _updateErrorCount == MaxErrorCount:
                     LogSource.LogError(
                         "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
                     break;
-                case ErrorType.MemberAccessException when _memberAccessExceptionCount == MaxUpdateErrorCount:
-                case ErrorType.MissingMemberException when _missingMemberExceptionCount == MaxUpdateErrorCount:
-                case ErrorType.MethodAccessException when _methodAccessExceptionCount == MaxUpdateErrorCount:
-                case ErrorType.MissingMethodException when _missingMethodExceptionCount == MaxUpdateErrorCount:
-                case ErrorType.MissingFieldException when _missingFieldExceptionCount == MaxUpdateErrorCount:
-                case ErrorType.FieldAccessException when _fieldAccessExceptionCount == MaxUpdateErrorCount:
+                case ErrorType.MemberAccessException when _memberAccessExceptionCount == MaxErrorCount:
+                case ErrorType.MissingMemberException when _missingMemberExceptionCount == MaxErrorCount:
+                case ErrorType.MethodAccessException when _methodAccessExceptionCount == MaxErrorCount:
+                case ErrorType.MissingMethodException when _missingMethodExceptionCount == MaxErrorCount:
+                case ErrorType.MissingFieldException when _missingFieldExceptionCount == MaxErrorCount:
+                case ErrorType.FieldAccessException when _fieldAccessExceptionCount == MaxErrorCount:
                     LogSource.LogError(
                         $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
@@ -158,7 +158,7 @@ namespace EFTConfiguration
 
         private static void ClearErrorCount(ref int errorCount)
         {
-            if (errorCount < MaxUpdateErrorCount)
+            if (errorCount < MaxErrorCount)
             {
                 errorCount = 0;
             }
@@ -166,11 +166,11 @@ namespace EFTConfiguration
 
         private static bool NeedFilterLog(ref int errorCount)
         {
-            if (errorCount == MaxUpdateErrorCount)
+            if (errorCount == MaxErrorCount)
             {
                 return true;
             }
-            else if (errorCount < MaxUpdateErrorCount)
+            else if (errorCount < MaxErrorCount)
             {
                 errorCount++;
             }

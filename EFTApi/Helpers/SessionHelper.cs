@@ -165,7 +165,7 @@ namespace EFTApi.Helpers
 
             private readonly Func<object, int, int> _refKillingBonusPercent;
 
-            private bool _isReady;
+            private bool _isInitialized;
 
             private ExperienceData()
             {
@@ -188,7 +188,7 @@ namespace EFTApi.Helpers
 
                 _headShotMult = Traverse.Create(_kill).Field("HeadShotMult").GetValue<float>();
 
-                _isReady = true;
+                _isInitialized = true;
             }
 
             public int GetBaseExp(int exp, EPlayerSide side)
@@ -217,7 +217,7 @@ namespace EFTApi.Helpers
 
             public int GetKillingBonusPercent(int killed)
             {
-                return _isReady ? _refKillingBonusPercent(_kill, killed) : 0;
+                return _isInitialized ? _refKillingBonusPercent(_kill, killed) : 0;
             }
         }
     }

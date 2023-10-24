@@ -192,9 +192,11 @@ namespace EFTApi.Helpers
         {
             public static readonly InventoryData Instance = new InventoryData();
 
+#pragma warning disable IDE0031
             public object Inventory =>
                 RefInventory.GetValue(
                     PlayerHelper.Instance.Player != null ? PlayerHelper.Instance.Player.Profile : null);
+#pragma warning restore IDE0031
 
             public object Equipment => RefEquipment.GetValue(Inventory);
 
@@ -386,9 +388,11 @@ namespace EFTApi.Helpers
         {
             public static readonly WeaponData Instance = new WeaponData();
 
+#pragma warning disable IDE0031
             public Weapon Weapon => FirearmControllerData.Instance.FirearmController != null
                 ? FirearmControllerData.Instance.FirearmController.Item
                 : null;
+#pragma warning restore IDE0031
 
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 

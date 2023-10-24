@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace ConfigurationTest
 {
-    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "kmyuhkyuk-ConfigurationTest", "1.1.7")]
-    [BepInDependency("com.kmyuhkyuk.EFTConfiguration", "1.1.7")]
+    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "kmyuhkyuk-ConfigurationTest", "1.1.8")]
+    [BepInDependency("com.kmyuhkyuk.EFTConfiguration", "1.1.8")]
     public class ConfigurationTest : BaseUnityPlugin
     {
         private bool _testLoopThrow;

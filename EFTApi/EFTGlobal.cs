@@ -68,5 +68,10 @@ namespace EFTApi
         ///     Current EnvironmentUIRoot
         /// </summary>
         public static EnvironmentUIRoot EnvironmentUIRoot => EnvironmentUIRootHelper.Instance.EnvironmentUIRoot;
+
+        /// <summary>
+        ///     Current AbstractGame
+        /// </summary>
+        public static AbstractGame AbstractGame => AbstractGameHelper.Instance.AbstractGame;
     }
 }

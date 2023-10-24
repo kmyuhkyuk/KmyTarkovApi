@@ -70,6 +70,7 @@
     <Compile Include="EFTGlobal.cs" />
     <Compile Include="EFTHelpers.cs" />
     <Compile Include="EFTVersion.cs" />
+    <Compile Include="Helpers\AbstractGameHelper.cs" />
     <Compile Include="Helpers\AirdropHelper.cs" />
     <Compile Include="Helpers\EnvironmentUIRootHelper.cs" />
     <Compile Include="Helpers\GameUIHelper.cs" />

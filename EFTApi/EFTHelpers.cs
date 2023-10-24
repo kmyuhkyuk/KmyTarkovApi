@@ -52,5 +52,10 @@ namespace EFTApi
         ///     EnvironmentUIRoot Helper
         /// </summary>
         public static readonly EnvironmentUIRootHelper _EnvironmentUIRootHelper = EnvironmentUIRootHelper.Instance;
+
+        /// <summary>
+        ///     AbstractGame Helper
+        /// </summary>
+        public static readonly AbstractGameHelper _AbstractGameHelper = AbstractGameHelper.Instance;
     }
 }

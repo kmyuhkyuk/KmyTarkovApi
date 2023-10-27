@@ -244,11 +244,11 @@ namespace EFTReflection.Patching
 
                 var isFieldName = parameterName.StartsWith("___", StringComparison.Ordinal);
 
-                var isPatchName = parameterName.StartsWith("__", StringComparison.Ordinal);
+                var isPatchName = !isFieldName && parameterName.StartsWith("__", StringComparison.Ordinal);
 
                 if ( /*patchNames.Contains(parameterName) ||*/
-                    isPatchName && !isFieldName ||
-                    isFieldName && !isPatchName &&
+                    isPatchName ||
+                    isFieldName &&
                     originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null ||
                     originalParameters.Any(x =>
                         x.Name == parameterName &&

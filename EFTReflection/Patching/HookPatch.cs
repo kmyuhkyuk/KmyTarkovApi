@@ -240,14 +240,18 @@ namespace EFTReflection.Patching
 
                 var parameterName = hookDelegateParameter.Name;
 
+                var isFieldName = parameterName.StartsWith("___", StringComparison.Ordinal);
+
+                var isPatchName = parameterName.StartsWith("__", StringComparison.Ordinal);
+
                 if ( /*patchNames.Contains(parameterName) ||*/
-                    (parameterName.StartsWith("___", StringComparison.Ordinal) &&
-                     originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null) ||
-                    parameterName.StartsWith("__", StringComparison.Ordinal) ||
+                    isPatchName && !isFieldName ||
+                    isFieldName && !isPatchName &&
+                    originalDeclaringType.GetField(parameterName.Remove(0, 3), AccessTools.all) != null ||
                     originalParameters.Any(x =>
-                        x.Name == parameterName && (x.ParameterType.IsAssignableFrom(
-                                                        hookDelegateParameter.ParameterType) ||
-                                                    x.ParameterType.IsSubclassOf(hookDelegateParameter.ParameterType))))
+                        x.Name == parameterName &&
+                        (x.ParameterType.IsAssignableFrom(hookDelegateParameter.ParameterType) ||
+                         x.ParameterType.IsSubclassOf(hookDelegateParameter.ParameterType))))
                 {
                     list.Add(delegateParameters[i]);
                 }

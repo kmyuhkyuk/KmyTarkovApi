@@ -236,6 +236,8 @@ namespace EFTReflection.Patching
 
             for (var i = 0; i < delegateParameters.Length; i++)
             {
+                var delegateParameter = delegateParameters[i];
+
                 var hookDelegateParameter = hookDelegateParameters[i];
 
                 var parameterName = hookDelegateParameter.Name;
@@ -253,7 +255,7 @@ namespace EFTReflection.Patching
                         (x.ParameterType.IsAssignableFrom(hookDelegateParameter.ParameterType) ||
                          x.ParameterType.IsSubclassOf(hookDelegateParameter.ParameterType))))
                 {
-                    list.Add(delegateParameters[i]);
+                    list.Add(delegateParameter);
                 }
                 else
                 {

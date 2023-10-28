@@ -35,12 +35,6 @@ namespace EFTConfiguration.Controllers
 
         private void Start()
         {
-            Init();
-            EFTConfigurationModel.Instance.CreateUI();
-        }
-
-        private static void Init()
-        {
             var eftConfigurationModel = EFTConfigurationModel.Instance;
 
             var configurationList = new List<ConfigurationModel>
@@ -66,6 +60,8 @@ namespace EFTConfiguration.Controllers
             }
 
             eftConfigurationModel.Configurations = configurationList.ToArray();
+
+            EFTConfigurationModel.Instance.CreateUI();
         }
 
         private static bool TryGetConfigurationData(PluginInfo pluginInfo, out ConfigurationModel configurationData)

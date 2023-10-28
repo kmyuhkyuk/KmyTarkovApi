@@ -17,7 +17,9 @@ namespace EFTApi.Helpers
 {
     public class PlayerHelper
     {
-        public static readonly PlayerHelper Instance = new PlayerHelper();
+        private static readonly Lazy<PlayerHelper> Lazy = new Lazy<PlayerHelper>(() => new PlayerHelper());
+
+        public static PlayerHelper Instance => Lazy.Value;
 
         public Player Player { get; private set; }
 
@@ -108,7 +110,10 @@ namespace EFTApi.Helpers
 
         public class FirearmControllerData
         {
-            public static readonly FirearmControllerData Instance = new FirearmControllerData();
+            private static readonly Lazy<FirearmControllerData> Lazy =
+                new Lazy<FirearmControllerData>(() => new FirearmControllerData());
+
+            public static FirearmControllerData Instance => Lazy.Value;
 
             public Player.FirearmController FirearmController => PlayerHelper.Instance.Player != null
                 ? PlayerHelper.Instance.Player.HandsController as Player.FirearmController
@@ -124,7 +129,10 @@ namespace EFTApi.Helpers
 
         public class ArmorComponentData
         {
-            public static readonly ArmorComponentData Instance = new ArmorComponentData();
+            private static readonly Lazy<ArmorComponentData> Lazy =
+                new Lazy<ArmorComponentData>(() => new ArmorComponentData());
+
+            public static ArmorComponentData Instance => Lazy.Value;
 
             public readonly RefHelper.HookRef ApplyDamage;
 
@@ -136,7 +144,9 @@ namespace EFTApi.Helpers
 
         public class RoleData
         {
-            public static readonly RoleData Instance = new RoleData();
+            private static readonly Lazy<RoleData> Lazy = new Lazy<RoleData>(() => new RoleData());
+
+            public static RoleData Instance => Lazy.Value;
 
             private readonly Func<WildSpawnType, bool> _refIsBoss;
 
@@ -190,7 +200,9 @@ namespace EFTApi.Helpers
 
         public class InventoryData
         {
-            public static readonly InventoryData Instance = new InventoryData();
+            private static readonly Lazy<InventoryData> Lazy = new Lazy<InventoryData>(() => new InventoryData());
+
+            public static InventoryData Instance => Lazy.Value;
 
 #pragma warning disable IDE0031
             public object Inventory =>
@@ -386,7 +398,9 @@ namespace EFTApi.Helpers
 
         public class WeaponData
         {
-            public static readonly WeaponData Instance = new WeaponData();
+            private static readonly Lazy<WeaponData> Lazy = new Lazy<WeaponData>(() => new WeaponData());
+
+            public static WeaponData Instance => Lazy.Value;
 
 #pragma warning disable IDE0031
             public Weapon Weapon => FirearmControllerData.Instance.FirearmController != null
@@ -511,7 +525,9 @@ namespace EFTApi.Helpers
 
         public class DamageInfoData
         {
-            public static readonly DamageInfoData Instance = new DamageInfoData();
+            private static readonly Lazy<DamageInfoData> Lazy = new Lazy<DamageInfoData>(() => new DamageInfoData());
+
+            public static DamageInfoData Instance => Lazy.Value;
 
             /// <summary>
             ///     DamageInfo.Player
@@ -548,7 +564,9 @@ namespace EFTApi.Helpers
 
         public class SpeakerData
         {
-            public static readonly SpeakerData Instance = new SpeakerData();
+            private static readonly Lazy<SpeakerData> Lazy = new Lazy<SpeakerData>(() => new SpeakerData());
+
+            public static SpeakerData Instance => Lazy.Value;
 
             /// <summary>
             ///     Player.Speaker
@@ -590,7 +608,10 @@ namespace EFTApi.Helpers
 
         public class HealthControllerData
         {
-            public static readonly HealthControllerData Instance = new HealthControllerData();
+            private static readonly Lazy<HealthControllerData> Lazy =
+                new Lazy<HealthControllerData>(() => new HealthControllerData());
+
+            public static HealthControllerData Instance => Lazy.Value;
 
             public object HealthController => RefHealthController.GetValue(PlayerHelper.Instance.Player);
 

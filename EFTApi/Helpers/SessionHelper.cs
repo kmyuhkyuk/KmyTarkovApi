@@ -15,7 +15,9 @@ namespace EFTApi.Helpers
 {
     public class SessionHelper
     {
-        public static readonly SessionHelper Instance = new SessionHelper();
+        private static readonly Lazy<SessionHelper> Lazy = new Lazy<SessionHelper>(() => new SessionHelper());
+
+        public static SessionHelper Instance => Lazy.Value;
 
         public ISession Session { get; private set; }
 
@@ -62,7 +64,9 @@ namespace EFTApi.Helpers
 
         public class TradersData
         {
-            public static readonly TradersData Instance = new TradersData();
+            private static readonly Lazy<TradersData> Lazy = new Lazy<TradersData>(() => new TradersData());
+
+            public static TradersData Instance => Lazy.Value;
 
             public object[] Traders { get; private set; }
 
@@ -85,7 +89,9 @@ namespace EFTApi.Helpers
 
             public class AvatarData
             {
-                public static readonly AvatarData Instance = new AvatarData();
+                private static readonly Lazy<AvatarData> Lazy = new Lazy<AvatarData>(() => new AvatarData());
+
+                public static AvatarData Instance => Lazy.Value;
 
                 private readonly Dictionary<string, object> _avatar = new Dictionary<string, object>();
 
@@ -149,7 +155,9 @@ namespace EFTApi.Helpers
 
         public class ExperienceData
         {
-            public static readonly ExperienceData Instance = new ExperienceData();
+            private static readonly Lazy<ExperienceData> Lazy = new Lazy<ExperienceData>(() => new ExperienceData());
+
+            public static ExperienceData Instance => Lazy.Value;
 
             private object _config;
 

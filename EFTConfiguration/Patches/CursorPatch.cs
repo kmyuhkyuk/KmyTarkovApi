@@ -2,6 +2,7 @@
 
 using System.Reflection;
 using Aki.Reflection.Patching;
+using EFTConfiguration.Models;
 using UnityEngine;
 
 namespace EFTConfiguration.Patches
@@ -18,7 +19,7 @@ namespace EFTConfiguration.Patches
         [PatchPrefix]
         private static bool PatchPrefix()
         {
-            return !EFTConfigurationPlugin.Unlock;
+            return !EFTConfigurationModel.Instance.Unlock;
         }
     }
 
@@ -34,7 +35,7 @@ namespace EFTConfiguration.Patches
         [PatchPrefix]
         private static bool PatchPrefix()
         {
-            return !EFTConfigurationPlugin.Unlock;
+            return !EFTConfigurationModel.Instance.Unlock;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -8,7 +9,10 @@ namespace EFTApi.Helpers
 {
     public class MainMenuControllerHelper
     {
-        public static readonly MainMenuControllerHelper Instance = new MainMenuControllerHelper();
+        private static readonly Lazy<MainMenuControllerHelper> Lazy =
+            new Lazy<MainMenuControllerHelper>(() => new MainMenuControllerHelper());
+
+        public static MainMenuControllerHelper Instance => Lazy.Value;
 
         public MainMenuController MainMenuController { get; private set; }
 

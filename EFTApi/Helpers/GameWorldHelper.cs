@@ -15,7 +15,9 @@ namespace EFTApi.Helpers
 {
     public class GameWorldHelper
     {
-        public static readonly GameWorldHelper Instance = new GameWorldHelper();
+        private static readonly Lazy<GameWorldHelper> Lazy = new Lazy<GameWorldHelper>(() => new GameWorldHelper());
+
+        public static GameWorldHelper Instance => Lazy.Value;
 
         public GameWorld GameWorld { get; private set; }
 
@@ -84,7 +86,10 @@ namespace EFTApi.Helpers
 
         public class LevelSettingsData
         {
-            public static readonly LevelSettingsData Instance = new LevelSettingsData();
+            private static readonly Lazy<LevelSettingsData> Lazy =
+                new Lazy<LevelSettingsData>(() => new LevelSettingsData());
+
+            public static LevelSettingsData Instance => Lazy.Value;
 
             public LevelSettings LevelSettings { get; private set; }
 
@@ -108,7 +113,9 @@ namespace EFTApi.Helpers
 
         public class ZoneData
         {
-            public static readonly ZoneData Instance = new ZoneData();
+            private static readonly Lazy<ZoneData> Lazy = new Lazy<ZoneData>(() => new ZoneData());
+
+            public static ZoneData Instance => Lazy.Value;
 
             internal readonly List<TriggerWithId> TriggerPoints = new List<TriggerWithId>();
 
@@ -147,7 +154,10 @@ namespace EFTApi.Helpers
 
         public class LootableContainerData
         {
-            public static readonly LootableContainerData Instance = new LootableContainerData();
+            private static readonly Lazy<LootableContainerData> Lazy =
+                new Lazy<LootableContainerData>(() => new LootableContainerData());
+
+            public static LootableContainerData Instance => Lazy.Value;
 
             /// <summary>
             ///     LootableContainer.ItemOwner
@@ -168,7 +178,10 @@ namespace EFTApi.Helpers
 
         public class SearchableItemClassData
         {
-            public static readonly SearchableItemClassData Instance = new SearchableItemClassData();
+            private static readonly Lazy<SearchableItemClassData> Lazy =
+                new Lazy<SearchableItemClassData>(() => new SearchableItemClassData());
+
+            public static SearchableItemClassData Instance => Lazy.Value;
 
             /// <summary>
             ///     SearchableItemClass.ItemOwner

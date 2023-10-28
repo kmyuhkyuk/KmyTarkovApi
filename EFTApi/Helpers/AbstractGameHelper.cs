@@ -1,4 +1,5 @@
-﻿using EFT;
+﻿using System;
+using EFT;
 using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -7,7 +8,10 @@ namespace EFTApi.Helpers
 {
     public class AbstractGameHelper
     {
-        public static readonly AbstractGameHelper Instance = new AbstractGameHelper();
+        private static readonly Lazy<AbstractGameHelper> Lazy =
+            new Lazy<AbstractGameHelper>(() => new AbstractGameHelper());
+
+        public static AbstractGameHelper Instance => Lazy.Value;
 
         public AbstractGame AbstractGame { get; private set; }
 

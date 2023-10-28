@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using EFTReflection;
 
 // ReSharper disable NotAccessedField.Global
@@ -7,7 +8,9 @@ namespace EFTApi.Helpers
 {
     public class QuestHelper
     {
-        public static readonly QuestHelper Instance = new QuestHelper();
+        private static readonly Lazy<QuestHelper> Lazy = new Lazy<QuestHelper>(() => new QuestHelper());
+
+        public static QuestHelper Instance => Lazy.Value;
 
         public readonly RefHelper.HookRef OnConditionValueChanged;
 

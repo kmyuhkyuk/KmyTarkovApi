@@ -1,4 +1,5 @@
-﻿using EFT.UI;
+﻿using System;
+using EFT.UI;
 using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -7,7 +8,10 @@ namespace EFTApi.Helpers
 {
     public class EnvironmentUIRootHelper
     {
-        public static readonly EnvironmentUIRootHelper Instance = new EnvironmentUIRootHelper();
+        private static readonly Lazy<EnvironmentUIRootHelper> Lazy =
+            new Lazy<EnvironmentUIRootHelper>(() => new EnvironmentUIRootHelper());
+
+        public static EnvironmentUIRootHelper Instance => Lazy.Value;
 
         public EnvironmentUIRoot EnvironmentUIRoot { get; private set; }
 

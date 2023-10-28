@@ -1,17 +1,19 @@
-﻿using System;
+﻿#if !UNITY_EDITOR
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using BepInEx.Logging;
+using EFTConfiguration.Models;
 
 namespace EFTConfiguration
 {
     public class EFTLogListener : ILogListener
     {
-        public static IReadOnlyList<LogData> LogList => AllLog;
+        public static IReadOnlyList<LogModel> LogList => AllLog;
 
-        public static event Action<LogData> OnLog;
+        public static event Action<LogModel> OnLog;
 
-        private static readonly List<LogData> AllLog = new List<LogData>();
+        private static readonly List<LogModel> AllLog = new List<LogModel>();
 
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
 
@@ -90,7 +92,7 @@ namespace EFTConfiguration
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
-            var log = new LogData(sender, eventArgs);
+            var log = new LogModel(sender, eventArgs);
 
             AllLog.Add(log);
 
@@ -178,22 +180,10 @@ namespace EFTConfiguration
             return false;
         }
 
-        [SuppressMessage("ReSharper", "NotAccessedField.Global")]
-        public class LogData
-        {
-            public readonly object Sender;
-
-            public readonly LogEventArgs EventArgs;
-
-            public LogData(object sender, LogEventArgs eventArgs)
-            {
-                Sender = sender;
-                EventArgs = eventArgs;
-            }
-        }
-
         public void Dispose()
         {
         }
     }
 }
+
+#endif

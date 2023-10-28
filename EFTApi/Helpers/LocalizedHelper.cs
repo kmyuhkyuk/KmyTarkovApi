@@ -9,7 +9,9 @@ namespace EFTApi.Helpers
 {
     public class LocalizedHelper
     {
-        public static readonly LocalizedHelper Instance = new LocalizedHelper();
+        private static readonly Lazy<LocalizedHelper> Lazy = new Lazy<LocalizedHelper>(() => new LocalizedHelper());
+
+        public static LocalizedHelper Instance => Lazy.Value;
 
         private readonly Func<string, string, string> _refLocalized;
 

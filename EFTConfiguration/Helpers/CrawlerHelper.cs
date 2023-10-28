@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using EFTConfiguration.Models;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace EFTConfiguration.Helpers
 {
     public static class CrawlerHelper
     {
-        private static readonly string CachePath = Path.Combine(EFTConfigurationPlugin.ModPath, "cache");
+        private static readonly string CachePath = Path.Combine(EFTConfigurationModel.Instance.ModPath, "cache");
 
         private static readonly string CacheFilePath = Path.Combine(CachePath, "cache.json");
 
@@ -60,9 +61,7 @@ namespace EFTConfiguration.Helpers
 
         public static async Task<HtmlDocument> CreateHtmlDocument(string url)
         {
-            var web = new HtmlWeb();
-
-            return await web.LoadFromWebAsync(url);
+            return await new HtmlWeb().LoadFromWebAsync(url);
         }
 
         public static Version GetModVersion(HtmlDocument doc)

@@ -19,7 +19,7 @@ namespace ConfigurationTest
             C
         }
 
-        private ConfigurationTest()
+        private void Awake()
         {
             const string testSettings = "Test Settings";
             var eftConfigurationAttributes = new EFTConfigurationAttributes { Advanced = true };

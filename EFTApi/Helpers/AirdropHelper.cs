@@ -8,7 +8,9 @@ namespace EFTApi.Helpers
 {
     public class AirdropHelper
     {
-        public static readonly AirdropHelper Instance = new AirdropHelper();
+        private static readonly Lazy<AirdropHelper> Lazy = new Lazy<AirdropHelper>(() => new AirdropHelper());
+
+        public static AirdropHelper Instance => Lazy.Value;
 
         public readonly AirdropBoxData AirdropBoxHelper = AirdropBoxData.Instance;
 
@@ -21,7 +23,9 @@ namespace EFTApi.Helpers
 
         public class AirdropBoxData
         {
-            public static readonly AirdropBoxData Instance = new AirdropBoxData();
+            private static readonly Lazy<AirdropBoxData> Lazy = new Lazy<AirdropBoxData>(() => new AirdropBoxData());
+
+            public static AirdropBoxData Instance => Lazy.Value;
 
             [CanBeNull] public readonly RefHelper.HookRef OnBoxLand;
 
@@ -39,7 +43,10 @@ namespace EFTApi.Helpers
 
         public class AirdropSynchronizableObjectData
         {
-            public static readonly AirdropSynchronizableObjectData Instance = new AirdropSynchronizableObjectData();
+            private static readonly Lazy<AirdropSynchronizableObjectData> Lazy =
+                new Lazy<AirdropSynchronizableObjectData>(() => new AirdropSynchronizableObjectData());
+
+            public static AirdropSynchronizableObjectData Instance => Lazy.Value;
 
             /// <summary>
             ///     AirdropSynchronizableObject.AirdropType

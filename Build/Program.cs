@@ -30,10 +30,11 @@ namespace Build
                         "EFTReflection",
                         "EFTConfiguration",
                         "HtmlAgilityPack",
-                        "Crc32.NET"
+                        "Crc32.NET",
+                        "ConfigurationTest"
                     });
 
-                    SevenZip(releasePath, null, new[] { "cache" }, Array.Empty<string>());
+                    SevenZip(releasePath, null, new[] { "cache" }, new[] { "ConfigurationTest.dll" });
                     break;
                 case "UNITY_EDITOR":
                     const string unityEditorPath = "C:\\Users\\24516\\Documents\\EFTConfiguration\\Assets\\Managed";

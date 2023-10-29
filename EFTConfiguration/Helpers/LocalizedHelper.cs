@@ -6,18 +6,21 @@ namespace EFTConfiguration.Helpers
 {
     public static class LocalizedHelper
     {
+        private static string _currentLanguage = "En";
+
         public static string CurrentLanguage
         {
             get => _currentLanguage;
             internal set
             {
+                if (value == _currentLanguage) 
+                    return;
+
                 _currentLanguage = value;
 
                 LanguageChange?.Invoke();
             }
         }
-
-        private static string _currentLanguage = "En";
 
         public static string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
 

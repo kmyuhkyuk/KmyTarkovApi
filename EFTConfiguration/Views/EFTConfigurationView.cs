@@ -84,6 +84,8 @@ namespace EFTConfiguration.Views
             set
             {
 #if !UNITY_EDITOR
+                if (value == windowRoot.gameObject.activeSelf)
+                    return;
 
                 if (value)
                 {

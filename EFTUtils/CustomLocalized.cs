@@ -16,7 +16,7 @@ namespace EFTUtils
             get => CustomCurrentLanguage;
             set
             {
-                if (value == CustomCurrentLanguage)
+                if (CustomCurrentLanguage == value)
                     return;
 
                 CustomCurrentLanguage = value;

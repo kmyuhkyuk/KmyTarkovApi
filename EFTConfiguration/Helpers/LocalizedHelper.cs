@@ -13,7 +13,7 @@ namespace EFTConfiguration.Helpers
             get => _currentLanguage;
             internal set
             {
-                if (value == _currentLanguage) 
+                if (_currentLanguage == value) 
                     return;
 
                 _currentLanguage = value;

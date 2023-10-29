@@ -7,7 +7,6 @@ namespace EFTConfiguration.Helpers
     public static class LocalizedHelper
     {
         private static string _currentLanguage = "En";
-
         public static string CurrentLanguage
         {
             get => _currentLanguage;

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EFTConfiguration.Models;
 using HtmlAgilityPack;
@@ -66,8 +67,8 @@ namespace EFTConfiguration.Helpers
 
         public static Version GetModVersion(HtmlDocument doc)
         {
-            return Version.Parse(new string(doc.DocumentNode.SelectSingleNode("//span[@class='filebaseVersionNumber']")
-                .InnerText.Where(x => char.IsDigit(x) || x == '.').ToArray()));
+            return Version.Parse(new Regex(@"[^\d.]").Replace(doc.DocumentNode.SelectSingleNode("//span[@class='filebaseVersionNumber']")
+                .InnerText, ""));
         }
 
         /*public static DateTime GetModVersionDataTime(HtmlDocument doc)

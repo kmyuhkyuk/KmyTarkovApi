@@ -351,12 +351,9 @@ namespace EFTConfiguration.Views
 
             var configurations = _configuration.ToArray();
 
-            var changes = new List<(int Index, bool Active)>();
-
-            for (var i = 0; i < eftConfigurationModel.Configurations.Length; i++)
+            var needShowList = new List<bool>();
+            foreach (var configurationData in eftConfigurationModel.Configurations)
             {
-                var configurationData = eftConfigurationModel.Configurations[i];
-
                 var attributes = configurationData.ConfigurationPluginAttributes;
 
                 var show = !(attributes.HidePlugin || !attributes.AlwaysDisplay && configurationData.ConfigCount == 0);
@@ -367,77 +364,25 @@ namespace EFTConfiguration.Views
                     show = false;
                 }
 
-                changes.Add((i, show));
+                needShowList.Add(show);
             }
 
-            var changesArray = changes.ToArray();
-
-            foreach (var change in changesArray)
+            for (var i = 0; i < needShowList.Count; i++)
             {
-                var configuration = configurations[change.Index];
+                var needShowChange = needShowList[i];
+                var configuration = configurations[i];
 
-                if (!change.Active && configuration.Key == _currentConfiguration.Key)
+                if (needShowChange && configuration.Key != _currentConfiguration.Key)
+                    continue;
+
+                var fistIndex = i == needShowList.Count - 1 ? needShowList.FindLastIndex(x => x) : needShowList.FindIndex(x => x);
+
+                if (fistIndex > -1)
                 {
-                    if (change.Index == 0)
-                    {
-                        for (var i = 0; i < changesArray.Length; i++)
-                        {
-                            var changeValue = changesArray[i];
-
-                            if (changeValue.Active)
-                            {
-                                SwitchConfiguration(configurations[i], true);
-                                break;
-                            }
-                        }
-                    }
-                    else if (change.Index == changesArray.Length - 1)
-                    {
-                        for (var i = change.Index; i >= 0; i--)
-                        {
-                            var changeActive = changesArray[i].Active;
-
-                            if (changeActive)
-                            {
-                                SwitchConfiguration(configurations[i], true);
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var hasChange = false;
-
-                        for (var i = change.Index; i < changesArray.Length; i++)
-                        {
-                            var changeValue = changesArray[i];
-
-                            if (changeValue.Active)
-                            {
-                                hasChange = true;
-
-                                SwitchConfiguration(configurations[i], true);
-                                break;
-                            }
-                        }
-
-                        if (!hasChange)
-                        {
-                            for (var i = change.Index; i >= 0; i--)
-                            {
-                                var changeActive = changesArray[i].Active;
-
-                                if (changeActive)
-                                {
-                                    SwitchConfiguration(configurations[i], true);
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    SwitchConfiguration(configurations[fistIndex], true);
                 }
 
-                configuration.Key.gameObject.SetActive(change.Active);
+                configuration.Key.gameObject.SetActive(needShowChange);
             }
         }
 

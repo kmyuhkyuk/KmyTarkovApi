@@ -369,22 +369,22 @@ namespace EFTConfiguration.Views
 
             for (var i = 0; i < needShowList.Count; i++)
             {
-                var needShowChange = needShowList[i];
+                var needShow = needShowList[i];
                 var configuration = configurations[i];
 
-                if (needShowChange && configuration.Key != _currentConfiguration.Key)
-                    continue;
-
-                var fistIndex = i == needShowList.Count - 1
-                    ? needShowList.FindLastIndex(x => x)
-                    : needShowList.FindIndex(x => x);
-
-                if (fistIndex > -1)
+                if (!needShow && configuration.Key == _currentConfiguration.Key)
                 {
-                    SwitchConfiguration(configurations[fistIndex], true);
+                    var fistIndex = i == needShowList.Count - 1
+                        ? needShowList.FindLastIndex(x => x)
+                        : needShowList.FindIndex(x => x);
+
+                    if (fistIndex > -1)
+                    {
+                        SwitchConfiguration(configurations[fistIndex], true);
+                    }
                 }
 
-                configuration.Key.gameObject.SetActive(needShowChange);
+                configuration.Key.gameObject.SetActive(needShow);
             }
         }
 

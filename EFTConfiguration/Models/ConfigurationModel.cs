@@ -1,6 +1,7 @@
 ﻿#if !UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
@@ -26,7 +27,7 @@ namespace EFTConfiguration.Models
 
         public int ConfigCount => _configFile.Count;
 
-        public ConfigModel[] Configs => _configFile.Select(x => new ConfigModel(x.Key, x.Value, IsCore)).ToArray();
+        public IEnumerable<ConfigModel> Configs => _configFile.Select(x => new ConfigModel(x.Key, x.Value, IsCore)).ToArray();
 
         public ConfigurationModel(ConfigFile configFile, BepInPlugin metadata,
             EFTConfigurationPluginAttributes configurationPlugin, bool isCore = false)

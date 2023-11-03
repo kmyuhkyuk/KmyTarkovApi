@@ -67,7 +67,8 @@ namespace EFTConfiguration.Helpers
 
         public static Version GetModVersion(HtmlDocument doc)
         {
-            return Version.Parse(new Regex(@"[^\d.]").Replace(doc.DocumentNode.SelectSingleNode("//span[@class='filebaseVersionNumber']")
+            return Version.Parse(new Regex(@"[^\d.]").Replace(doc.DocumentNode
+                .SelectSingleNode("//span[@class='filebaseVersionNumber']")
                 .InnerText, string.Empty));
         }
 

@@ -10,6 +10,7 @@ namespace EFTUtils
     public abstract class CustomLocalized<T, TV>
     {
         protected virtual string CustomCurrentLanguage { get; set; } = "En";
+
         public string CurrentLanguage
         {
             get => CustomCurrentLanguage;

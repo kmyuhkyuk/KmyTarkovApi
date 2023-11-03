@@ -375,7 +375,9 @@ namespace EFTConfiguration.Views
                 if (needShowChange && configuration.Key != _currentConfiguration.Key)
                     continue;
 
-                var fistIndex = i == needShowList.Count - 1 ? needShowList.FindLastIndex(x => x) : needShowList.FindIndex(x => x);
+                var fistIndex = i == needShowList.Count - 1
+                    ? needShowList.FindLastIndex(x => x)
+                    : needShowList.FindIndex(x => x);
 
                 if (fistIndex > -1)
                 {

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace EFTConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "kmyuhkyuk-EFTConfiguration", "1.1.8")]
+    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "EFTConfiguration", "1.1.8")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {

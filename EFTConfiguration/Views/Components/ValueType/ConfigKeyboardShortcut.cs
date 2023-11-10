@@ -42,12 +42,7 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             bind.onClick.AddListener(() =>
             {
-                if (_cancellationTokenSource != null)
-                {
-                    _cancellationTokenSource.Cancel();
-                    _cancellationTokenSource.Dispose();
-                    _cancellationTokenSource = null;
-                }
+                ClearTokenSource();
 
                 _cancellationTokenSource = new CancellationTokenSource();
 
@@ -113,7 +108,7 @@ namespace EFTConfiguration.Views.Components.ValueType
 #endif
         }
 
-        private void OnDisable()
+        private void ClearTokenSource()
         {
             if (_cancellationTokenSource != null)
             {
@@ -121,6 +116,11 @@ namespace EFTConfiguration.Views.Components.ValueType
                 _cancellationTokenSource.Dispose();
                 _cancellationTokenSource = null;
             }
+        }
+
+        private void OnDisable()
+        {
+            ClearTokenSource();
         }
     }
 }

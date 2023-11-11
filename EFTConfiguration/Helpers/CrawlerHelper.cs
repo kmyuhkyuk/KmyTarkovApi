@@ -60,9 +60,9 @@ namespace EFTConfiguration.Helpers
             }
         }
 
-        public static async Task<HtmlDocument> CreateHtmlDocument(string url)
+        public static Task<HtmlDocument> CreateHtmlDocument(string url)
         {
-            return await new HtmlWeb().LoadFromWebAsync(url);
+            return new HtmlWeb().LoadFromWebAsync(url);
         }
 
         public static Version GetModVersion(HtmlDocument doc)

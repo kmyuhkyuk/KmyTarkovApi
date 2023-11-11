@@ -169,7 +169,9 @@ namespace EFTApi.Helpers
 
             private int _victimBotLevelExp;
 
-            private float _headShotMult;
+            private float _pmcHeadShotMult;
+
+            private float _botHeadShotMult;
 
             private readonly Func<object, int, int> _refKillingBonusPercent;
 
@@ -194,7 +196,19 @@ namespace EFTApi.Helpers
 
                 _victimBotLevelExp = Traverse.Create(_kill).Field("VictimBotLevelExp").GetValue<int>();
 
-                _headShotMult = Traverse.Create(_kill).Field("HeadShotMult").GetValue<float>();
+                if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                {
+                    _pmcHeadShotMult = Traverse.Create(_kill).Field("PmcHeadShotMult").GetValue<float>();
+
+                    _botHeadShotMult = Traverse.Create(_kill).Field("BotHeadShotMult").GetValue<float>();
+                }
+                else
+                {
+                    var headShotMult = Traverse.Create(_kill).Field("HeadShotMult").GetValue<float>();
+                    _pmcHeadShotMult = headShotMult;
+                    _botHeadShotMult = headShotMult;
+                }
+
 
                 _isInitialized = true;
             }
@@ -215,7 +229,7 @@ namespace EFTApi.Helpers
 
             public int GetHeadExp(int exp, EPlayerSide side)
             {
-                return (int)(GetBaseExp(exp, side) * _headShotMult);
+                return (int)(GetBaseExp(exp, side) * (side != EPlayerSide.Savage ? _pmcHeadShotMult : _botHeadShotMult));
             }
 
             public int GetStreakExp(int exp, EPlayerSide side, int kills)

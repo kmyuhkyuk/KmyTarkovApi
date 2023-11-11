@@ -2,18 +2,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using BepInEx;
 using BepInEx.Logging;
-using EFTConfiguration.Models;
 
 namespace EFTConfiguration
 {
     public class EFTLogListener : ILogListener
     {
-        public static IReadOnlyList<LogModel> LogList => AllLog;
+        public static IReadOnlyCollection<string> AllLog => LogQueue;
 
-        public static event Action<LogModel> OnLog;
+        public static event Action<string> OnLog;
 
-        private static readonly List<LogModel> AllLog = new List<LogModel>();
+        private static readonly Queue<string> LogQueue = new Queue<string>();
 
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
 
@@ -31,7 +32,11 @@ namespace EFTConfiguration
 
         private static int _fieldAccessExceptionCount;
 
+        private const int MaxLogCount = 100;
+
         private const int MaxErrorCount = 3;
+
+        private static readonly TextWriter Writer;
 
         private enum ErrorType
         {
@@ -43,6 +48,11 @@ namespace EFTConfiguration
             MissingMethodException,
             MissingFieldException,
             FieldAccessException
+        }
+
+        static EFTLogListener()
+        {
+            Writer = TextWriter.Synchronized(File.CreateText($"{Paths.BepInExRootPath}/FullLogOutput.log"));
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
@@ -92,11 +102,21 @@ namespace EFTConfiguration
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
-            var log = new LogModel(sender, eventArgs);
+            var logString = LogToString(eventArgs);
 
-            AllLog.Add(log);
+            Writer.WriteLine(logString);
 
-            OnLog?.Invoke(log);
+            //InstantFlushing
+            Writer.Flush();
+
+            LogQueue.Enqueue(logString);
+
+            if (LogQueue.Count > MaxLogCount)
+            {
+                LogQueue.Dequeue();
+            }
+
+            OnLog?.Invoke(logString);
 
             switch (error)
             {
@@ -178,6 +198,37 @@ namespace EFTConfiguration
             }
 
             return false;
+        }
+
+        private static string LogToString(LogEventArgs eventArgs)
+        {
+            string color;
+            switch (eventArgs.Level)
+            {
+                case LogLevel.Fatal:
+                    color = "#5F0000";
+                    break;
+                case LogLevel.Error:
+                    color = "#FF0000";
+                    break;
+                case LogLevel.Warning:
+                    color = "#FFFF00";
+                    break;
+                case LogLevel.Message:
+                    color = "#FFFFFF";
+                    break;
+                case LogLevel.Info:
+                case LogLevel.Debug:
+                    color = "#C0C0C0";
+                    break;
+                case LogLevel.None:
+                case LogLevel.All:
+                default:
+                    color = "#808080";
+                    break;
+            }
+
+            return $"<color={color}>{eventArgs}</color>";
         }
 
         public void Dispose()

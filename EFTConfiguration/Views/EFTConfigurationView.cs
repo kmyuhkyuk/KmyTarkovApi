@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using TMPro;
@@ -55,8 +54,6 @@ namespace EFTConfiguration.Views
         [SerializeField] private Button searchButton;
 
         [SerializeField] private Button consoleButton;
-
-        [SerializeField] private Button consoleSaveButton;
 
         [SerializeField] private Description description;
 
@@ -116,16 +113,16 @@ namespace EFTConfiguration.Views
             search.text = settingsModel.KeySearch.Value;
             advanced.isOn = settingsModel.KeyAdvanced.Value;
 
-            foreach (var log in EFTLogListener.LogList)
+            foreach (var log in EFTLogListener.AllLog)
             {
-                stringBuilder.Append(LogToString(log));
+                stringBuilder.Append($"{log}{Environment.NewLine}");
             }
 
             console.text = stringBuilder.ToString();
 
             EFTLogListener.OnLog += log =>
             {
-                stringBuilder.Append(LogToString(log));
+                stringBuilder.Append($"{log}{Environment.NewLine}");
                 console.text = stringBuilder.ToString();
 
                 if (consoleScrollRect.verticalNormalizedPosition == 0)
@@ -133,20 +130,6 @@ namespace EFTConfiguration.Views
                     consoleCache = true;
                 }
             };
-
-            consoleSaveButton.onClick.AddListener(() =>
-            {
-                var path = settingsModel.KeySavePath.Value;
-
-                if (!Directory.Exists(path))
-                {
-                    LogSource.LogError($"{path} Directory not Exists");
-                }
-                else
-                {
-                    File.WriteAllText($"{path}/FullLogOutput.log", console.text);
-                }
-            });
 
             settingsModel.KeySearch.SettingChanged += (value1, value2) =>
                 search.text = settingsModel.KeySearch.Value;
@@ -204,37 +187,6 @@ namespace EFTConfiguration.Views
             {
                 State = !State;
             }
-        }
-
-        private static string LogToString(LogModel logModel)
-        {
-            string color;
-            switch (logModel.EventArgs.Level)
-            {
-                case LogLevel.Fatal:
-                    color = "#5F0000";
-                    break;
-                case LogLevel.Error:
-                    color = "#FF0000";
-                    break;
-                case LogLevel.Warning:
-                    color = "#FFFF00";
-                    break;
-                case LogLevel.Message:
-                    color = "#FFFFFF";
-                    break;
-                case LogLevel.Info:
-                case LogLevel.Debug:
-                    color = "#C0C0C0";
-                    break;
-                case LogLevel.None:
-                case LogLevel.All:
-                default:
-                    color = "#808080";
-                    break;
-            }
-
-            return $"<color={color}>{logModel.EventArgs}</color>{Environment.NewLine}";
         }
 
         private void CreateUI()

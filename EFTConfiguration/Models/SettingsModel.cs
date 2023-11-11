@@ -1,6 +1,5 @@
 ﻿#if !UNITY_EDITOR
 
-using BepInEx;
 using BepInEx.Configuration;
 using EFTConfiguration.AcceptableValue;
 using EFTConfiguration.Helpers;
@@ -21,8 +20,6 @@ namespace EFTConfiguration.Models
 
         public readonly ConfigEntry<string> KeySearch;
 
-        public readonly ConfigEntry<string> KeySavePath;
-
         public readonly ConfigEntry<bool> KeyAdvanced;
 
         public readonly ConfigEntry<int> KeySortingOrder;
@@ -42,9 +39,6 @@ namespace EFTConfiguration.Models
                     "Preferred language, if not available will tried English, if still not available than return original text",
                     new AcceptableValueCustomList<string>(LocalizedHelper.Languages)));
             KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
-            KeySavePath = configFile.Bind<string>(mainSettings, "Save Path", Paths.BepInExRootPath,
-                new ConfigDescription(
-                    "Save Console Log Path"));
             KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
             KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29997);
 

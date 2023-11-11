@@ -112,7 +112,6 @@
     <Compile Include="Models\ConfigModel.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\EFTConfigurationModel.cs" />
-    <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Views\Components\Base\ConfigBase.cs" />
     <Compile Include="Views\Components\Base\ConfigObjectCustom.cs" />

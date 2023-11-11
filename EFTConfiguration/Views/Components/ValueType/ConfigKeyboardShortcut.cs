@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using BepInEx.Configuration;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.Views.Components.Base;
@@ -31,8 +30,6 @@ namespace EFTConfiguration.Views.Components.ValueType
         private static readonly KeyCode[] AllKeyCodes =
             KeyboardShortcut.AllKeyCodes.Where(x => x != KeyCode.None && x != KeyCode.Mouse0).ToArray();
 
-        private CancellationTokenSource _cancellationTokenSource;
-
         public override void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,
             bool readOnly, KeyboardShortcut defaultValue, Action<KeyboardShortcut> onValueChanged, bool hideReset,
             Func<KeyboardShortcut> currentValue)
@@ -40,14 +37,7 @@ namespace EFTConfiguration.Views.Components.ValueType
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
                 hideReset, currentValue);
 
-            bind.onClick.AddListener(() =>
-            {
-                ClearTokenSource();
-
-                _cancellationTokenSource = new CancellationTokenSource();
-
-                Bind(onValueChanged, _cancellationTokenSource.Token);
-            });
+            bind.onClick.AddListener(() => { StartCoroutine(Bind(onValueChanged)); });
             bind.interactable = !readOnly;
 
             clear.onClick.AddListener(() =>
@@ -59,7 +49,7 @@ namespace EFTConfiguration.Views.Components.ValueType
             clear.interactable = !readOnly;
         }
 
-        private async void Bind(Action<KeyboardShortcut> onValueChanged, CancellationToken token)
+        private IEnumerator Bind(Action<KeyboardShortcut> onValueChanged)
         {
             var bindKeyCode = KeyCode.None;
 
@@ -71,9 +61,6 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             while (bindKeyCode == KeyCode.None)
             {
-                if (token.IsCancellationRequested)
-                    return;
-
                 foreach (var keyCode in AllKeyCodes)
                 {
                     if (Input.GetKeyUp(keyCode))
@@ -82,7 +69,7 @@ namespace EFTConfiguration.Views.Components.ValueType
                     }
                 }
 
-                await Task.Yield();
+                yield return new WaitForEndOfFrame();
             }
 
             onValueChanged(new KeyboardShortcut(bindKeyCode));
@@ -106,21 +93,6 @@ namespace EFTConfiguration.Views.Components.ValueType
             clearName.text = LocalizedHelper.Localized(EFTConfigurationModel.Instance.ModName, ClearNameKey);
 
 #endif
-        }
-
-        private void ClearTokenSource()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
-        private void OnDisable()
-        {
-            ClearTokenSource();
         }
     }
 }

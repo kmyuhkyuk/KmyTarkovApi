@@ -105,8 +105,10 @@ namespace Build
                     file.FullName);
             }
 
-            compressor.CompressFileDictionary(filesDictionary,
-                File.Create(Path.Combine(directory.Parent.FullName, $"{directory.Name}.7z")));
+            using (var stream = File.Create(Path.Combine(directory.Parent.FullName, $"{directory.Name}.7z")))
+            {
+                compressor.CompressFileDictionary(filesDictionary, stream);
+            }
         }
 
         private static void Copy(string toPath, string[] dllNames)

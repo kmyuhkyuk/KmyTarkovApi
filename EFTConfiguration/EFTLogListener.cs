@@ -52,7 +52,10 @@ namespace EFTConfiguration
 
         static EFTLogListener()
         {
-            Writer = TextWriter.Synchronized(File.CreateText($"{Paths.BepInExRootPath}/FullLogOutput.log"));
+            using (var stream = File.CreateText($"{Paths.BepInExRootPath}/FullLogOutput.log"))
+            {
+                Writer = TextWriter.Synchronized(stream);
+            }
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)

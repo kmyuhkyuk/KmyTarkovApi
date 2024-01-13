@@ -12,21 +12,21 @@ namespace EFTConfiguration
     {
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTDiskLogListener");
 
-        private static int _updateErrorCount;
+        private int _updateErrorCount;
 
-        private static int _memberAccessExceptionCount;
+        private int _memberAccessExceptionCount;
 
-        private static int _missingMemberExceptionCount;
+        private int _missingMemberExceptionCount;
 
-        private static int _methodAccessExceptionCount;
+        private int _methodAccessExceptionCount;
 
-        private static int _missingMethodExceptionCount;
+        private int _missingMethodExceptionCount;
 
-        private static int _missingFieldExceptionCount;
+        private int _missingFieldExceptionCount;
 
-        private static int _fieldAccessExceptionCount;
+        private int _fieldAccessExceptionCount;
 
-        private const int MaxErrorCount = 3;
+        private readonly int _maxErrorCount;
 
         private readonly TextWriter _logWriter;
 
@@ -48,10 +48,13 @@ namespace EFTConfiguration
 
         //Modify from BepInEx.Core.Logging.DiskLogListener
         public EFTDiskLogListener(string localPath,
+            int maxErrorCount = 3,
             bool appendLog = false,
             bool delayedFlushing = true,
             int fileLimit = 5)
         {
+            _maxErrorCount = maxErrorCount;
+
             var counter = 1;
             FileStream fileStream;
             while (!Utility.TryOpenFileStream(Path.Combine(Paths.BepInExRootPath, localPath),
@@ -74,7 +77,7 @@ namespace EFTConfiguration
 
             if (delayedFlushing)
             {
-                _flushTimer = new Timer(o => { _logWriter?.Flush(); }, null, 2000, 2000);
+                _flushTimer = new Timer(o => _logWriter?.Flush(), null, 2000, 2000);
             }
 
             _instantFlushing = !delayedFlushing;
@@ -139,16 +142,16 @@ namespace EFTConfiguration
 
             switch (error)
             {
-                case ErrorType.Update when _updateErrorCount == MaxErrorCount:
+                case ErrorType.Update when _updateErrorCount == _maxErrorCount:
                     LogSource.LogError(
                         "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
                     break;
-                case ErrorType.MemberAccessException when _memberAccessExceptionCount == MaxErrorCount:
-                case ErrorType.MissingMemberException when _missingMemberExceptionCount == MaxErrorCount:
-                case ErrorType.MethodAccessException when _methodAccessExceptionCount == MaxErrorCount:
-                case ErrorType.MissingMethodException when _missingMethodExceptionCount == MaxErrorCount:
-                case ErrorType.MissingFieldException when _missingFieldExceptionCount == MaxErrorCount:
-                case ErrorType.FieldAccessException when _fieldAccessExceptionCount == MaxErrorCount:
+                case ErrorType.MemberAccessException when _memberAccessExceptionCount == _maxErrorCount:
+                case ErrorType.MissingMemberException when _missingMemberExceptionCount == _maxErrorCount:
+                case ErrorType.MethodAccessException when _methodAccessExceptionCount == _maxErrorCount:
+                case ErrorType.MissingMethodException when _missingMethodExceptionCount == _maxErrorCount:
+                case ErrorType.MissingFieldException when _missingFieldExceptionCount == _maxErrorCount:
+                case ErrorType.FieldAccessException when _fieldAccessExceptionCount == _maxErrorCount:
                     LogSource.LogError(
                         $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
@@ -197,21 +200,21 @@ namespace EFTConfiguration
             }
         }
 
-        private static void ClearErrorCount(ref int errorCount)
+        private void ClearErrorCount(ref int errorCount)
         {
-            if (errorCount < MaxErrorCount)
+            if (errorCount < _maxErrorCount)
             {
                 errorCount = 0;
             }
         }
 
-        private static bool NeedFilterLog(ref int errorCount)
+        private bool NeedFilterLog(ref int errorCount)
         {
-            if (errorCount == MaxErrorCount)
+            if (errorCount == _maxErrorCount)
             {
                 return true;
             }
-            else if (errorCount < MaxErrorCount)
+            else if (errorCount < _maxErrorCount)
             {
                 errorCount++;
             }

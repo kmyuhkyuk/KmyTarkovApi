@@ -23,7 +23,7 @@ namespace EFTConfiguration
 
         private void Awake()
         {
-            BepInEx.Logging.Logger.Listeners.Add(new EFTLogListener());
+            BepInEx.Logging.Logger.Listeners.Add(new EFTDiskLogListener("FullLogOutput.log"));
 
             SettingsModel.Create(Config);
 

@@ -2,14 +2,15 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using BepInEx;
 using BepInEx.Logging;
 
 namespace EFTConfiguration
 {
-    public class EFTLogListener : ILogListener
+    public class EFTDiskLogListener : ILogListener
     {
-        private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
+        private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTDiskLogListener");
 
         private static int _updateErrorCount;
 
@@ -27,7 +28,11 @@ namespace EFTConfiguration
 
         private const int MaxErrorCount = 3;
 
-        private static readonly TextWriter Writer;
+        private readonly TextWriter _logWriter;
+
+        private readonly Timer _flushTimer;
+
+        private readonly bool _instantFlushing;
 
         private enum ErrorType
         {
@@ -41,16 +46,45 @@ namespace EFTConfiguration
             FieldAccessException
         }
 
-        static EFTLogListener()
+        //Modify from BepInEx.Core.Logging.DiskLogListener
+        public EFTDiskLogListener(string localPath,
+            bool appendLog = false,
+            bool delayedFlushing = true,
+            int fileLimit = 5)
         {
-            using (var stream = File.CreateText($"{Paths.BepInExRootPath}/FullLogOutput.log"))
+            var counter = 1;
+            FileStream fileStream;
+            while (!Utility.TryOpenFileStream(Path.Combine(Paths.BepInExRootPath, localPath),
+                       appendLog ? FileMode.Append : FileMode.Create, out fileStream,
+                       share: FileShare.Read, access: FileAccess.Write))
             {
-                Writer = TextWriter.Synchronized(stream);
+                if (counter == fileLimit)
+                {
+                    LogSource.Log(LogLevel.Error, "Couldn't open a log file for writing. Skipping log file creation");
+
+                    return;
+                }
+
+                LogSource.Log(LogLevel.Warning, $"Couldn't open log file '{localPath}' for writing, trying another...");
+
+                localPath = $"{Path.GetFileNameWithoutExtension(localPath)}.{counter++}.{Path.GetExtension(localPath)}";
             }
+
+            _logWriter = TextWriter.Synchronized(new StreamWriter(fileStream, Utility.UTF8NoBom));
+
+            if (delayedFlushing)
+            {
+                _flushTimer = new Timer(o => { _logWriter?.Flush(); }, null, 2000, 2000);
+            }
+
+            _instantFlushing = !delayedFlushing;
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
         {
+            if (_logWriter == null)
+                return;
+
             var error = GetErrorType(eventArgs);
 
             switch (error)
@@ -96,10 +130,12 @@ namespace EFTConfiguration
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
-            Writer.WriteLine(eventArgs);
+            _logWriter.WriteLine(eventArgs);
 
-            //InstantFlushing
-            Writer.Flush();
+            if (_instantFlushing)
+            {
+                _logWriter.Flush();
+            }
 
             switch (error)
             {
@@ -185,6 +221,21 @@ namespace EFTConfiguration
 
         public void Dispose()
         {
+            _flushTimer?.Dispose();
+
+            try
+            {
+                _logWriter?.Flush();
+                _logWriter?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
+
+        ~EFTDiskLogListener()
+        {
+            Dispose();
         }
     }
 }

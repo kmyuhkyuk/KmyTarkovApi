@@ -142,7 +142,7 @@
     <Compile Include="Views\Components\ValueType\ConfigVector2.cs" />
     <Compile Include="Views\Components\ValueType\ConfigVector3.cs" />
     <Compile Include="Views\Components\ValueType\ConfigVector4.cs" />
-    <Compile Include="EFTLogListener.cs" />
+    <Compile Include="EFTDiskLogListener.cs" />
     <Compile Include="Helpers\LocalizedHelper.cs" />
     <Compile Include="Views\EFTConfigurationView.cs" />
     <Compile Include="Attributes\EFTConfigurationPluginAttributes.cs" />

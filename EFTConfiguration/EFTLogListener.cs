@@ -1,7 +1,6 @@
 ﻿#if !UNITY_EDITOR
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using BepInEx.Logging;
@@ -10,12 +9,6 @@ namespace EFTConfiguration
 {
     public class EFTLogListener : ILogListener
     {
-        public static IReadOnlyCollection<string> AllLog => LogQueue;
-
-        public static event Action<string> OnLog;
-
-        private static readonly Queue<string> LogQueue = new Queue<string>();
-
         private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTLogListener");
 
         private static int _updateErrorCount;
@@ -31,8 +24,6 @@ namespace EFTConfiguration
         private static int _missingFieldExceptionCount;
 
         private static int _fieldAccessExceptionCount;
-
-        private const int MaxLogCount = 100;
 
         private const int MaxErrorCount = 3;
 
@@ -105,21 +96,10 @@ namespace EFTConfiguration
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
 
-            var logString = LogToString(eventArgs);
-
-            Writer.WriteLine(logString);
+            Writer.WriteLine(eventArgs);
 
             //InstantFlushing
             Writer.Flush();
-
-            LogQueue.Enqueue(logString);
-
-            if (LogQueue.Count > MaxLogCount)
-            {
-                LogQueue.Dequeue();
-            }
-
-            OnLog?.Invoke(logString);
 
             switch (error)
             {
@@ -201,37 +181,6 @@ namespace EFTConfiguration
             }
 
             return false;
-        }
-
-        private static string LogToString(LogEventArgs eventArgs)
-        {
-            string color;
-            switch (eventArgs.Level)
-            {
-                case LogLevel.Fatal:
-                    color = "#5F0000";
-                    break;
-                case LogLevel.Error:
-                    color = "#FF0000";
-                    break;
-                case LogLevel.Warning:
-                    color = "#FFFF00";
-                    break;
-                case LogLevel.Message:
-                    color = "#FFFFFF";
-                    break;
-                case LogLevel.Info:
-                case LogLevel.Debug:
-                    color = "#C0C0C0";
-                    break;
-                case LogLevel.None:
-                case LogLevel.All:
-                default:
-                    color = "#808080";
-                    break;
-            }
-
-            return $"<color={color}>{eventArgs}</color>";
         }
 
         public void Dispose()

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,8 +24,6 @@ namespace EFTConfiguration.Views
 
 #endif
 
-        private readonly StringBuilder stringBuilder = new StringBuilder();
-
         [SerializeField] private Transform pluginInfosRoot;
 
         [SerializeField] private Transform configsRoot;
@@ -45,25 +42,15 @@ namespace EFTConfiguration.Views
 
         [SerializeField] private TMP_Text advancedName;
 
-        [SerializeField] private TMP_InputField console;
-
-        [SerializeField] private ScrollRect consoleScrollRect;
-
         [SerializeField] private Toggle advanced;
 
         [SerializeField] private Button searchButton;
-
-        [SerializeField] private Button consoleButton;
 
         [SerializeField] private Description description;
 
         private Transform _searchPanelTransform;
 
-        private Transform _consolePanelTransform;
-
         private RectTransform _windowRect;
-
-        private bool consoleCache;
 
         internal static Action<string> EnableDescription;
 
@@ -108,28 +95,9 @@ namespace EFTConfiguration.Views
             _windowRect = windowRoot.GetComponent<RectTransform>();
 
             _searchPanelTransform = search.transform.parent;
-            _consolePanelTransform = console.transform.parent.parent.parent.parent;
 
             search.text = settingsModel.KeySearch.Value;
             advanced.isOn = settingsModel.KeyAdvanced.Value;
-
-            foreach (var log in EFTLogListener.AllLog)
-            {
-                stringBuilder.Append($"{log}{Environment.NewLine}");
-            }
-
-            console.text = stringBuilder.ToString();
-
-            EFTLogListener.OnLog += log =>
-            {
-                stringBuilder.Append($"{log}{Environment.NewLine}");
-                console.text = stringBuilder.ToString();
-
-                if (consoleScrollRect.verticalNormalizedPosition == 0)
-                {
-                    consoleCache = true;
-                }
-            };
 
             settingsModel.KeySearch.SettingChanged += (value1, value2) =>
                 search.text = settingsModel.KeySearch.Value;
@@ -155,13 +123,6 @@ namespace EFTConfiguration.Views
                 searchPanel.SetActive(!searchPanel.activeSelf);
             });
 
-            consoleButton.onClick.AddListener(() =>
-            {
-                var consolePanel = _consolePanelTransform.gameObject;
-
-                consolePanel.SetActive(!consolePanel.activeSelf);
-            });
-
             closeButton.onClick.AddListener(() => State = false);
 
             SwitchPluginInfo = SwitchConfiguration;
@@ -176,13 +137,6 @@ namespace EFTConfiguration.Views
 
         private void Update()
         {
-            if (_consolePanelTransform.gameObject.activeInHierarchy && consoleCache)
-            {
-                consoleScrollRect.verticalNormalizedPosition = 0;
-
-                consoleCache = false;
-            }
-
             if (SettingsModel.Instance.KeyConfigurationShortcut.Value.IsDown())
             {
                 State = !State;

@@ -30,7 +30,7 @@ namespace Build
 
             Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]
             {
-                "EFTConfiguration" 
+                "EFTConfiguration"
             });
         }
     }

@@ -209,7 +209,6 @@ namespace EFTApi.Helpers
                     _botHeadShotMult = headShotMult;
                 }
 
-
                 _isInitialized = true;
             }
 
@@ -229,7 +228,8 @@ namespace EFTApi.Helpers
 
             public int GetHeadExp(int exp, EPlayerSide side)
             {
-                return (int)(GetBaseExp(exp, side) * (side != EPlayerSide.Savage ? _pmcHeadShotMult : _botHeadShotMult));
+                return (int)(GetBaseExp(exp, side) *
+                             (side != EPlayerSide.Savage ? _pmcHeadShotMult : _botHeadShotMult));
             }
 
             public int GetStreakExp(int exp, EPlayerSide side, int kills)

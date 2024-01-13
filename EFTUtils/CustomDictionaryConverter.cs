@@ -14,7 +14,7 @@ namespace EFTUtils
         {
             var iDictionary = value as IDictionary<TKey, TValue> ??
                               throw new Exception(
-                                  $"{value.GetType()} can't converter to IDictionary<{typeof(TKey)}, {typeof(TValue)}>");
+                                  $"{value?.GetType()} can't converter to IDictionary<{typeof(TKey)}, {typeof(TValue)}>");
 
             writer.WriteStartArray();
 

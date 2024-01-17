@@ -8,6 +8,7 @@ namespace EFTConfiguration.Views.Components.Base
     {
         [SerializeField] protected TMP_Dropdown dropdown;
 
+        // ReSharper disable once NotAccessedField.Global
         protected T[] Values;
 
         public virtual void Init(string modName, string configNameKey, string descriptionNameKey, bool isAdvanced,

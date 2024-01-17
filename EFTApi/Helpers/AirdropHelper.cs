@@ -2,7 +2,9 @@
 using EFTReflection;
 using JetBrains.Annotations;
 
+// ReSharper disable MemberHidesStaticFromOuterClass
 // ReSharper disable NotAccessedField.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi.Helpers
 {

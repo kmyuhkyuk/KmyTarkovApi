@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTConfiguration.Models
 {
     internal class EFTConfigurationModel
@@ -56,6 +58,7 @@ namespace EFTConfiguration.Models
                 (value, value2) => canvas.sortingOrder = settingsModel.KeySortingOrder.Value;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public static EFTConfigurationModel Create(string modName, GameObject eftConfigurationPublic,
             PrefabManager prefabManager, string modPath, PluginInfo info)
         {

@@ -123,23 +123,19 @@ namespace EFTConfiguration.Helpers
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
             if (IconCache.TryGetValue(fileName, out var cacheSprite))
-            {
                 return cacheSprite;
-            }
-            else
+
+            var cacheTexture = IconCacheFile.GetOrAdd(fileName, key2 => GetAsyncTexture(url));
+
+            var texture = await cacheTexture;
+
+            return IconCache.GetOrAdd(fileName, key3 =>
             {
-                var cacheTexture = IconCacheFile.GetOrAdd(fileName, key2 => GetAsyncTexture(url));
+                File.WriteAllBytes(Path.Combine(CachePath, $"{fileName}.png"), texture.EncodeToPNG());
 
-                var texture = await cacheTexture;
-
-                return IconCache.GetOrAdd(fileName, key3 =>
-                {
-                    File.WriteAllBytes(Path.Combine(CachePath, $"{fileName}.png"), texture.EncodeToPNG());
-
-                    return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                        new Vector2(0.5f, 0.5f));
-                });
-            }
+                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
+            });
         }
 
         private static async Task<Texture2D> GetAsyncTexture(string url)
@@ -152,15 +148,11 @@ namespace EFTConfiguration.Helpers
                     await Task.Yield();
 
                 if (www.isNetworkError || www.isHttpError)
-                {
                     return null;
-                }
-                else
-                {
-                    var texture = DownloadHandlerTexture.GetContent(www);
 
-                    return texture;
-                }
+                var texture = DownloadHandlerTexture.GetContent(www);
+
+                return texture;
             }
         }
     }

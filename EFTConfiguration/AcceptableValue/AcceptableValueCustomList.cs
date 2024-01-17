@@ -15,10 +15,15 @@
             get => acceptableValuesCustom;
             set
             {
-                if (acceptableValuesCustom.Length != 0)
+                if (acceptableValuesCustom == null)
                 {
-                    acceptableValuesCustom = value;
+                    throw new System.ArgumentNullException(nameof(acceptableValuesCustom));
                 }
+
+                acceptableValuesCustom = value.Length > 0
+                    ? value
+                    : throw new System.ArgumentException("At least one acceptable value is needed",
+                        nameof(acceptableValuesCustom));
             }
         }
 

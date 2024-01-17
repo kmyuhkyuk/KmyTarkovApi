@@ -10,6 +10,7 @@ using BepInEx.Bootstrap;
 using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTReflection
 {
@@ -20,17 +21,17 @@ namespace EFTReflection
         /// <summary>
         ///     <see cref="BindingFlags.NonPublic" /> and <see cref="BindingFlags.Instance" />
         /// </summary>
-        public static readonly BindingFlags NonPublic = BindingFlags.NonPublic | BindingFlags.Instance;
+        public const BindingFlags NonPublic = BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>
         ///     <see cref="BindingFlags.Public" /> and <see cref="BindingFlags.Instance" />
         /// </summary>
-        public static readonly BindingFlags Public = BindingFlags.Public | BindingFlags.Instance;
+        public const BindingFlags Public = BindingFlags.Public | BindingFlags.Instance;
 
         /// <summary>
         ///     <see cref="BindingFlags.DeclaredOnly" /> and <see cref="BindingFlags.Static" />
         /// </summary>
-        public static readonly BindingFlags DeclaredStatic = BindingFlags.DeclaredOnly | BindingFlags.Static;
+        public const BindingFlags DeclaredStatic = BindingFlags.DeclaredOnly | BindingFlags.Static;
 
         #endregion
 
@@ -45,7 +46,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Single <see cref="Type" /> by Lambda
+        ///     Try To Find Single <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="typePredicate"></param>
         /// <param name="eftType"></param>
@@ -94,7 +95,7 @@ namespace EFTReflection
         #region TryGetMethod
 
         /// <summary>
-        ///     Try Find Single <see cref="MethodInfo" /> by Lambda
+        ///     Try To Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="type"></param>
         /// <param name="flags"></param>
@@ -116,7 +117,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Single <see cref="MethodInfo" /> by Lambda
+        ///     Try To Find Single <see cref="MethodInfo" /> by Lambda
         /// </summary>
         /// <param name="typePredicate"></param>
         /// <param name="flags"></param>
@@ -127,14 +128,11 @@ namespace EFTReflection
             Func<MethodInfo, bool> methodPredicate, out MethodInfo eftMethod)
         {
             if (TryGetEftType(typePredicate, out var type))
-            {
                 return TryGetEftMethod(type, flags, methodPredicate, out eftMethod);
-            }
-            else
-            {
-                eftMethod = null;
-                return false;
-            }
+
+            eftMethod = null;
+
+            return false;
         }
 
         #endregion
@@ -205,12 +203,8 @@ namespace EFTReflection
                 throw new ArgumentNullException(nameof(methodBase));
             }
 
-            var asyncAttribute = methodBase.GetCustomAttribute<AsyncStateMachineAttribute>();
-
-            if (asyncAttribute == null)
-            {
-                throw new Exception($"{methodBase.Name} not is async type");
-            }
+            var asyncAttribute = methodBase.GetCustomAttribute<AsyncStateMachineAttribute>() ??
+                                 throw new Exception($"{methodBase.Name} not is async type");
 
             return asyncAttribute.StateMachineType;
         }
@@ -244,9 +238,8 @@ namespace EFTReflection
                 throw new Exception($"{type.Name} not is Struct");
             }
 
-            var method = type.GetMethod("MoveNext", NonPublic);
-
-            return method == null ? throw new Exception($"{type.Name} not have MoveNext Method") : method;
+            return type.GetMethod("MoveNext", NonPublic) ??
+                   throw new Exception($"{type.Name} not have MoveNext Method");
         }
 
         #endregion
@@ -397,7 +390,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try Find Plugin <see cref="Type" /> by Lambda
+        ///     Try To Find Plugin <see cref="Type" /> by Lambda
         /// </summary>
         /// <param name="plugin"></param>
         /// <param name="typePredicate"></param>

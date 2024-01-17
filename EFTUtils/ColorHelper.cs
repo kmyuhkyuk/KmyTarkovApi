@@ -2,6 +2,7 @@
 using UnityEngine;
 
 // ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {
@@ -12,17 +13,13 @@ namespace EFTUtils
         public static string ColorToHtml(this Color color)
         {
             if (HexColorPool.TryGetValue(color, out var hexColor))
-            {
                 return hexColor;
-            }
-            else
-            {
-                hexColor = $"#{ColorUtility.ToHtmlStringRGBA(color)}";
 
-                HexColorPool.Add(color, hexColor);
+            hexColor = $"#{ColorUtility.ToHtmlStringRGBA(color)}";
 
-                return hexColor;
-            }
+            HexColorPool.Add(color, hexColor);
+
+            return hexColor;
         }
     }
 }

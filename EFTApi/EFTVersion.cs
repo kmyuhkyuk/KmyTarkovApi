@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BepInEx;
 using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi
 {
@@ -39,6 +41,7 @@ namespace EFTApi
             AkiVersion = GetAkiVersion();
         }
 
+        [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static Version GetAkiVersion()
         {
             if (GameVersionRange("0.12.12.17107", "0.12.12.17349"))

@@ -1,9 +1,12 @@
 ﻿#if !UNITY_EDITOR
 
+using System.Diagnostics.CodeAnalysis;
 using BepInEx.Configuration;
 using EFTConfiguration.AcceptableValue;
 using EFTConfiguration.Helpers;
 using UnityEngine;
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace EFTConfiguration.Models
 {
@@ -24,6 +27,7 @@ namespace EFTConfiguration.Models
 
         public readonly ConfigEntry<int> KeySortingOrder;
 
+        [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         private SettingsModel(ConfigFile configFile)
         {
             const string mainSettings = "Main Settings";
@@ -54,6 +58,7 @@ namespace EFTConfiguration.Models
                 LocalizedHelper.CurrentLanguage = KeyLanguage.Value;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public static SettingsModel Create(ConfigFile configFile)
         {
             if (Instance != null)

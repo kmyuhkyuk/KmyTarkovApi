@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using UnityEngine;
 
 // ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {
@@ -16,16 +17,12 @@ namespace EFTUtils
         {
             var assetBundle = AssetBundle.LoadFromFile(bundlePath);
 
-            if (assetBundle == null)
-            {
-                Logger.LogError($"{nameof(LoadBundle)}: Failed to load AssetBundle!");
-
-                return null;
-            }
-            else
-            {
+            if (assetBundle != null)
                 return assetBundle;
-            }
+
+            Logger.LogError($"{nameof(LoadBundle)}: Failed to load AssetBundle!");
+
+            return null;
         }
 
         public static async Task<AssetBundle> LoadAsyncBundle(string bundlePath)
@@ -35,16 +32,12 @@ namespace EFTUtils
             while (!www.isDone)
                 await Task.Yield();
 
-            if (www.assetBundle == null)
-            {
-                Logger.LogError($"{nameof(LoadAsyncBundle)}: Failed to load AssetBundle!");
-
-                return null;
-            }
-            else
-            {
+            if (www.assetBundle != null)
                 return www.assetBundle;
-            }
+
+            Logger.LogError($"{nameof(LoadAsyncBundle)}: Failed to load AssetBundle!");
+
+            return null;
         }
 
         public static async Task<T[]> LoadAsyncAllAsset<T>(AssetBundle assetBundle) where T : UnityEngine.Object
@@ -57,20 +50,16 @@ namespace EFTUtils
                     await Task.Yield();
 
                 if (www.allAssets != null)
-                {
                     return Array.ConvertAll(www.allAssets, x => (T)x);
-                }
-                else
-                {
-                    Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AllAssets!");
-                    return null;
-                }
-            }
-            else
-            {
-                Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AssetBundle!");
+
+                Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AllAssets!");
+
                 return null;
             }
+
+            Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AssetBundle!");
+
+            return null;
         }
     }
 }

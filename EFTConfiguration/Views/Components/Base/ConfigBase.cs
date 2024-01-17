@@ -2,6 +2,8 @@
 using TMPro;
 using UnityEngine;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTConfiguration.Views.Components.Base
 {
     public abstract class ConfigBase : MonoBehaviour

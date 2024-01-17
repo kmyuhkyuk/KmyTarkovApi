@@ -1,6 +1,7 @@
 ﻿#if !UNITY_EDITOR
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using BepInEx;
@@ -162,6 +163,7 @@ namespace EFTConfiguration
             }
         }
 
+        [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static ErrorType GetErrorType(LogEventArgs eventArgs)
         {
             var logArg = eventArgs.Data.ToString();
@@ -211,10 +213,9 @@ namespace EFTConfiguration
         private bool NeedFilterLog(ref int errorCount)
         {
             if (errorCount == _maxErrorCount)
-            {
                 return true;
-            }
-            else if (errorCount < _maxErrorCount)
+
+            if (errorCount < _maxErrorCount)
             {
                 errorCount++;
             }

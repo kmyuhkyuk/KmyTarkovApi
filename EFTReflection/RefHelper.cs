@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -6,6 +7,7 @@ using EFTReflection.Patching;
 using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTReflection
 {
@@ -249,15 +251,15 @@ namespace EFTReflection
 
                 var delegateParameterIsObject = delegateParameterTypes[i] == typeof(object);
 
-                if (delegateParameterIsObject)
-                {
-                    var parameterType = parameterTypes[i];
+                if (!delegateParameterIsObject)
+                    continue;
 
-                    var parameterIsValueType = parameterType.IsValueType;
+                var parameterType = parameterTypes[i];
 
-                    //DelegateParameterTypes i == parameterTypes i
-                    ilGen.Emit(!parameterIsValueType ? OpCodes.Castclass : OpCodes.Unbox_Any, parameterType);
-                }
+                var parameterIsValueType = parameterType.IsValueType;
+
+                //DelegateParameterTypes i == parameterTypes i
+                ilGen.Emit(!parameterIsValueType ? OpCodes.Castclass : OpCodes.Unbox_Any, parameterType);
             }
 
             ilGen.Emit(!isStatic ? OpCodes.Callvirt : OpCodes.Call, methodInfo);
@@ -291,11 +293,12 @@ namespace EFTReflection
         /// <summary>
         ///     A Wrapper Property Delegate Class
         ///     <para>More convenient and fast Get or Set Property Value</para>
-        ///     <para>If <typeparamref name="T" /> is object then use <see cref="ObjectMethodDelegate{DelegateType}" /></para>
+        ///     <para>If <typeparamref name="T" /> is object than use <see cref="ObjectMethodDelegate{DelegateType}" /></para>
         ///     <para>else use <see cref="AccessTools.MethodDelegate{DelegateType}" /> Generate Delegate</para>
         /// </summary>
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
         public class PropertyRef<T, TF> : RefBase<T, TF>
         {
             private Func<T, TF> _refGetValue;
@@ -332,12 +335,8 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var propertyInfo = type.GetProperty(propertyName, flags);
-
-                if (propertyInfo == null)
-                {
-                    throw new Exception($"{propertyName} Property not exist");
-                }
+                var propertyInfo = type.GetProperty(propertyName, flags) ??
+                                   throw new Exception($"{propertyName} Property not exist");
 
                 Init(propertyInfo, instance);
             }
@@ -346,12 +345,9 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var propertyInfo = propertyNames.Select(x => type.GetProperty(x, flags)).FirstOrDefault(x => x != null);
-
-                if (propertyInfo == null)
-                {
+                var propertyInfo =
+                    propertyNames.Select(x => type.GetProperty(x, flags)).FirstOrDefault(x => x != null) ??
                     throw new Exception($"{string.Join("|", propertyNames)} All Property not exist");
-                }
 
                 Init(propertyInfo, instance);
             }
@@ -378,14 +374,14 @@ namespace EFTReflection
                         : AccessTools.MethodDelegate<Func<T, TF>>(_getMethodInfo);
                 }
 
-                if (_propertyInfo.CanWrite)
-                {
-                    _setMethodInfo = _propertyInfo.GetSetMethod(true);
+                if (!_propertyInfo.CanWrite)
+                    return;
 
-                    _refSetValue = inIsObject
-                        ? ObjectMethodDelegate<Action<T, TF>>(_setMethodInfo)
-                        : AccessTools.MethodDelegate<Action<T, TF>>(_setMethodInfo);
-                }
+                _setMethodInfo = _propertyInfo.GetSetMethod(true);
+
+                _refSetValue = inIsObject
+                    ? ObjectMethodDelegate<Action<T, TF>>(_setMethodInfo)
+                    : AccessTools.MethodDelegate<Action<T, TF>>(_setMethodInfo);
             }
 
             public static PropertyRef<T, TF> Create(PropertyInfo propertyInfo, object instance)
@@ -425,17 +421,12 @@ namespace EFTReflection
                 }
 
                 if (instance != null && DeclaringType.IsInstanceOfType(instance))
-                {
                     return _refGetValue(instance);
-                }
-                else if (_instance != null && instance == null)
-                {
+
+                if (_instance != null && instance == null)
                     return _refGetValue(_instance);
-                }
-                else
-                {
-                    return default;
-                }
+
+                return default;
             }
 
             public override void SetValue(T instance, TF value)
@@ -460,13 +451,14 @@ namespace EFTReflection
         ///     A Wrapper Field Delegate Class
         ///     <para>More convenient and fast Get or Set Field Value</para>
         ///     <para>
-        ///         If <typeparamref name="T" /> is object then use <see cref="ObjectFieldGetAccess{T,F}" /> and
+        ///         If <typeparamref name="T" /> is object than use <see cref="ObjectFieldGetAccess{T,F}" /> and
         ///         <see cref="ObjectFieldSetAccess{T,F}" />
         ///     </para>
         ///     <para>else use <see cref="AccessTools.FieldRefAccess{T, F}(System.Reflection.FieldInfo)" /> Generate Delegate</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
         public class FieldRef<T, TF> : RefBase<T, TF>
         {
             private AccessTools.FieldRef<T, TF> _harmonyFieldRef;
@@ -503,12 +495,7 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var fieldInfo = type.GetField(fieldName, flags);
-
-                if (fieldInfo == null)
-                {
-                    throw new Exception($"{fieldName} Field not exist");
-                }
+                var fieldInfo = type.GetField(fieldName, flags) ?? throw new Exception($"{fieldName} Field not exist");
 
                 Init(fieldInfo, instance);
             }
@@ -517,12 +504,8 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var fieldInfo = fieldNames.Select(x => type.GetField(x, flags)).FirstOrDefault(x => x != null);
-
-                if (fieldInfo == null)
-                {
-                    throw new Exception($"{string.Join("|", fieldNames)} All Field not exist");
-                }
+                var fieldInfo = fieldNames.Select(x => type.GetField(x, flags)).FirstOrDefault(x => x != null) ??
+                                throw new Exception($"{string.Join("|", fieldNames)} All Field not exist");
 
                 Init(fieldInfo, instance);
             }
@@ -588,38 +571,26 @@ namespace EFTReflection
                     }
 
                     if (instance != null && DeclaringType.IsInstanceOfType(instance))
-                    {
                         return _harmonyFieldRef(instance);
-                    }
-                    else if (_instance != null && instance == null)
-                    {
-                        return _harmonyFieldRef(_instance);
-                    }
-                    else
-                    {
-                        return default;
-                    }
-                }
-                else
-                {
-                    if (_refGetValue == null)
-                    {
-                        throw new ArgumentNullException(nameof(_refGetValue));
-                    }
 
-                    if (instance != null && DeclaringType.IsInstanceOfType(instance))
-                    {
-                        return _refGetValue(instance);
-                    }
-                    else if (_instance != null && instance == null)
-                    {
-                        return _refGetValue(_instance);
-                    }
-                    else
-                    {
-                        return default;
-                    }
+                    if (_instance != null && instance == null)
+                        return _harmonyFieldRef(_instance);
+
+                    return default;
                 }
+
+                if (_refGetValue == null)
+                {
+                    throw new ArgumentNullException(nameof(_refGetValue));
+                }
+
+                if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                    return _refGetValue(instance);
+
+                if (_instance != null && instance == null)
+                    return _refGetValue(_instance);
+
+                return default;
             }
 
             public override void SetValue(T instance, TF value)
@@ -662,18 +633,14 @@ namespace EFTReflection
         /// <summary>
         ///     A Wrapper HookPatch Class
         /// </summary>
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
         public class HookRef
         {
             public readonly MethodBase TargetMethod;
 
             public HookRef(MethodBase targetMethod)
             {
-                if (targetMethod == null)
-                {
-                    throw new ArgumentNullException(nameof(targetMethod));
-                }
-
-                TargetMethod = targetMethod;
+                TargetMethod = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod));
             }
 
             public HookRef(Type targetType, string targetMethodName)

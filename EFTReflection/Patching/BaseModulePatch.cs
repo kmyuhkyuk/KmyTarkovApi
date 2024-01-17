@@ -6,6 +6,9 @@ using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+
 namespace EFTReflection.Patching
 {
     [MeansImplicitUse]
@@ -77,6 +80,7 @@ namespace EFTReflection.Patching
             var T = GetType();
             var methods = new List<HarmonyMethod>();
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var method in T.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
                                                 BindingFlags.DeclaredOnly))
             {
@@ -94,12 +98,8 @@ namespace EFTReflection.Patching
         /// </summary>
         public virtual void Enable()
         {
-            var target = GetTargetMethod();
-
-            if (target == null)
-            {
-                throw new InvalidOperationException($"{Harmony.Id}: TargetMethod is null");
-            }
+            var target = GetTargetMethod() ??
+                         throw new InvalidOperationException($"{Harmony.Id}: TargetMethod is null");
 
             try
             {

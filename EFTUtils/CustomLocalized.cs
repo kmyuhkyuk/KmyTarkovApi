@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-// ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedType.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {
@@ -60,12 +61,12 @@ namespace EFTUtils
 
         public virtual void AddLanguage(string name)
         {
-            if (!LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
-            {
-                LanguagesLowerDictionary.Add(name, name.ToLower());
+            if (LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
+                return;
 
-                LanguageAdd?.Invoke();
-            }
+            LanguagesLowerDictionary.Add(name, name.ToLower());
+
+            LanguageAdd?.Invoke();
         }
 
         public abstract string Localized(T tKey, TV key);

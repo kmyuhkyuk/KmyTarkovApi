@@ -19,6 +19,7 @@ namespace EFTConfiguration.Views
     {
         public bool State
         {
+            // ReSharper disable once UnusedMember.Global
             get => gameObject.activeSelf;
             set => gameObject.SetActive(value);
         }
@@ -106,11 +107,8 @@ namespace EFTConfiguration.Views
                 }
             }
 
-            foreach (var configData in sectionConfigModel)
+            foreach (var configData in sectionConfigModel.Where(configData => configData.Value.Count != 0))
             {
-                if (configData.Value.Count == 0)
-                    continue;
-
                 if (!string.IsNullOrEmpty(configData.Key))
                 {
                     var configHeader = Instantiate(EFTConfigurationModel.Instance.PrefabManager.header, transform)

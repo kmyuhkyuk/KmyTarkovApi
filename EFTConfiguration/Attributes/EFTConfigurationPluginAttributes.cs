@@ -29,7 +29,7 @@
         ///     Keep plugins displayed with not any setting
         /// </summary>
         /// <remarks>
-        ///     It priority lower than <see cref="HidePlugin" />
+        ///     It prioritizes lower than <see cref="HidePlugin" />
         /// </remarks>
         public bool AlwaysDisplay;
 

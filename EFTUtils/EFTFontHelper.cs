@@ -2,11 +2,10 @@
 using TMPro;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
-
-// ReSharper disable UnusedType.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable Unity.UnknownResource
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {

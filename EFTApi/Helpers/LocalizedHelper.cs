@@ -5,6 +5,8 @@ using EFT;
 using EFTReflection;
 using HarmonyLib;
 
+// ReSharper disable UnusedMember.Global
+
 namespace EFTApi.Helpers
 {
     public class LocalizedHelper
@@ -21,7 +23,7 @@ namespace EFTApi.Helpers
 
         private LocalizedHelper()
         {
-            var flags = BindingFlags.Static | RefTool.Public;
+            const BindingFlags flags = BindingFlags.Static | RefTool.Public;
 
             var localizedType = RefTool.GetEftType(x => x.GetMethod("ParseLocalization", flags) != null);
 

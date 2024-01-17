@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+
 namespace EFTConfiguration.Helpers
 {
     public static class LocalizedHelper
@@ -57,12 +60,12 @@ namespace EFTConfiguration.Helpers
 
         public static void AddLanguage(string name)
         {
-            if (!LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
-            {
-                LanguagesLowerDictionary.Add(name, name.ToLower());
+            if (LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
+                return;
 
-                LanguageAdd?.Invoke();
-            }
+            LanguagesLowerDictionary.Add(name, name.ToLower());
+
+            LanguageAdd?.Invoke();
         }
 
         public static string Localized(string modName)
@@ -79,10 +82,8 @@ namespace EFTConfiguration.Helpers
             {
                 return localized;
             }
-            else
-            {
-                return key;
-            }
+
+            return key;
         }
     }
 }

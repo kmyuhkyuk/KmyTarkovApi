@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BepInEx.Logging;
 
 // ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {
@@ -52,33 +53,33 @@ namespace EFTUtils
 
         public void Update()
         {
-            if (_updates.Count > 0)
+            if (_updates.Count == 0)
+                return;
+
+            for (var i = 0; i < _updates.Count; i++)
             {
-                for (var i = 0; i < _updates.Count; i++)
+                try
                 {
-                    try
+                    var update = _updates[i];
+
+                    if (_removeUpdates.Contains(update))
                     {
-                        var update = _updates[i];
+                        var num = _removeUpdates.IndexOf(update);
 
-                        if (_removeUpdates.Contains(update))
-                        {
-                            var num = _removeUpdates.IndexOf(update);
-
-                            _updates.RemoveAt(i);
-
-                            _removeUpdates.RemoveAt(num);
-                        }
-                        else if (!_stopUpdates.Contains(update))
-                        {
-                            update.CustomUpdate();
-                        }
-                    }
-                    catch (Exception e)
-                    {
                         _updates.RemoveAt(i);
 
-                        LogSource.LogError(e);
+                        _removeUpdates.RemoveAt(num);
                     }
+                    else if (!_stopUpdates.Contains(update))
+                    {
+                        update.CustomUpdate();
+                    }
+                }
+                catch (Exception e)
+                {
+                    _updates.RemoveAt(i);
+
+                    LogSource.LogError(e);
                 }
             }
         }

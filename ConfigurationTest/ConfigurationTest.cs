@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using BepInEx;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 using UnityEngine;
+
+// ReSharper disable UnusedMember.Local
 
 namespace ConfigurationTest
 {
@@ -19,6 +22,7 @@ namespace ConfigurationTest
             C
         }
 
+        [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         private void Awake()
         {
             const string testSettings = "Test Settings";

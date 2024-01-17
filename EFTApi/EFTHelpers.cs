@@ -1,8 +1,8 @@
 ﻿using EFTApi.Helpers;
 
-// ReSharper disable UnusedType.Global
-
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi
 {

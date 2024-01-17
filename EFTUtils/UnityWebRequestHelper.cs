@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 // ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTUtils
 {
@@ -22,17 +23,12 @@ namespace EFTUtils
                 while (!sendWeb.isDone)
                     await Task.Yield();
 
-                if (www.isNetworkError || www.isHttpError)
-                {
-                    Logger.LogError($"{nameof(GetAsyncTexture)}: Network Error");
-                    return null;
-                }
-                else
-                {
-                    var texture = DownloadHandlerTexture.GetContent(www);
+                if (!www.isNetworkError && !www.isHttpError)
+                    return DownloadHandlerTexture.GetContent(www);
 
-                    return texture;
-                }
+                Logger.LogError($"{nameof(GetAsyncTexture)}: Network Error");
+
+                return null;
             }
         }
 
@@ -71,15 +67,12 @@ namespace EFTUtils
                 while (!sendWeb.isDone)
                     await Task.Yield();
 
-                if (www.isNetworkError || www.isHttpError)
-                {
-                    Logger.LogError($"{nameof(GetAsyncAudioClip)}: Network Error");
-                    return null;
-                }
-                else
-                {
+                if (!www.isNetworkError && !www.isHttpError)
                     return DownloadHandlerAudioClip.GetContent(www);
-                }
+
+                Logger.LogError($"{nameof(GetAsyncAudioClip)}: Network Error");
+
+                return null;
             }
         }
     }

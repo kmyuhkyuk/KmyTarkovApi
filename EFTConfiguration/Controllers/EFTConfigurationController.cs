@@ -82,29 +82,29 @@ namespace EFTConfiguration.Controllers
             {
                 var attributeType = attribute.GetType();
 
-                if (attributeType.Name == nameof(EFTConfigurationPluginAttributes))
+                if (attributeType.Name != nameof(EFTConfigurationPluginAttributes))
+                    continue;
+
+                var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
+
+                foreach (var eftConfigurationPluginAttributesFieldInfo in
+                         EFTConfigurationPluginAttributesFields)
                 {
-                    var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
+                    var eftConfigurationPluginExternalAttributesFieldInfo =
+                        eftConfigurationPluginExternalAttributesFieldInfos.SingleOrDefault(x =>
+                            x.Name == eftConfigurationPluginAttributesFieldInfo.Name && x.FieldType ==
+                            eftConfigurationPluginAttributesFieldInfo.FieldType);
 
-                    foreach (var eftConfigurationPluginAttributesFieldInfo in
-                             EFTConfigurationPluginAttributesFields)
-                    {
-                        var eftConfigurationPluginExternalAttributesFieldInfo =
-                            eftConfigurationPluginExternalAttributesFieldInfos.SingleOrDefault(x =>
-                                x.Name == eftConfigurationPluginAttributesFieldInfo.Name && x.FieldType ==
-                                eftConfigurationPluginAttributesFieldInfo.FieldType);
+                    if (eftConfigurationPluginExternalAttributesFieldInfo == null)
+                        continue;
 
-                        if (eftConfigurationPluginExternalAttributesFieldInfo == null)
-                            continue;
-
-                        eftConfigurationPluginAttributesFieldInfo.SetValue(eftConfigurationPluginAttributes,
-                            eftConfigurationPluginExternalAttributesFieldInfo.GetValue(attribute));
-                    }
-
-                    hasAttributes = true;
-
-                    break;
+                    eftConfigurationPluginAttributesFieldInfo.SetValue(eftConfigurationPluginAttributes,
+                        eftConfigurationPluginExternalAttributesFieldInfo.GetValue(attribute));
                 }
+
+                hasAttributes = true;
+
+                break;
             }
 
             if (!hasAttributes)

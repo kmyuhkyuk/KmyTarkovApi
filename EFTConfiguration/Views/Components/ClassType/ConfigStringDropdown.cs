@@ -31,11 +31,12 @@ namespace EFTConfiguration.Views.Components.ClassType
             {
                 var option = options[i];
 
-                if (option.text == currentValue)
-                {
-                    dropdown.value = i;
-                    break;
-                }
+                if (option.text != currentValue)
+                    continue;
+
+                dropdown.value = i;
+
+                break;
             }
         }
     }

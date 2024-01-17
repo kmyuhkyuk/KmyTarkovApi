@@ -1,8 +1,10 @@
 ﻿namespace EFTConfiguration.AcceptableValue
 {
+    // ReSharper disable ConvertToAutoPropertyWhenPossible
     // ReSharper disable UnusedType.Global
+    // ReSharper disable UnusedMember.Global
     /// <summary>
-    ///     Can be Modify Range Value
+    ///     Can be modified Range Value
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class AcceptableValueCustomRange<T> : BepInEx.Configuration.AcceptableValueRange<T>
@@ -19,10 +21,14 @@
             get => minValueCustom;
             set
             {
-                if (value.CompareTo(maxValueCustom) < 0)
+                if (value == null)
                 {
-                    minValueCustom = value;
+                    throw new System.ArgumentNullException(nameof(value));
                 }
+
+                minValueCustom = value.CompareTo(maxValueCustom) < 0
+                    ? value
+                    : throw new System.ArgumentException("minValue has to be lower than maxValue");
             }
         }
 

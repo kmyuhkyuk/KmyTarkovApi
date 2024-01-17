@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 
-// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTReflection.Patching
 {
@@ -143,66 +143,60 @@ namespace EFTReflection.Patching
             }
 
             if (VirtualMethodDictionary.TryGetValue(hookMethod, out var virtualMethod))
-            {
                 return virtualMethod;
-            }
-            else
+
+            if (!NeedCastParameters(originalMethod, hookMethod, out var validParameters))
+                return hookMethod;
+
+            var validParametersNotNull = validParameters.Where(x => x != null).ToArray();
+
+            var name = $"DTFType_{delegateMethodDeclaringType.Name}_{hookMethod.Name}";
+            var assemblyName = new AssemblyName(name);
+            var assemblyBuilder =
+                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule("module");
+
+            var typeBuilder = moduleBuilder.DefineType(name,
+                TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
+
+            var invokeMethod = typeBuilder.DefineMethod(
+                hookMethod.Name,
+                MethodAttributes.HideBySig | MethodAttributes.Static | MethodAttributes.Public,
+                hookMethod.ReturnType, validParametersNotNull.Select(x => x.ParameterType).ToArray());
+
+            var ilGen = invokeMethod.GetILGenerator();
+
+            for (var i = 0; i < validParametersNotNull.Length; i++)
             {
-                if (!NeedCastParameters(originalMethod, hookMethod, out var validParameters))
-                {
-                    return hookMethod;
-                }
+                var validParameterNotNull = validParametersNotNull[i];
 
-                var validParametersNotNull = validParameters.Where(x => x != null).ToArray();
-
-                var name = $"DTFType_{delegateMethodDeclaringType.Name}_{hookMethod.Name}";
-                var assemblyName = new AssemblyName(name);
-                var assemblyBuilder =
-                    AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-                var moduleBuilder = assemblyBuilder.DefineDynamicModule("module");
-
-                var typeBuilder = moduleBuilder.DefineType(name,
-                    TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
-
-                var invokeMethod = typeBuilder.DefineMethod(
-                    hookMethod.Name,
-                    MethodAttributes.HideBySig | MethodAttributes.Static | MethodAttributes.Public,
-                    hookMethod.ReturnType, validParametersNotNull.Select(x => x.ParameterType).ToArray());
-
-                var ilGen = invokeMethod.GetILGenerator();
-
-                for (var i = 0; i < validParametersNotNull.Length; i++)
-                {
-                    var validParameterNotNull = validParametersNotNull[i];
-
-                    invokeMethod.DefineParameter(i + 1, validParameterNotNull.Attributes, validParameterNotNull.Name);
-                }
-
-                for (var i = 0; i < validParameters.Length; i++)
-                {
-                    var validParameter = validParameters[i];
-
-                    if (validParameter != null)
-                    {
-                        ilGen.Emit(OpCodes.Ldarg, i);
-                    }
-                    else
-                    {
-                        ilGen.Emit(OpCodes.Ldnull);
-                    }
-                }
-
-                ilGen.Emit(OpCodes.Call, hookMethod);
-
-                ilGen.Emit(OpCodes.Ret);
-
-                virtualMethod = typeBuilder.CreateType()
-                    .GetMethod(hookMethod.Name, BindingFlags.Static | RefTool.Public);
-
-                VirtualMethodDictionary.Add(hookMethod, virtualMethod);
-
-                return virtualMethod;
+                invokeMethod.DefineParameter(i + 1, validParameterNotNull.Attributes, validParameterNotNull.Name);
             }
+
+            for (var i = 0; i < validParameters.Length; i++)
+            {
+                var validParameter = validParameters[i];
+
+                if (validParameter != null)
+                {
+                    ilGen.Emit(OpCodes.Ldarg, i);
+                }
+                else
+                {
+                    ilGen.Emit(OpCodes.Ldnull);
+                }
+            }
+
+            ilGen.Emit(OpCodes.Call, hookMethod);
+
+            ilGen.Emit(OpCodes.Ret);
+
+            virtualMethod = typeBuilder.CreateType()
+                .GetMethod(hookMethod.Name, BindingFlags.Static | RefTool.Public);
+
+            VirtualMethodDictionary.Add(hookMethod, virtualMethod);
+
+            return virtualMethod;
         }
 
         private static bool NeedCastParameters(MethodBase originalMethod, MethodInfo hookMethod,
@@ -269,12 +263,10 @@ namespace EFTReflection.Patching
 
                 return true;
             }
-            else
-            {
-                validParameters = null;
 
-                return false;
-            }
+            validParameters = null;
+
+            return false;
         }
 
         /// <summary>

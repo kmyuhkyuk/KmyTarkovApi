@@ -11,7 +11,10 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBeMadeStatic.Global
+// ReSharper disable MemberHidesStaticFromOuterClass
 // ReSharper disable NotAccessedField.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi.Helpers
 {
@@ -158,7 +161,7 @@ namespace EFTApi.Helpers
 
             private RoleData()
             {
-                var flags = BindingFlags.Static | RefTool.Public;
+                const BindingFlags flags = BindingFlags.Static | RefTool.Public;
 
                 var roleType = RefTool.GetEftType(x =>
                     x.GetMethod("IsBoss", flags) != null && x.GetMethod("Init", flags) != null);
@@ -274,6 +277,7 @@ namespace EFTApi.Helpers
 
                     var hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+                    // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                     foreach (var grid in equipmentGrids)
                     {
                         foreach (var item in RefItems.GetValue(grid))
@@ -286,6 +290,7 @@ namespace EFTApi.Helpers
                 }
             }
 
+            //List is always not is null
             public List<object> QuestRaidItemsGrids
             {
                 get
@@ -297,6 +302,7 @@ namespace EFTApi.Helpers
 
                     var list = new List<object>();
 
+                    // ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (var grid in RefGrids.GetValue(questRaidItems))
                     {
                         list.Add(grid);
@@ -337,6 +343,7 @@ namespace EFTApi.Helpers
 
                     var hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+                    // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                     foreach (var grid in questRaidItemsGrids)
                     {
                         foreach (var item in RefItems.GetValue(grid))
@@ -369,7 +376,6 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.FieldRef<object, Slot[]> RefSlots;
 
-            // ReSharper disable once InvalidXmlDocComment
             /// <summary>
             ///     InventoryClass.Equipment.Slots.Grids
             /// </summary>
@@ -552,13 +558,9 @@ namespace EFTApi.Helpers
             public Player GetPlayer(DamageInfo damageInfo)
             {
                 if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
-                {
                     return (Player)RefIPlayer?.GetValue(RefPlayer.GetValue(damageInfo));
-                }
-                else
-                {
-                    return (Player)RefPlayer.GetValue(damageInfo);
-                }
+
+                return (Player)RefPlayer.GetValue(damageInfo);
             }
         }
 

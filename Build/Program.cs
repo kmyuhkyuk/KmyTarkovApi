@@ -2,9 +2,10 @@
 using System.Linq;
 using CopyBuildAssembly;
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace Build
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
     internal class Program
     {
         private static void Main(string[] args)
@@ -13,7 +14,7 @@ namespace Build
             var arg = args.ElementAtOrDefault(0);
 
             const string releasePath =
-                "R:\\Battlestate Games\\Client.0.13.5.3.26535\\BepInEx\\plugins\\kmyuhkyuk-EFTApi";
+                @"R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
             Copy.CopyAssembly(arg, "Release", baseDirectory, releasePath, new[]
             {
@@ -26,7 +27,7 @@ namespace Build
                 "ConfigurationTest"
             });
 
-            const string unityEditorPath = "C:\\Users\\24516\\Documents\\EFTConfiguration\\Assets\\Managed";
+            const string unityEditorPath = @"C:\Users\24516\Documents\EFTConfiguration\Assets\Managed";
 
             Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]
             {

@@ -4,6 +4,9 @@ using EFT.InventoryLogic;
 using EFT.UI;
 using EFTApi.Helpers;
 
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
+
 namespace EFTApi
 {
     public static class EFTGlobal

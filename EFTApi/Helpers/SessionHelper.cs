@@ -10,6 +10,8 @@ using UnityEngine;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberHidesStaticFromOuterClass
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi.Helpers
 {
@@ -102,7 +104,7 @@ namespace EFTApi.Helpers
                 {
                 }
 
-                internal void Init(object[] traders)
+                internal void Init(IEnumerable<object> traders)
                 {
                     Clear();
 
@@ -119,23 +121,16 @@ namespace EFTApi.Helpers
                 public async Task<Sprite> GetAvatar(string traderId)
                 {
                     if (_avatarSprites.TryGetValue(traderId, out var sprite))
-                    {
                         return await sprite;
-                    }
-                    else
-                    {
-                        if (_avatar.TryGetValue(traderId, out var avatar))
-                        {
-                            var avatarSprite = Traverse.Create(avatar).Method("GetAvatar").GetValue<Task<Sprite>>();
-                            _avatarSprites.Add(traderId, avatarSprite);
 
-                            return await avatarSprite;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
+                    if (!_avatar.TryGetValue(traderId, out var avatar))
+                        return null;
+
+                    var avatarSprite = Traverse.Create(avatar).Method("GetAvatar").GetValue<Task<Sprite>>();
+
+                    _avatarSprites.Add(traderId, avatarSprite);
+
+                    return await avatarSprite;
                 }
 
                 public async void GetAvatar(string traderId, Action<Sprite> action)

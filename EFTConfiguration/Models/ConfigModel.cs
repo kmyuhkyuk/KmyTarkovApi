@@ -6,6 +6,8 @@ using System.Reflection;
 using BepInEx.Configuration;
 using EFTConfiguration.Attributes;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace EFTConfiguration.Models
 {
     internal class ConfigModel

@@ -8,8 +8,10 @@ using EFT.InventoryLogic;
 using EFTReflection;
 using JetBrains.Annotations;
 
-// ReSharper disable NotAccessedField.Global
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberHidesStaticFromOuterClass
+// ReSharper disable NotAccessedField.Global
+// ReSharper disable UnusedMember.Global
 
 namespace EFTApi.Helpers
 {
@@ -38,6 +40,7 @@ namespace EFTApi.Helpers
 
                 var list = new List<Player>();
 
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var player in GameWorld.AllPlayers)
                 {
                     if (player != PlayerHelper.Instance.Player)

@@ -28,18 +28,12 @@ namespace EFTUtils
             return parent.ReplaceTargetFont(_ => true, toFontAsset);
         }
 
-        public static GameObject ReplaceTargetFont(this GameObject parent, TMP_FontAsset fromFontAsset,
-            TMP_FontAsset toFontAsset)
-        {
-            return parent.ReplaceTargetFont(x => x == fromFontAsset, toFontAsset);
-        }
-
         public static GameObject ReplaceTargetFont(this GameObject parent,
-            Func<TMP_FontAsset, bool> fromFontAssetPredicate, TMP_FontAsset toFontAsset)
+            Func<TMP_Text, bool> predicate, TMP_FontAsset toFontAsset)
         {
             foreach (var tmpText in parent.GetComponentsInChildren<TMP_Text>(true))
             {
-                if (fromFontAssetPredicate(tmpText.font))
+                if (predicate(tmpText))
                 {
                     tmpText.font = toFontAsset;
                 }

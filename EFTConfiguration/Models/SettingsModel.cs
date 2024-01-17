@@ -36,7 +36,7 @@ namespace EFTConfiguration.Models
                 new KeyboardShortcut(KeyCode.Home));
             KeyDefaultPosition = configFile.Bind<Vector2>(mainSettings, "Default Position", Vector2.zero);
             KeyDescriptionPositionOffset = configFile.Bind<Vector2>(mainSettings, "Description Position Offset",
-                new Vector2(0, -50), new ConfigDescription("Description position offset from Mouse position"));
+                new Vector2(0, -25), new ConfigDescription("Description position offset from Mouse position"));
             KeyLanguage = configFile.Bind<string>(mainSettings, "Language",
                 "En",
                 new ConfigDescription(

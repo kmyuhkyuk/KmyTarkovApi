@@ -46,5 +46,36 @@ namespace EFTConfiguration
         [SerializeField] public GameObject unknown;
 
         [SerializeField] public GameObject unknownCustom;
+
+        public GameObject[] AllGameObject
+        {
+            get
+            {
+                return new[]
+                {
+                    eftConfiguration,
+                    pluginInfo,
+                    config,
+                    header,
+                    toggle,
+                    vector2,
+                    vector3,
+                    vector4,
+                    quaternion,
+                    @int,
+                    intSlider,
+                    @float,
+                    floatSlider,
+                    color,
+                    @string,
+                    stringDropdown,
+                    @enum,
+                    keyboardShortcut,
+                    stringAction,
+                    unknown,
+                    unknownCustom
+                };
+            }
+        }
     }
 }

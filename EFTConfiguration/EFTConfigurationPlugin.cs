@@ -1,11 +1,13 @@
 ﻿#if !UNITY_EDITOR
 
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Models;
 using EFTConfiguration.Patches;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +37,13 @@ namespace EFTConfiguration
             else
             {
                 var prefabManager = assetBundle.LoadAllAssets<PrefabManager>()[0];
+
+                foreach (var tmpText in prefabManager.AllGameObject.SelectMany(x =>
+                             x.GetComponentsInChildren<TMP_Text>(true)))
+                {
+                    // ReSharper disable once Unity.UnknownResource
+                    tmpText.font = Resources.Load<TMP_FontAsset>("ui/fonts/jovanny lemonad - bender normal sdf");
+                }
 
                 EFTConfigurationModel.Create(GetType().GetCustomAttribute<BepInPlugin>().Name, EFTConfigurationPublic,
                     prefabManager, ModPath, Info);

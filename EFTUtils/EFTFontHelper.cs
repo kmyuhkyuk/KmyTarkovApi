@@ -25,10 +25,10 @@ namespace EFTUtils
 
         public static GameObject ReplaceAllFont(this GameObject parent, TMP_FontAsset toFontAsset)
         {
-            return parent.ReplaceTargetFont(_ => true, toFontAsset);
+            return parent.ReplaceAllFont(_ => true, toFontAsset);
         }
 
-        public static GameObject ReplaceTargetFont(this GameObject parent,
+        public static GameObject ReplaceAllFont(this GameObject parent,
             Func<TMP_Text, bool> predicate, TMP_FontAsset toFontAsset)
         {
             foreach (var tmpText in parent.GetComponentsInChildren<TMP_Text>(true))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using CopyBuildAssembly;
 
@@ -13,10 +14,18 @@ namespace Build
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var arg = args.ElementAtOrDefault(0);
 
-            const string releasePath =
+            const string modPath =
                 @"R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
-            Copy.CopyAssembly(arg, "Release", baseDirectory, releasePath, new[]
+            var previewName = $"{new DirectoryInfo(modPath).Name}-(Preview).7z";
+
+            var releasePreview = new[]
+            {
+                "Release",
+                "Preview"
+            };
+
+            Copy.CopyAssembly(arg, releasePreview, baseDirectory, modPath, new[]
             {
                 "EFTApi",
                 "EFTUtils",
@@ -27,7 +36,18 @@ namespace Build
                 "ConfigurationTest"
             });
 
-            Copy.GenerateSevenZip(arg, "Release", releasePath, null, @"BepInEx\plugins", Array.Empty<string>(), new[]
+            Copy.GenerateSevenZip(arg, "Release", modPath, null, @"BepInEx\plugins", new[]
+            {
+                "ConfigurationTest.dll"
+            }, new[]
+            {
+                "cache"
+            }, Array.Empty<string>(), Array.Empty<string>());
+
+            Copy.GenerateSevenZip(arg, "Preview", modPath, previewName, @"BepInEx\plugins", new[]
+            {
+                "ConfigurationTest.dll"
+            }, new[]
             {
                 "cache"
             }, Array.Empty<string>(), Array.Empty<string>());

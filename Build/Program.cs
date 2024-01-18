@@ -27,6 +27,13 @@ namespace Build
                 "ConfigurationTest"
             });
 
+            Copy.GenerateSevenZip(arg, "Release", releasePath, null, @"BepInEx\plugins", Array.Empty<string>(), new[]
+            {
+                "cache"
+            }, Array.Empty<string>(), Array.Empty<string>());
+
+            //Unity
+
             const string unityEditorPath = @"C:\Users\24516\Documents\EFTConfiguration\Assets\Managed";
 
             Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]

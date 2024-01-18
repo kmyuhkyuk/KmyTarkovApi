@@ -47,8 +47,14 @@ namespace EFTConfiguration.Controllers
 
             foreach (var pluginInfo in PluginInfos.Values)
             {
+                var pluginVersion = pluginInfo.Metadata.Version;
+
+                var fileVersion = FileVersionInfo.GetVersionInfo(pluginInfo.Location).FileVersion;
+
+                var crc32 = Crc32CAlgorithm.Compute(File.ReadAllBytes(pluginInfo.Location)).ToString("X");
+
                 ModVerifyLogger.LogMessage(
-                    $"{Path.GetFileNameWithoutExtension(pluginInfo.Location)} Version:{pluginInfo.Metadata.Version} CRC32:{(string.IsNullOrEmpty(pluginInfo.Location) ? "null" : Crc32CAlgorithm.Compute(File.ReadAllBytes(pluginInfo.Location)).ToString("X"))}");
+                    $"{Path.GetFileNameWithoutExtension(pluginInfo.Location)} Version:{pluginVersion}{(!string.IsNullOrEmpty(fileVersion) ? $"({fileVersion})" : null)} CRC32:{crc32}");
 
                 if (pluginInfo == eftConfigurationModel.Info)
                     continue;

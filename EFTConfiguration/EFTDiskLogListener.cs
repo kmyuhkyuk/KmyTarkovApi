@@ -168,6 +168,9 @@ namespace EFTConfiguration
         {
             var logArg = eventArgs.Data.ToString();
 
+            if (string.IsNullOrEmpty(logArg))
+                return ErrorType.None;
+
             if (logArg.Contains(".Update ()"))
             {
                 return ErrorType.Update;

@@ -191,20 +191,34 @@ namespace EFTConfiguration.Views
         private static async void BindWeb(string modURL, Action<Sprite> bindIcon, Action<string> bindURL,
             Action<int> bindDownloads, Action<Version> bindVersion)
         {
-            try
-            {
-                var doc = await CrawlerHelper.CreateHtmlDocument(modURL);
+            var doc = await CrawlerHelper.CreateHtmlDocument(modURL);
 
-                bindURL(CrawlerHelper.GetModDownloadURL(doc));
-                bindDownloads(CrawlerHelper.GetModDownloads(doc));
-                bindVersion(CrawlerHelper.GetModVersion(doc));
-                bindIcon(await CrawlerHelper.GetModIcon(doc, modURL));
+            var url = CrawlerHelper.GetModDownloadURL(doc);
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                bindURL(url);
             }
-            catch (Exception e)
-            {
-                LogSource.LogWarning($"BindWeb:{modURL} HtmlDocument throw {e.Message}");
 
-                bindIcon(await CrawlerHelper.GetModIcon(modURL));
+            var downloadCount = CrawlerHelper.GetModDownloadCount(doc);
+
+            if (downloadCount > 0)
+            {
+                bindDownloads(downloadCount);
+            }
+
+            var version = CrawlerHelper.GetModVersion(doc);
+
+            if (version != null)
+            {
+                bindVersion(version);
+            }
+
+            var icon = await CrawlerHelper.GetModIcon(doc, modURL);
+
+            if (icon != null)
+            {
+                bindIcon(icon);
             }
         }
 

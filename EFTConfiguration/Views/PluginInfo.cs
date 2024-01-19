@@ -132,10 +132,7 @@ namespace EFTConfiguration.Views
 
         public void BindIcon(Sprite modIcon)
         {
-            if (modIcon != null)
-            {
-                icon.sprite = modIcon;
-            }
+            icon.sprite = modIcon;
         }
 
         public void BindURL(string modDownloadURL)

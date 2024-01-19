@@ -22,12 +22,6 @@ namespace EFTConfiguration.Helpers
 
         private static readonly string CacheFilePath = Path.Combine(CachePath, "cache.json");
 
-        private static readonly ConcurrentDictionary<string, Task<Texture2D>> IconCacheFile =
-            new ConcurrentDictionary<string, Task<Texture2D>>();
-
-        private static readonly ConcurrentDictionary<string, Sprite> IconCache =
-            new ConcurrentDictionary<string, Sprite>();
-
         private static readonly ConcurrentDictionary<string, string> IconURL;
 
         static CrawlerHelper()
@@ -37,16 +31,6 @@ namespace EFTConfiguration.Helpers
             if (!cacheDirectory.Exists)
             {
                 cacheDirectory.Create();
-            }
-            else
-            {
-                var cacheFiles = cacheDirectory.GetFiles("*.png");
-
-                foreach (var cacheFile in cacheFiles)
-                {
-                    IconCacheFile.TryAdd(Path.GetFileNameWithoutExtension(cacheFile.Name),
-                        GetAsyncTexture(cacheFile.FullName));
-                }
             }
 
             if (!File.Exists(CacheFilePath))
@@ -67,75 +51,105 @@ namespace EFTConfiguration.Helpers
 
         public static Version GetModVersion(HtmlDocument doc)
         {
-            return Version.Parse(new Regex(@"[^\d.]").Replace(doc.DocumentNode
-                .SelectSingleNode("//span[@class='filebaseVersionNumber']")
-                .InnerText, string.Empty));
+            try
+            {
+                return Version.Parse(new Regex(@"[^\d.]").Replace(doc.DocumentNode
+                    .SelectSingleNode("//span[@class='filebaseVersionNumber']")
+                    .InnerText, string.Empty));
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        /*public static DateTime GetModVersionDataTime(HtmlDocument doc)
+        public static int GetModDownloadCount(HtmlDocument doc)
         {
-            return Convert.ToDateTime(doc.DocumentNode.SelectSingleNode("//div[1]/ul/li[2]/time").GetAttributeValue("datetime", string.Empty));
-        }*/
-
-        public static int GetModDownloads(HtmlDocument doc)
-        {
-            return Convert.ToInt32(doc.DocumentNode
-                .SelectSingleNode("//meta[@itemprop='userInteractionCount']")
-                .GetAttributeValue("content", string.Empty));
+            try
+            {
+                return Convert.ToInt32(doc.DocumentNode
+                    .SelectSingleNode("//meta[@itemprop='userInteractionCount']")
+                    .GetAttributeValue("content", string.Empty));
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         public static string GetModDownloadURL(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/nav/ul/li/a")
-                .GetAttributeValue("href", string.Empty);
+            try
+            {
+                return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/nav/ul/li/a")
+                    .GetAttributeValue("href", string.Empty);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static string GetModIconURL(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[1]/img")
-                ?.GetAttributeValue("src", string.Empty);
+            try
+            {
+                return doc.DocumentNode.SelectSingleNode("//*[@id=\"content\"]/header/div[1]/img")
+                    ?.GetAttributeValue("src", string.Empty);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public static async Task<Sprite> GetModIcon(HtmlDocument doc, string modURL)
+        public static Task<Sprite> GetModIcon(HtmlDocument doc, string modURL)
         {
             var url = GetModIconURL(doc);
 
             if (string.IsNullOrEmpty(url))
-                return null;
+                return LoadModIcon(modURL, true);
 
             IconURL.AddOrUpdate(modURL, url, (key, value) => url);
 
-            File.WriteAllText(CacheFilePath, JsonConvert.SerializeObject(IconURL));
+            try
+            {
+                File.WriteAllText(CacheFilePath, JsonConvert.SerializeObject(IconURL));
+            }
+            catch
+            {
+                // ignored
+            }
 
-            return await LoadModIcon(url);
+            return LoadModIcon(url, false);
         }
 
-        public static async Task<Sprite> GetModIcon(string modURL)
-        {
-            if (string.IsNullOrEmpty(modURL))
-                return null;
-
-            return IconURL.TryGetValue(modURL, out var url) ? await LoadModIcon(url) : null;
-        }
-
-        private static async Task<Sprite> LoadModIcon(string url)
+        private static async Task<Sprite> LoadModIcon(string url, bool isLocal)
         {
             var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
-            if (IconCache.TryGetValue(fileName, out var cacheSprite))
-                return cacheSprite;
+            var filePath = Path.Combine(CachePath, $"{fileName}.png");
 
-            var cacheTexture = IconCacheFile.GetOrAdd(fileName, key2 => GetAsyncTexture(url));
+            var texture = await GetAsyncTexture(isLocal ? filePath : url);
 
-            var texture = await cacheTexture;
+            if (texture == null)
+                return null;
 
-            return IconCache.GetOrAdd(fileName, key3 =>
-            {
-                File.WriteAllBytes(Path.Combine(CachePath, $"{fileName}.png"), texture.EncodeToPNG());
-
+            if (isLocal)
                 return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
                     new Vector2(0.5f, 0.5f));
-            });
+
+            try
+            {
+                File.WriteAllBytes(filePath, texture.EncodeToPNG());
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f));
         }
 
         private static async Task<Texture2D> GetAsyncTexture(string url)
@@ -150,9 +164,7 @@ namespace EFTConfiguration.Helpers
                 if (www.isNetworkError || www.isHttpError)
                     return null;
 
-                var texture = DownloadHandlerTexture.GetContent(www);
-
-                return texture;
+                return DownloadHandlerTexture.GetContent(www);
             }
         }
     }

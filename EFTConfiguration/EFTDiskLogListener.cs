@@ -166,10 +166,10 @@ namespace EFTConfiguration
         [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static ErrorType GetErrorType(LogEventArgs eventArgs)
         {
-            var logArg = eventArgs.Data.ToString();
-
-            if (string.IsNullOrEmpty(logArg))
+            if (eventArgs.Data == null)
                 return ErrorType.None;
+
+            var logArg = eventArgs.Data.ToString();
 
             if (logArg.Contains(".Update ()"))
             {

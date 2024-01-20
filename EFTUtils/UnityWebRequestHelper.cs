@@ -26,7 +26,7 @@ namespace EFTUtils
                 if (!www.isNetworkError && !www.isHttpError)
                     return DownloadHandlerTexture.GetContent(www);
 
-                Logger.LogError($"{nameof(GetAsyncTexture)}: Network Error");
+                Logger.LogError($"{nameof(GetAsyncTexture)}: {url} Network Error");
 
                 return null;
             }
@@ -54,7 +54,11 @@ namespace EFTUtils
                 case "xm":
                     return await GetAsyncAudioClip(url, AudioType.XM);
                 default:
+                {
+                    Logger.LogError($"{nameof(GetAsyncAudioClip)}: {url} is Unknown AudioType");
+
                     return null;
+                }
             }
         }
 
@@ -70,7 +74,7 @@ namespace EFTUtils
                 if (!www.isNetworkError && !www.isHttpError)
                     return DownloadHandlerAudioClip.GetContent(www);
 
-                Logger.LogError($"{nameof(GetAsyncAudioClip)}: Network Error");
+                Logger.LogError($"{nameof(GetAsyncAudioClip)}: {url} Network Error");
 
                 return null;
             }

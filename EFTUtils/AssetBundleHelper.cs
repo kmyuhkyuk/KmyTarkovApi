@@ -20,7 +20,7 @@ namespace EFTUtils
             if (assetBundle != null)
                 return assetBundle;
 
-            Logger.LogError($"{nameof(LoadBundle)}: Failed to load AssetBundle!");
+            Logger.LogError($"{nameof(LoadBundle)}: {bundlePath} Failed to load AssetBundle!");
 
             return null;
         }
@@ -35,7 +35,7 @@ namespace EFTUtils
             if (www.assetBundle != null)
                 return www.assetBundle;
 
-            Logger.LogError($"{nameof(LoadAsyncBundle)}: Failed to load AssetBundle!");
+            Logger.LogError($"{nameof(LoadAsyncBundle)}: {bundlePath} Failed to load AssetBundle!");
 
             return null;
         }
@@ -52,12 +52,12 @@ namespace EFTUtils
                 if (www.allAssets != null)
                     return Array.ConvertAll(www.allAssets, x => (T)x);
 
-                Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AllAssets!");
+                Logger.LogError($"{nameof(LoadAsyncAllAsset)}: {assetBundle.name} Failed to load AllAssets!");
 
                 return null;
             }
 
-            Logger.LogError($"{nameof(LoadAsyncAllAsset)}: Failed to load AssetBundle!");
+            Logger.LogError($"{nameof(LoadAsyncAllAsset)}: {nameof(assetBundle)} is null!");
 
             return null;
         }

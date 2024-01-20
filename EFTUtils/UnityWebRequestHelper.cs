@@ -55,7 +55,7 @@ namespace EFTUtils
                     return await GetAsyncAudioClip(url, AudioType.XM);
                 default:
                 {
-                    Logger.LogError($"{nameof(GetAsyncAudioClip)}: {url} is Unknown AudioType");
+                    Logger.LogError($"{nameof(GetAsyncAudioClip)}: {url} Unknown AudioType");
 
                     return null;
                 }

@@ -202,7 +202,7 @@ namespace EFTConfiguration.Views
 
             var downloadCount = CrawlerHelper.GetModDownloadCount(doc);
 
-            if (downloadCount > 0)
+            if (downloadCount > -1)
             {
                 bindDownloads(downloadCount);
             }

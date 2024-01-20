@@ -118,19 +118,19 @@ namespace EFTApi.Helpers
                     }
                 }
 
-                public async Task<Sprite> GetAvatar(string traderId)
+                public Task<Sprite> GetAvatar(string traderId)
                 {
                     if (_avatarSprites.TryGetValue(traderId, out var sprite))
-                        return await sprite;
+                        return sprite;
 
                     if (!_avatar.TryGetValue(traderId, out var avatar))
-                        return null;
+                        return Task.FromResult<Sprite>(null);
 
                     var avatarSprite = Traverse.Create(avatar).Method("GetAvatar").GetValue<Task<Sprite>>();
 
                     _avatarSprites.Add(traderId, avatarSprite);
 
-                    return await avatarSprite;
+                    return avatarSprite;
                 }
 
                 public async void GetAvatar(string traderId, Action<Sprite> action)

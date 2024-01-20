@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BepInEx;
+using BepInEx.Logging;
 using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -12,6 +13,8 @@ namespace EFTApi
 {
     public static class EFTVersion
     {
+        private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(EFTVersion));
+
         /// <summary>
         ///     Current Game File Version
         /// </summary>
@@ -44,6 +47,8 @@ namespace EFTApi
         [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static Version GetAkiVersion()
         {
+            const string unknownVersion = "Unable to get current Aki version, which will cause errors in mod";
+
             if (GameVersionRange("0.12.12.17107", "0.12.12.17349"))
             {
                 return Version.Parse("2.3.0");
@@ -103,10 +108,19 @@ namespace EFTApi
             else if (GameVersion > Version.Parse("0.13.0.23399") &&
                      RefTool.TryGetPlugin("com.spt-aki.core", out var plugin))
             {
-                return plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
+                var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
+
+                if (version == Version.Parse("0.0.0"))
+                {
+                    Logger.LogError(unknownVersion);
+                }
+
+                return version;
             }
             else
             {
+                Logger.LogError(unknownVersion);
+
                 return Version.Parse("0.0.0");
             }
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -26,8 +26,8 @@ namespace EFTApi
         /// </summary>
         public static readonly Version AkiVersion;
 
-        private static readonly ConcurrentDictionary<string, Version> SaveVersions =
-            new ConcurrentDictionary<string, Version>();
+        private static readonly Dictionary<string, Version> SaveVersions =
+            new Dictionary<string, Version>();
 
         static EFTVersion()
         {
@@ -55,7 +55,7 @@ namespace EFTApi
 
             saveVersion = Version.Parse(version);
 
-            SaveVersions.AddOrUpdate(version, saveVersion, (key, value) => saveVersion);
+            SaveVersions.Add(version, saveVersion);
 
             return saveVersion;
         }

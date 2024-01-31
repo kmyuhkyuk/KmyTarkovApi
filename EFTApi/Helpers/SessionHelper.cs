@@ -25,9 +25,9 @@ namespace EFTApi.Helpers
 
         public object BackEndConfig { get; private set; }
 
-        public readonly TradersData TradersHelper = TradersData.Instance;
+        public TradersData TradersHelper => TradersData.Instance;
 
-        public readonly ExperienceData ExperienceHelper = ExperienceData.Instance;
+        public ExperienceData ExperienceHelper => ExperienceData.Instance;
 
         /// <summary>
         ///     Init Action
@@ -36,7 +36,7 @@ namespace EFTApi.Helpers
 
         private SessionHelper()
         {
-            CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > Version.Parse("3.3.0")
+            CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
                     ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                     : RefTool.GetEftType(x => x.Name == "MainApplication"),
                 x => x.IsAsync() && x.ReturnType == typeof(Task) &&
@@ -49,7 +49,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            var session = EFTVersion.AkiVersion > Version.Parse("3.3.0")
+            var session = EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
                 ? Traverse.Create(__instance).Field("ClientBackEnd").Property("Session").GetValue<ISession>()
                 : Traverse.Create(__instance).Field("_backEnd").Property("Session").GetValue<ISession>();
 
@@ -58,10 +58,6 @@ namespace EFTApi.Helpers
             var backEndConfig = Traverse.Create(session).Property("BackEndConfig").GetValue<object>();
 
             Instance.BackEndConfig = backEndConfig;
-
-            Instance.TradersHelper.Init(session);
-
-            Instance.ExperienceHelper.Init(backEndConfig);
         }
 
         public class TradersData
@@ -70,80 +66,90 @@ namespace EFTApi.Helpers
 
             public static TradersData Instance => Lazy.Value;
 
-            public object[] Traders { get; private set; }
+            public List<object> Traders
+            {
+                get
+                {
+                    var session = SessionHelper.Instance.Session;
 
-            public readonly AvatarData TradersAvatarData = AvatarData.Instance;
+                    if (session == null)
+                        return null;
+
+                    var list = new List<object>();
+
+                    foreach (var key in RefTraders.GetValue(session))
+                    {
+                        list.Add(key);
+                    }
+
+                    return list;
+                }
+            }
+
+            public readonly RefHelper.PropertyRef<object, IEnumerable> RefTraders;
+
+            public TradersAvatarData TradersAvatarHelper => TradersAvatarData.Instance;
 
             private TradersData()
             {
+                var sessionType = RefTool.GetEftType(x =>
+                    typeof(ISession).IsAssignableFrom(x) && x.DeclaringType == null &&
+                    x.GetProperty("Traders", RefTool.Public) != null);
+
+                RefTraders = RefHelper.PropertyRef<object, IEnumerable>.Create(sessionType, "Traders");
             }
 
-            internal void Init(ISession session)
+            public class TradersAvatarData
             {
-                var list = Traverse.Create(session).Property("Traders").GetValue<IList>();
+                private static readonly Lazy<TradersAvatarData> Lazy =
+                    new Lazy<TradersAvatarData>(() => new TradersAvatarData());
 
-                Traders = new object[list.Count];
+                public static TradersAvatarData Instance => Lazy.Value;
 
-                list.CopyTo(Traders, 0);
+                public readonly RefHelper.PropertyRef<object, object> RefSettings;
 
-                TradersAvatarData.Init(Traders);
-            }
+                /// <summary>
+                ///     Settings.Id
+                /// </summary>
+                public readonly RefHelper.FieldRef<object, string> RefId;
 
-            public class AvatarData
-            {
-                private static readonly Lazy<AvatarData> Lazy = new Lazy<AvatarData>(() => new AvatarData());
+                private readonly Func<object, Task<Sprite>> _refGetAvatar;
 
-                public static AvatarData Instance => Lazy.Value;
-
-                private readonly Dictionary<string, object> _avatar = new Dictionary<string, object>();
-
-                private readonly Dictionary<string, Task<Sprite>> _avatarSprites =
-                    new Dictionary<string, Task<Sprite>>();
-
-                private AvatarData()
+                private TradersAvatarData()
                 {
-                }
+                    var traderType = RefTool.GetEftType(x => x.GetMethod("GetAssortmentPrice", RefTool.Public) != null);
 
-                internal void Init(IEnumerable<object> traders)
-                {
-                    Clear();
+                    RefSettings = RefHelper.PropertyRef<object, object>.Create(traderType, "Settings");
+                    RefId = RefHelper.FieldRef<object, string>.Create(RefSettings.PropertyType, "Id");
 
-                    foreach (var trader in traders)
-                    {
-                        var settings = Traverse.Create(trader).Property("Settings").GetValue<object>();
-
-                        var id = Traverse.Create(settings).Field("Id").GetValue<string>();
-
-                        _avatar.Add(id, settings);
-                    }
+                    _refGetAvatar =
+                        RefHelper.ObjectMethodDelegate<Func<object, Task<Sprite>>>(
+                            RefSettings.PropertyType.GetMethod("GetAvatar", RefTool.Public));
                 }
 
                 public Task<Sprite> GetAvatar(string traderId)
                 {
-                    if (_avatarSprites.TryGetValue(traderId, out var sprite))
-                        return sprite;
+                    var traders = TradersData.Instance.Traders;
 
-                    if (!_avatar.TryGetValue(traderId, out var avatar))
+                    if (traders == null)
                         return Task.FromResult<Sprite>(null);
 
-                    var avatarSprite = Traverse.Create(avatar).Method("GetAvatar").GetValue<Task<Sprite>>();
+                    foreach (var trader in traders)
+                    {
+                        var settings = RefSettings.GetValue(trader);
 
-                    _avatarSprites.Add(traderId, avatarSprite);
+                        if (RefId.GetValue(settings) == traderId)
+                            return _refGetAvatar(settings);
+                    }
 
-                    return avatarSprite;
+                    return Task.FromResult<Sprite>(null);
                 }
 
-                public async void GetAvatar(string traderId, Action<Sprite> action)
+                public async void BindAvatar(string traderId, Action<Sprite> action)
                 {
                     var sprite = await GetAvatar(traderId);
 
                     action?.Invoke(sprite);
-                }
-
-                private void Clear()
-                {
-                    _avatar.Clear();
-                    _avatarSprites.Clear();
                 }
             }
         }
@@ -154,57 +160,63 @@ namespace EFTApi.Helpers
 
             public static ExperienceData Instance => Lazy.Value;
 
-            private object _config;
+            public object Config => RefConfig.GetValue(SessionHelper.Instance.BackEndConfig);
 
-            private object _experience;
+            public object Experience => RefExperience.GetValue(Config);
 
-            private object _kill;
+            public object Kill => RefKill.GetValue(Experience);
 
-            private int _victimLevelExp;
+            public int VictimLevelExp => RefVictimLevelExp.GetValue(Kill);
 
-            private int _victimBotLevelExp;
+            public int VictimBotLevelExp => RefVictimBotLevelExp.GetValue(Kill);
 
-            private float _pmcHeadShotMult;
+            public float PmcHeadShotMult => RefPmcHeadShotMult.GetValue(Kill);
 
-            private float _botHeadShotMult;
+            public float BotHeadShotMult => RefBotHeadShotMult.GetValue(Kill);
+
+            public readonly RefHelper.FieldRef<object, object> RefConfig;
+
+            public readonly RefHelper.FieldRef<object, object> RefExperience;
+
+            public readonly RefHelper.FieldRef<object, object> RefKill;
+
+            public readonly RefHelper.FieldRef<object, int> RefVictimLevelExp;
+
+            public readonly RefHelper.FieldRef<object, int> RefVictimBotLevelExp;
+
+            public readonly RefHelper.FieldRef<object, float> RefPmcHeadShotMult;
+
+            public readonly RefHelper.FieldRef<object, float> RefBotHeadShotMult;
 
             private readonly Func<object, int, int> _refKillingBonusPercent;
 
-            private bool _isInitialized;
-
             private ExperienceData()
             {
-                _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(
-                    RefTool.GetEftMethod(x => x.GetMethod("GetKillingBonusPercent") != null, RefTool.Public,
-                        x => x.Name == "GetKillingBonusPercent"));
-            }
+                var backEndConfigType =
+                    RefTool.GetEftType(x => x.GetField("BotWeaponScatterings", RefTool.Public) != null);
 
-            internal void Init(object backEndConfig)
-            {
-                _config = Traverse.Create(backEndConfig).Field("Config").GetValue<object>();
+                RefConfig = RefHelper.FieldRef<object, object>.Create(backEndConfigType, "Config");
+                RefExperience = RefHelper.FieldRef<object, object>.Create(RefConfig.FieldType, "Experience");
+                RefKill = RefHelper.FieldRef<object, object>.Create(RefExperience.FieldType, "Kill");
+                RefVictimLevelExp = RefHelper.FieldRef<object, int>.Create(RefKill.FieldType, "VictimLevelExp");
+                RefVictimBotLevelExp = RefHelper.FieldRef<object, int>.Create(RefKill.FieldType, "VictimBotLevelExp");
 
-                _experience = Traverse.Create(_config).Field("Experience").GetValue<object>();
-
-                _kill = Traverse.Create(_experience).Field("Kill").GetValue<object>();
-
-                _victimLevelExp = Traverse.Create(_kill).Field("VictimLevelExp").GetValue<int>();
-
-                _victimBotLevelExp = Traverse.Create(_kill).Field("VictimBotLevelExp").GetValue<int>();
-
-                if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.6.1"))
                 {
-                    _pmcHeadShotMult = Traverse.Create(_kill).Field("PmcHeadShotMult").GetValue<float>();
-
-                    _botHeadShotMult = Traverse.Create(_kill).Field("BotHeadShotMult").GetValue<float>();
+                    RefPmcHeadShotMult = RefHelper.FieldRef<object, float>.Create(RefKill.FieldType, "PmcHeadShotMult");
+                    RefBotHeadShotMult = RefHelper.FieldRef<object, float>.Create(RefKill.FieldType, "BotHeadShotMult");
                 }
                 else
                 {
-                    var headShotMult = Traverse.Create(_kill).Field("HeadShotMult").GetValue<float>();
-                    _pmcHeadShotMult = headShotMult;
-                    _botHeadShotMult = headShotMult;
+                    var refHeadShotMult = RefHelper.FieldRef<object, float>.Create(RefKill.FieldType, "HeadShotMult");
+
+                    RefPmcHeadShotMult = refHeadShotMult;
+                    RefBotHeadShotMult = refHeadShotMult;
                 }
 
-                _isInitialized = true;
+                _refKillingBonusPercent = RefHelper.ObjectMethodDelegate<Func<object, int, int>>(
+                    RefTool.GetEftMethod(x => x.GetMethod("GetKillingBonusPercent") != null, RefTool.Public,
+                        x => x.Name == "GetKillingBonusPercent"));
             }
 
             public int GetBaseExp(int exp, EPlayerSide side)
@@ -213,9 +225,9 @@ namespace EFTApi.Helpers
                 {
                     case EPlayerSide.Usec:
                     case EPlayerSide.Bear:
-                        return _victimLevelExp;
+                        return VictimLevelExp;
                     case EPlayerSide.Savage:
-                        return exp < 0 ? _victimBotLevelExp : exp;
+                        return exp < 0 ? VictimBotLevelExp : exp;
                     default:
                         return 0;
                 }
@@ -224,7 +236,7 @@ namespace EFTApi.Helpers
             public int GetHeadExp(int exp, EPlayerSide side)
             {
                 return (int)(GetBaseExp(exp, side) *
-                             (side != EPlayerSide.Savage ? _pmcHeadShotMult : _botHeadShotMult));
+                             (side != EPlayerSide.Savage ? PmcHeadShotMult : BotHeadShotMult));
             }
 
             public int GetStreakExp(int exp, EPlayerSide side, int kills)
@@ -234,7 +246,7 @@ namespace EFTApi.Helpers
 
             public int GetKillingBonusPercent(int killed)
             {
-                return _isInitialized ? _refKillingBonusPercent(_kill, killed) : 0;
+                return Kill != null ? _refKillingBonusPercent(Kill, killed) : 0;
             }
         }
     }

@@ -22,7 +22,9 @@ namespace EFTApi.Helpers
 
         private EnvironmentUIRootHelper()
         {
-            Init = RefHelper.HookRef.Create(typeof(EnvironmentUIRoot), "Init");
+            var environmentUIRootType = typeof(EnvironmentUIRoot);
+
+            Init = RefHelper.HookRef.Create(environmentUIRootType, "Init");
 
             Init.Add(this, nameof(OnInit));
         }

@@ -84,6 +84,7 @@
     <Compile Include="Helpers\EnvironmentUIRootHelper.cs" />
     <Compile Include="Helpers\GameUIHelper.cs" />
     <Compile Include="Helpers\GameWorldHelper.cs" />
+    <Compile Include="Helpers\LevelSettingsHelper.cs" />
     <Compile Include="Helpers\MainMenuControllerHelper.cs" />
     <Compile Include="Helpers\PlayerHelper.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />

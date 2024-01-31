@@ -332,7 +332,7 @@ namespace EFTReflection
         #region GetPluginType
 
         /// <summary>
-        ///     Find <see cref="Type" /> from Plugin by Path
+        ///     Find <see cref="Type" /> from Plugin Assembly by Path
         /// </summary>
         /// <param name="plugin"></param>
         /// <param name="typePath"></param>
@@ -349,7 +349,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Find Plugin <see cref="Type" /> by Lambda
+        ///     Find <see cref="Type" /> from Plugin Assembly by Lambda
         /// </summary>
         /// <param name="plugin"></param>
         /// <param name="typePredicate"></param>
@@ -370,7 +370,7 @@ namespace EFTReflection
         #region TryGetPluginType
 
         /// <summary>
-        ///     Try Find <see cref="Type" /> from Plugin by Path
+        ///     Try Find <see cref="Type" /> from Plugin Assembly by Path
         /// </summary>
         /// <param name="plugin"></param>
         /// <param name="typePath"></param>
@@ -390,7 +390,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Try To Find Plugin <see cref="Type" /> by Lambda
+        ///     Try Find <see cref="Type" /> from Plugin Assembly by Lambda
         /// </summary>
         /// <param name="plugin"></param>
         /// <param name="typePredicate"></param>

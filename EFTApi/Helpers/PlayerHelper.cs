@@ -26,21 +26,21 @@ namespace EFTApi.Helpers
 
         public Player Player { get; private set; }
 
-        public readonly FirearmControllerData FirearmControllerHelper = FirearmControllerData.Instance;
+        public FirearmControllerData FirearmControllerHelper => FirearmControllerData.Instance;
 
-        public readonly WeaponData WeaponHelper = WeaponData.Instance;
+        public WeaponData WeaponHelper => WeaponData.Instance;
 
-        public readonly ArmorComponentData ArmorComponentHelper = ArmorComponentData.Instance;
+        public ArmorComponentData ArmorComponentHelper => ArmorComponentData.Instance;
 
-        public readonly RoleData RoleHelper = RoleData.Instance;
+        public RoleData RoleHelper => RoleData.Instance;
 
-        public readonly InventoryData InventoryHelper = InventoryData.Instance;
+        public InventoryData InventoryHelper => InventoryData.Instance;
 
-        public readonly DamageInfoData DamageInfoHelper = DamageInfoData.Instance;
+        public DamageInfoData DamageInfoHelper => DamageInfoData.Instance;
 
-        public readonly SpeakerData SpeakerHelper = SpeakerData.Instance;
+        public SpeakerData SpeakerHelper => SpeakerData.Instance;
 
-        public readonly HealthControllerData HealthControllerHelper = HealthControllerData.Instance;
+        public HealthControllerData HealthControllerHelper => HealthControllerData.Instance;
 
         /// <summary>
         ///     Init Action
@@ -105,7 +105,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            if (EFTVersion.AkiVersion > Version.Parse("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
             {
                 Instance.Player = __instance;
             }
@@ -126,7 +126,9 @@ namespace EFTApi.Helpers
 
             private FirearmControllerData()
             {
-                InitiateShot = RefHelper.HookRef.Create(typeof(Player.FirearmController), "InitiateShot");
+                var playerFirearmControllerType = typeof(Player.FirearmController);
+
+                InitiateShot = RefHelper.HookRef.Create(playerFirearmControllerType, "InitiateShot");
             }
         }
 
@@ -141,7 +143,9 @@ namespace EFTApi.Helpers
 
             private ArmorComponentData()
             {
-                ApplyDamage = RefHelper.HookRef.Create(typeof(ArmorComponent), "ApplyDamage");
+                var armorComponentType = typeof(ArmorComponent);
+
+                ApplyDamage = RefHelper.HookRef.Create(armorComponentType, "ApplyDamage");
             }
         }
 
@@ -478,9 +482,11 @@ namespace EFTApi.Helpers
 
             private WeaponData()
             {
+                var weaponType = typeof(Weapon);
+
                 _refGetCurrentMagazine =
                     AccessTools.MethodDelegate<Func<Weapon, object>>(
-                        typeof(Weapon).GetMethod("GetCurrentMagazine", RefTool.Public));
+                        weaponType.GetMethod("GetCurrentMagazine", RefTool.Public));
 
                 RefWeaponIAnimator = RefHelper.PropertyRef<Player, object>.Create("ArmsAnimatorCommon");
                 RefAnimator = RefHelper.PropertyRef<object, Animator>.Create(
@@ -488,7 +494,7 @@ namespace EFTApi.Helpers
                         x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null),
                     "Animator");
 
-                if (EFTVersion.AkiVersion > Version.Parse("3.4.1"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
                 {
                     RefUnderbarrelWeapon =
                         RefHelper.FieldRef<Player.FirearmController, Item>.Create("UnderbarrelWeapon");
@@ -498,7 +504,7 @@ namespace EFTApi.Helpers
                     var launcherType =
                         RefTool.GetEftType(x => x.GetMethod("GetCenterOfImpact", RefTool.Public) != null);
 
-                    if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                    if (EFTVersion.AkiVersion > EFTVersion.Parse("3.6.1"))
                     {
                         RefUnderbarrelChambers = RefHelper.PropertyRef<object, Slot[]>.Create(launcherType, "Chambers");
                     }
@@ -513,7 +519,7 @@ namespace EFTApi.Helpers
                         RefHelper.PropertyRef<object, int>.Create(launcherType, "ChamberAmmoCount");
                 }
 
-                if (EFTVersion.AkiVersion > Version.Parse("3.6.1"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.6.1"))
                 {
                     RefChambers = RefHelper.PropertyRef<Weapon, Slot[]>.Create("Chambers");
                 }
@@ -547,9 +553,11 @@ namespace EFTApi.Helpers
 
             private DamageInfoData()
             {
-                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create(typeof(DamageInfo).GetField("Player"));
+                var damageInfoType = typeof(DamageInfo);
 
-                if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
+                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create(damageInfoType.GetField("Player"));
+
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8"))
                 {
                     RefIPlayer = RefHelper.PropertyRef<object, object>.Create(RefPlayer.FieldType, "iPlayer");
                 }
@@ -557,7 +565,7 @@ namespace EFTApi.Helpers
 
             public Player GetPlayer(DamageInfo damageInfo)
             {
-                if (EFTVersion.AkiVersion > Version.Parse("3.5.8"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8"))
                     return (Player)RefIPlayer?.GetValue(RefPlayer.GetValue(damageInfo));
 
                 return (Player)RefPlayer.GetValue(damageInfo);
@@ -600,7 +608,9 @@ namespace EFTApi.Helpers
 
             private SpeakerData()
             {
-                RefSpeaker = RefHelper.FieldRef<Player, object>.Create(typeof(Player), "Speaker");
+                var playerType = typeof(Player);
+
+                RefSpeaker = RefHelper.FieldRef<Player, object>.Create(playerType, "Speaker");
                 RefSpeaking = RefHelper.FieldRef<object, bool>.Create(RefSpeaker.FieldType, "Speaking");
                 RefClip = RefHelper.FieldRef<object, TaggedClip>.Create(RefSpeaker.FieldType, "Clip");
 

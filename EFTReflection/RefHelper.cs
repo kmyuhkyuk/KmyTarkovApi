@@ -356,7 +356,7 @@ namespace EFTReflection
             {
                 _propertyInfo = propertyInfo;
 
-                DeclaringType = _propertyInfo.DeclaringType;
+                DeclaringType = propertyInfo.DeclaringType;
 
                 if (instance != null)
                 {
@@ -365,19 +365,19 @@ namespace EFTReflection
 
                 var inIsObject = typeof(T) == typeof(object);
 
-                if (_propertyInfo.CanRead)
+                if (propertyInfo.CanRead)
                 {
-                    _getMethodInfo = _propertyInfo.GetGetMethod(true);
+                    _getMethodInfo = propertyInfo.GetGetMethod(true);
 
                     _refGetValue = inIsObject
                         ? ObjectMethodDelegate<Func<T, TF>>(_getMethodInfo)
                         : AccessTools.MethodDelegate<Func<T, TF>>(_getMethodInfo);
                 }
 
-                if (!_propertyInfo.CanWrite)
+                if (!propertyInfo.CanWrite)
                     return;
 
-                _setMethodInfo = _propertyInfo.GetSetMethod(true);
+                _setMethodInfo = propertyInfo.GetSetMethod(true);
 
                 _refSetValue = inIsObject
                     ? ObjectMethodDelegate<Action<T, TF>>(_setMethodInfo)
@@ -541,7 +541,7 @@ namespace EFTReflection
             {
                 _fieldInfo = fieldInfo;
 
-                DeclaringType = _fieldInfo.DeclaringType;
+                DeclaringType = fieldInfo.DeclaringType;
 
                 if (instance != null)
                 {
@@ -550,13 +550,13 @@ namespace EFTReflection
 
                 if (typeof(TF) == typeof(object))
                 {
-                    _refGetValue = ObjectFieldGetAccess<T, TF>(_fieldInfo);
-                    _refSetValue = ObjectFieldSetAccess<T, TF>(_fieldInfo);
+                    _refGetValue = ObjectFieldGetAccess<T, TF>(fieldInfo);
+                    _refSetValue = ObjectFieldSetAccess<T, TF>(fieldInfo);
                     _useHarmony = false;
                 }
                 else
                 {
-                    _harmonyFieldRef = AccessTools.FieldRefAccess<T, TF>(_fieldInfo);
+                    _harmonyFieldRef = AccessTools.FieldRefAccess<T, TF>(fieldInfo);
                     _useHarmony = true;
                 }
             }
@@ -674,6 +674,12 @@ namespace EFTReflection
                 HarmonyPatchType patchType = HarmonyPatchType.Postfix)
             {
                 Add(hookObject.GetType().GetMethod(hookMethodName, AccessTools.allDeclared), patchType);
+            }
+
+            public void Add(Type hookType, string hookMethodName,
+                HarmonyPatchType patchType = HarmonyPatchType.Postfix)
+            {
+                Add(hookType.GetMethod(hookMethodName, AccessTools.allDeclared), patchType);
             }
 
             public void Add(Delegate hookDelegate, HarmonyPatchType patchType = HarmonyPatchType.Postfix)

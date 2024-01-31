@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -25,6 +26,9 @@ namespace EFTApi
         /// </summary>
         public static readonly Version AkiVersion;
 
+        private static readonly ConcurrentDictionary<string, Version> SaveVersions =
+            new ConcurrentDictionary<string, Version>();
+
         static EFTVersion()
         {
             var processModule = Process.GetCurrentProcess().MainModule;
@@ -44,6 +48,18 @@ namespace EFTApi
             AkiVersion = GetAkiVersion();
         }
 
+        public static Version Parse(string version)
+        {
+            if (SaveVersions.TryGetValue(version, out var saveVersion))
+                return saveVersion;
+
+            saveVersion = Version.Parse(version);
+
+            SaveVersions.AddOrUpdate(version, saveVersion, (key, value) => saveVersion);
+
+            return saveVersion;
+        }
+
         [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static Version GetAkiVersion()
         {
@@ -51,78 +67,80 @@ namespace EFTApi
 
             if (GameVersionRange("0.12.12.17107", "0.12.12.17349"))
             {
-                return Version.Parse("2.3.0");
+                return Parse("2.3.0");
             }
             else if (GameVersionRange("0.12.12.17349", "0.12.12.18346"))
             {
-                return Version.Parse("2.3.1");
+                return Parse("2.3.1");
             }
             else if (GameVersionRange("0.12.12.18346", "0.12.12.19078"))
             {
-                return Version.Parse("3.0.0");
+                return Parse("3.0.0");
             }
             else if (GameVersionRange("0.12.12.19078", "0.12.12.19428"))
             {
-                return Version.Parse("3.2.1");
+                return Parse("3.2.1");
             }
             else if (GameVersionRange("0.12.12.19428", "0.12.12.19904"))
             {
-                return Version.Parse("3.2.4");
+                return Parse("3.2.4");
             }
             else if (GameVersionRange("0.12.12.19904", "0.12.12.20243"))
             {
-                return Version.Parse("3.2.5");
+                return Parse("3.2.5");
             }
             else if (GameVersionRange("0.12.12.20243", "0.12.12.20765"))
             {
-                return Version.Parse("3.3.0");
+                return Parse("3.3.0");
             }
             else if (GameVersionRange("0.12.12.20765", "0.13.0.21734"))
             {
-                return Version.Parse("3.4.1");
+                return Parse("3.4.1");
             }
             else if (GameVersionRange("0.13.0.21734", "0.13.0.22032"))
             {
-                return Version.Parse("3.5.0");
+                return Parse("3.5.0");
             }
             else if (GameVersionRange("0.13.0.22032", "0.13.0.22173"))
             {
-                return Version.Parse("3.5.1");
+                return Parse("3.5.1");
             }
             else if (GameVersionRange("0.13.0.22173", "0.13.0.22617"))
             {
-                return Version.Parse("3.5.4");
+                return Parse("3.5.4");
             }
             else if (GameVersionRange("0.13.0.22617", "0.13.0.23043"))
             {
-                return Version.Parse("3.5.5");
+                return Parse("3.5.5");
             }
             else if (GameVersionRange("0.13.0.23043", "0.13.0.23399"))
             {
-                return Version.Parse("3.5.6");
+                return Parse("3.5.6");
             }
             else if (GameVersionRange("0.13.0.23399", "0.13.1.25206"))
             {
-                return Version.Parse("3.5.7");
+                return Parse("3.5.7");
             }
-            else if (GameVersion > Version.Parse("0.13.0.23399") &&
-                     RefTool.TryGetPlugin("com.spt-aki.core", out var plugin))
+            else if (GameVersion > Parse("0.13.0.23399"))
             {
-                var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
-
-                if (version == Version.Parse("0.0.0"))
+                if (RefTool.TryGetPlugin("com.spt-aki.core", out var plugin))
                 {
-                    Logger.LogError(unknownVersion);
+                    var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
+
+                    if (version == Parse("0.0.0"))
+                    {
+                        Logger.LogError(unknownVersion);
+                    }
+
+                    return version;
                 }
 
-                return version;
+                Logger.LogError("Can't get com.spt-aki.core plugin, please run on Spt Tarkov");
             }
-            else
-            {
-                Logger.LogError(unknownVersion);
 
-                return Version.Parse("0.0.0");
-            }
+            Logger.LogError(unknownVersion);
+
+            return Parse("0.0.0");
         }
 
         /// <summary>
@@ -133,7 +151,7 @@ namespace EFTApi
         /// <returns></returns>
         public static bool GameVersionRange(string minVersion, string maxVersion)
         {
-            return GameVersionRange(Version.Parse(minVersion), Version.Parse(maxVersion));
+            return GameVersionRange(Parse(minVersion), Parse(maxVersion));
         }
 
         /// <summary>
@@ -155,7 +173,7 @@ namespace EFTApi
         /// <returns></returns>
         public static bool AkiVersionRange(string minVersion, string maxVersion)
         {
-            return AkiVersionRange(Version.Parse(minVersion), Version.Parse(maxVersion));
+            return AkiVersionRange(Parse(minVersion), Parse(maxVersion));
         }
 
         /// <summary>

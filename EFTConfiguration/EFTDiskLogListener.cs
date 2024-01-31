@@ -157,7 +157,7 @@ namespace EFTConfiguration
                         $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
                 case ErrorType.None:
-                    break;
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }

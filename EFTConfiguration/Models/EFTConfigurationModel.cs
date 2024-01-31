@@ -84,6 +84,7 @@ namespace EFTConfiguration.Models
                 (value, value2) => canvas.sortingOrder = settingsModel.KeySortingOrder.Value;
         }
 
+        // ReSharper disable once UnusedMethodReturnValue.Global
         public GameObject LoadConfiguration()
         {
             return Object.Instantiate(PrefabManager.eftConfiguration, EFTConfigurationPublic.transform);

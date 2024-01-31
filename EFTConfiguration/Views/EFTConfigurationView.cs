@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 #if !UNITY_EDITOR
-using BepInEx.Logging;
 using EFTConfiguration.Helpers;
 using EFTConfiguration.Models;
 #endif
@@ -55,12 +54,6 @@ namespace EFTConfiguration.Views
         internal static Action<string> EnableDescription;
 
         internal static Action DisableDescription;
-
-#if !UNITY_EDITOR
-
-        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("EFTConfiguration");
-
-#endif
 
         private bool State
         {

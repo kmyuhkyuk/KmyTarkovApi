@@ -14,9 +14,9 @@ namespace EFTApi.Helpers
 
         public static AirdropHelper Instance => Lazy.Value;
 
-        public readonly AirdropBoxData AirdropBoxHelper = AirdropBoxData.Instance;
+        public AirdropBoxData AirdropBoxHelper => AirdropBoxData.Instance;
 
-        public readonly AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper =
+        public AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper =>
             AirdropSynchronizableObjectData.Instance;
 
         private AirdropHelper()
@@ -33,7 +33,7 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion > Version.Parse("3.5.0") &&
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0") &&
                     RefTool.TryGetPlugin("com.spt-aki.custom", out var plugin))
                 {
                     OnBoxLand = RefHelper.HookRef.Create(
@@ -57,7 +57,7 @@ namespace EFTApi.Helpers
 
             private AirdropSynchronizableObjectData()
             {
-                if (EFTVersion.AkiVersion > Version.Parse("3.5.0"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0"))
                 {
                     RefAirdropType =
                         RefHelper.FieldRef<object, int>.Create(

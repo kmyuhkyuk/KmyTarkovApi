@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BepInEx.Logging;
+﻿using System.Collections.Generic;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -19,8 +17,6 @@ namespace EFTUtils
         private readonly List<IUpdate> _stopUpdates = new List<IUpdate>();
 
         private readonly List<IUpdate> _removeUpdates = new List<IUpdate>();
-
-        private static readonly ManualLogSource LogSource = Logger.CreateLogSource(nameof(UpdateManger));
 
         public void Register(IUpdate update)
         {
@@ -75,11 +71,11 @@ namespace EFTUtils
                         update.CustomUpdate();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     _updates.RemoveAt(i);
 
-                    LogSource.LogError(e);
+                    throw;
                 }
             }
         }

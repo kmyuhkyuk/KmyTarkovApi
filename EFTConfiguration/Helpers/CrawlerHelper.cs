@@ -73,7 +73,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                return -1;
+                return 0;
             }
         }
 

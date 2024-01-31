@@ -23,13 +23,11 @@ namespace EFTApi.Helpers
 
         public GameWorld GameWorld { get; private set; }
 
-        public readonly LevelSettingsData LevelSettingsHelper = LevelSettingsData.Instance;
+        public LootableContainerData LootableContainerHelper => LootableContainerData.Instance;
 
-        public readonly LootableContainerData LootableContainerHelper = LootableContainerData.Instance;
+        public SearchableItemClassData SearchableItemClassHelper => SearchableItemClassData.Instance;
 
-        public readonly SearchableItemClassData SearchableItemClassHelper = SearchableItemClassData.Instance;
-
-        public readonly ZoneData ZoneHelper = ZoneData.Instance;
+        public ZoneData ZoneHelper => ZoneData.Instance;
 
         public List<Player> AllBot
         {
@@ -58,20 +56,20 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef Awake;
 
-        public readonly RefHelper.HookRef OnGameStarted;
-
         /// <summary>
         ///     Dispose Action
         /// </summary>
         public readonly RefHelper.HookRef Dispose;
+
+        public readonly RefHelper.HookRef OnGameStarted;
 
         private GameWorldHelper()
         {
             var gameWorldType = typeof(GameWorld);
 
             Awake = RefHelper.HookRef.Create(gameWorldType, "Awake");
-            OnGameStarted = RefHelper.HookRef.Create(gameWorldType, "OnGameStarted");
             Dispose = RefHelper.HookRef.Create(gameWorldType, "Dispose");
+            OnGameStarted = RefHelper.HookRef.Create(gameWorldType, "OnGameStarted");
 
             Awake.Add(this, nameof(OnAwake));
             Dispose.Add(this, nameof(OnDispose));
@@ -85,33 +83,6 @@ namespace EFTApi.Helpers
         private static void OnAwake(GameWorld __instance)
         {
             Instance.GameWorld = __instance;
-        }
-
-        public class LevelSettingsData
-        {
-            private static readonly Lazy<LevelSettingsData> Lazy =
-                new Lazy<LevelSettingsData>(() => new LevelSettingsData());
-
-            public static LevelSettingsData Instance => Lazy.Value;
-
-            public LevelSettings LevelSettings { get; private set; }
-
-            public readonly RefHelper.HookRef Awake;
-
-            public readonly RefHelper.HookRef OnDestroy;
-
-            private LevelSettingsData()
-            {
-                Awake = RefHelper.HookRef.Create(typeof(LevelSettings), "Awake");
-                OnDestroy = RefHelper.HookRef.Create(typeof(LevelSettings), "OnDestroy");
-
-                Awake.Add(this, nameof(OnAwake));
-            }
-
-            private static void OnAwake(LevelSettings __instance)
-            {
-                Instance.LevelSettings = __instance;
-            }
         }
 
         public class ZoneData
@@ -193,7 +164,7 @@ namespace EFTApi.Helpers
 
             private SearchableItemClassData()
             {
-                if (EFTVersion.AkiVersion > Version.Parse("3.5.0"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0"))
                 {
                     RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(
                         RefTool.GetEftType(x =>

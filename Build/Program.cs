@@ -17,6 +17,8 @@ namespace Build
             const string modPath =
                 @"R:\Battlestate Games\Client.0.13.5.3.26535\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
+            var currentPath = Path.Combine(baseDirectory, "../Current");
+
             var previewName = $"{new DirectoryInfo(modPath).Name}-(Preview).7z";
 
             var releasePreview = new[]
@@ -24,6 +26,17 @@ namespace Build
                 "Release",
                 "Preview"
             };
+
+            Copy.CopyAssembly(arg, releasePreview, baseDirectory, currentPath, new[]
+            {
+                "EFTApi",
+                "EFTUtils",
+                "EFTReflection",
+                "EFTConfiguration",
+                "HtmlAgilityPack",
+                "Crc32.NET",
+                "ConfigurationTest"
+            });
 
             Copy.CopyAssembly(arg, releasePreview, baseDirectory, modPath, new[]
             {

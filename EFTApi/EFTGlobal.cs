@@ -17,19 +17,19 @@ namespace EFTApi
         public static ISession Session => SessionHelper.Instance.Session;
 
         /// <summary>
+        ///     Current LevelSettings
+        /// </summary>
+        public static LevelSettings LevelSettings => LevelSettingsHelper.Instance.LevelSettings;
+
+        /// <summary>
         ///     Current GameWorld
         /// </summary>
         public static GameWorld GameWorld => GameWorldHelper.Instance.GameWorld;
 
         /// <summary>
-        ///     Current LevelSettings
-        /// </summary>
-        public static LevelSettings LevelSettings => GameWorldHelper.LevelSettingsData.Instance.LevelSettings;
-
-        /// <summary>
         ///     Current Traders
         /// </summary>
-        public static object[] Traders => SessionHelper.TradersData.Instance.Traders;
+        public static List<object> Traders => SessionHelper.TradersData.Instance.Traders;
 
         /// <summary>
         ///     Current AllBot

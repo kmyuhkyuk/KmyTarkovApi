@@ -19,19 +19,19 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     Init Action
         /// </summary>
-        public readonly RefHelper.HookRef Unsubscribe;
+        public readonly RefHelper.HookRef Execute;
 
         /// <summary>
-        ///     Dispose Action
+        ///     Unsubscribe Action
         /// </summary>
-        public readonly RefHelper.HookRef Execute;
+        public readonly RefHelper.HookRef Unsubscribe;
 
         private MainMenuControllerHelper()
         {
             var mainMenuControllerType = typeof(MainMenuController);
 
-            Unsubscribe = RefHelper.HookRef.Create(mainMenuControllerType, "Unsubscribe");
             Execute = RefHelper.HookRef.Create(mainMenuControllerType, "Execute");
+            Unsubscribe = RefHelper.HookRef.Create(mainMenuControllerType, "Unsubscribe");
 
             Execute.Add(this, nameof(OnExecute));
         }

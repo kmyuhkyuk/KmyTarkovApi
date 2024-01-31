@@ -22,7 +22,9 @@ namespace EFTApi.Helpers
 
         private AbstractGameHelper()
         {
-            Constructor = RefHelper.HookRef.Create(typeof(AbstractGame).GetConstructors(RefTool.NonPublic)[0]);
+            var abstractGameType = typeof(AbstractGame);
+
+            Constructor = RefHelper.HookRef.Create(abstractGameType.GetConstructors(RefTool.NonPublic)[0]);
 
             Constructor.Add(this, nameof(OnConstructor));
         }

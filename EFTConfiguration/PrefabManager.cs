@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace EFTConfiguration
 {
@@ -47,7 +48,7 @@ namespace EFTConfiguration
 
         [SerializeField] public GameObject unknownCustom;
 
-        public GameObject[] AllGameObject
+        public IEnumerable<GameObject> AllGameObject
         {
             get
             {

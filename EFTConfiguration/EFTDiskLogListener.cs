@@ -1,7 +1,6 @@
 ﻿#if !UNITY_EDITOR
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using BepInEx;
@@ -163,7 +162,6 @@ namespace EFTConfiguration
             }
         }
 
-        [SuppressMessage("ReSharper", "RedundantIfElseBlock")]
         private static ErrorType GetErrorType(LogEventArgs eventArgs)
         {
             if (eventArgs.Data == null)
@@ -172,37 +170,24 @@ namespace EFTConfiguration
             var logArg = eventArgs.Data.ToString();
 
             if (logArg.Contains(".Update ()"))
-            {
                 return ErrorType.Update;
-            }
-            else if (logArg.StartsWith(nameof(MemberAccessException)))
-            {
+
+            if (logArg.StartsWith(nameof(MemberAccessException)))
                 return ErrorType.MemberAccessException;
-            }
-            else if (logArg.StartsWith(nameof(MissingMemberException)))
-            {
+
+            if (logArg.StartsWith(nameof(MissingMemberException)))
                 return ErrorType.MissingMemberException;
-            }
-            else if (logArg.StartsWith(nameof(MethodAccessException)))
-            {
+
+            if (logArg.StartsWith(nameof(MethodAccessException)))
                 return ErrorType.MethodAccessException;
-            }
-            else if (logArg.StartsWith(nameof(MissingMethodException)))
-            {
+
+            if (logArg.StartsWith(nameof(MissingMethodException)))
                 return ErrorType.MissingMethodException;
-            }
-            else if (logArg.StartsWith(nameof(MissingFieldException)))
-            {
+
+            if (logArg.StartsWith(nameof(MissingFieldException)))
                 return ErrorType.MissingFieldException;
-            }
-            else if (logArg.StartsWith(nameof(FieldAccessException)))
-            {
-                return ErrorType.FieldAccessException;
-            }
-            else
-            {
-                return ErrorType.None;
-            }
+
+            return logArg.StartsWith(nameof(FieldAccessException)) ? ErrorType.FieldAccessException : ErrorType.None;
         }
 
         private void ClearErrorCount(ref int errorCount)

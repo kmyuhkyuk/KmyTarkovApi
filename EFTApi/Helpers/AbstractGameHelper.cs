@@ -1,6 +1,7 @@
 ﻿using System;
 using EFT;
 using EFTReflection;
+using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -24,7 +25,7 @@ namespace EFTApi.Helpers
         {
             var abstractGameType = typeof(AbstractGame);
 
-            Constructor = RefHelper.HookRef.Create(abstractGameType.GetConstructors(RefTool.NonPublic)[0]);
+            Constructor = RefHelper.HookRef.Create(abstractGameType.GetConstructors(AccessTools.all)[0]);
 
             Constructor.Add(this, nameof(OnConstructor));
         }

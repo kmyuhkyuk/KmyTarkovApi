@@ -222,7 +222,7 @@ namespace EFTReflection
         {
             var asyncStruct = GetAsyncStruct(methodBase);
 
-            return asyncStruct.GetMethod("MoveNext", BindingFlags.DeclaredOnly | NonPublic);
+            return GetAsyncMoveNext(asyncStruct);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace EFTReflection
                 throw new Exception($"{type.Name} not is Struct");
             }
 
-            return type.GetMethod("MoveNext", NonPublic) ??
+            return type.GetMethod("MoveNext", AccessTools.allDeclared) ??
                    throw new Exception($"{type.Name} not have MoveNext Method");
         }
 

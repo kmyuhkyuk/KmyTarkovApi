@@ -186,6 +186,9 @@ namespace EFTConfiguration.Views
         {
             var doc = await CrawlerHelper.CreateHtmlDocument(modURL);
 
+            if (doc == null)
+                return;
+
             var url = CrawlerHelper.GetModDownloadURL(doc);
 
             if (!string.IsNullOrEmpty(url))

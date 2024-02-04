@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using EFTReflection;
+using HarmonyLib;
 
 // ReSharper disable NotAccessedField.Global
 
@@ -16,9 +17,21 @@ namespace EFTApi.Helpers
 
         private QuestHelper()
         {
-            OnConditionValueChanged = RefHelper.HookRef.Create(RefTool.GetEftType(x =>
-                    x.GetMethod("OnConditionValueChanged", BindingFlags.DeclaredOnly | RefTool.NonPublic) != null),
-                "OnConditionValueChanged");
+            var questControllerType = RefTool.GetEftType(x =>
+                x.GetMethod("IsQuestForCurrentProfile", BindingFlags.DeclaredOnly | RefTool.Public) != null);
+
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.7.6"))
+            {
+                questControllerType = questControllerType.BaseType;
+            }
+
+            if (questControllerType == null)
+            {
+                throw new ArgumentNullException(nameof(questControllerType));
+            }
+
+            OnConditionValueChanged =
+                RefHelper.HookRef.Create(questControllerType.GetMethod("OnConditionValueChanged", AccessTools.all));
         }
     }
 }

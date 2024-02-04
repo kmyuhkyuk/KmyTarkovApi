@@ -331,7 +331,7 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, string propertyName, bool declaredOnly, object instance = null)
+            public PropertyRef(Type type, string propertyName, bool declaredOnly = false, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -341,7 +341,7 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, string[] propertyNames, bool declaredOnly, object instance = null)
+            public PropertyRef(Type type, string[] propertyNames, bool declaredOnly = false, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -491,7 +491,7 @@ namespace EFTReflection
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, string fieldName, bool declaredOnly, object instance = null)
+            public FieldRef(Type type, string fieldName, bool declaredOnly = false, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -500,7 +500,7 @@ namespace EFTReflection
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, string[] fieldNames, bool declaredOnly, object instance = null)
+            public FieldRef(Type type, string[] fieldNames, bool declaredOnly = false, object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 

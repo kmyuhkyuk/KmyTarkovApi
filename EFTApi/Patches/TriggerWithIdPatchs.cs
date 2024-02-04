@@ -3,8 +3,8 @@ using System.Reflection;
 using Aki.Reflection.Patching;
 using EFT.Interactive;
 using EFTApi.Helpers;
-using EFTReflection;
 using EFTReflection.Patching;
+using HarmonyLib;
 
 namespace EFTApi.Patches
 {
@@ -12,8 +12,8 @@ namespace EFTApi.Patches
     {
         protected override IEnumerable<MethodBase> GetTargetMethods()
         {
-            yield return typeof(TriggerWithId).GetMethod("Awake", RefTool.NonPublic);
-            yield return typeof(ExperienceTrigger).GetMethod("Awake", RefTool.NonPublic);
+            yield return typeof(TriggerWithId).GetMethod("Awake", AccessTools.all);
+            yield return typeof(ExperienceTrigger).GetMethod("Awake", AccessTools.all);
         }
 
         [PatchPostfix]

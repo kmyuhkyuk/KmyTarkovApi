@@ -46,7 +46,14 @@ namespace EFTConfiguration.Helpers
 
         public static Task<HtmlDocument> CreateHtmlDocument(string url)
         {
-            return new HtmlWeb().LoadFromWebAsync(url);
+            try
+            {
+                return new HtmlWeb().LoadFromWebAsync(url);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static Version GetModVersion(HtmlDocument doc)
@@ -86,7 +93,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                return null;
+                return string.Empty;
             }
         }
 
@@ -99,7 +106,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                return null;
+                return string.Empty;
             }
         }
 
@@ -118,7 +125,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                // ignored
+                Console.WriteLine($"Can't write {CacheFilePath}");
             }
 
             return LoadModIcon(url, false);

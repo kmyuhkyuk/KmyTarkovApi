@@ -1,6 +1,7 @@
 ﻿using EFTApi.Helpers;
 using static EFTApi.Helpers.AirdropHelper;
 using static EFTApi.Helpers.GameWorldHelper;
+using static EFTApi.Helpers.GameWorldHelper.ExfiltrationControllerData;
 using static EFTApi.Helpers.PlayerHelper;
 using static EFTApi.Helpers.SessionHelper;
 using static EFTApi.Helpers.SessionHelper.TradersData;
@@ -33,6 +34,10 @@ namespace EFTApi
         public static LootableContainerData _LootableContainerHelper = LootableContainerData.Instance;
 
         public static SearchableItemClassData _SearchableItemClassHelper = SearchableItemClassData.Instance;
+
+        public static ExfiltrationControllerData _ExfiltrationControllerHelper = ExfiltrationControllerData.Instance;
+
+        public static ExfiltrationPointData _ExfiltrationPointHelper = ExfiltrationPointData.Instance;
 
         /// <summary>
         ///     Localized Helper

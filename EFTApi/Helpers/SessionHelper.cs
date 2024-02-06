@@ -33,7 +33,7 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef CreateBackend;
 
-        public readonly RefHelper.PropertyRef<object, object> RefBackEndConfig;
+        public readonly RefHelper.PropertyRef<ISession, object> RefBackEndConfig;
 
         public readonly Func<object, ISession> GetClientBackEndSession;
 
@@ -43,14 +43,14 @@ namespace EFTApi.Helpers
                 ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                 : RefTool.GetEftType(x => x.Name == "MainApplication");
 
-            GetClientBackEndSession =
-                RefHelper.ObjectMethodDelegate<Func<object, ISession>>(
-                    applicationType.GetMethod("GetClientBackEndSession", RefTool.Public));
-
-            RefBackEndConfig = RefHelper.PropertyRef<object, object>.Create(
+            RefBackEndConfig = RefHelper.PropertyRef<ISession, object>.Create(
                 RefTool.GetEftType(x =>
                     x.IsAbstract && x.IsClass && x.GetProperty("BackEndConfig", RefTool.Public) != null),
                 "BackEndConfig");
+
+            GetClientBackEndSession =
+                RefHelper.ObjectMethodDelegate<Func<object, ISession>>(
+                    applicationType.GetMethod("GetClientBackEndSession", RefTool.Public));
 
             CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
                     ? RefTool.GetEftType(x => x.Name == "TarkovApplication")

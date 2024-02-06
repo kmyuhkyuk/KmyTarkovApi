@@ -352,7 +352,7 @@ namespace EFTReflection
                     _instance = (T)instance;
                 }
 
-                var inIsObject = typeof(T) == typeof(object);
+                var inIsObject = typeof(T) == typeof(object) || typeof(TF) == typeof(object);
 
                 if (propertyInfo.CanRead)
                 {

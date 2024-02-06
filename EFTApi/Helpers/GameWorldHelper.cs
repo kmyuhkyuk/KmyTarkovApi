@@ -63,9 +63,13 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef OnGameStarted;
 
+        public readonly RefHelper.FieldRef<GameWorld, object> RefLootItems;
+
         private GameWorldHelper()
         {
             var gameWorldType = typeof(GameWorld);
+
+            RefLootItems = RefHelper.FieldRef<GameWorld, object>.Create("LootItems");
 
             Awake = RefHelper.HookRef.Create(gameWorldType, "Awake");
             Dispose = RefHelper.HookRef.Create(gameWorldType, "Dispose");
@@ -170,6 +174,63 @@ namespace EFTApi.Helpers
                         RefTool.GetEftType(x =>
                             x.GetMethod("AddNewSearcher", BindingFlags.DeclaredOnly | RefTool.Public) != null),
                         "_allSearchersIds");
+                }
+            }
+        }
+
+        public class ExfiltrationControllerData
+        {
+            private static readonly Lazy<ExfiltrationControllerData> Lazy =
+                new Lazy<ExfiltrationControllerData>(() => new ExfiltrationControllerData());
+
+            public static ExfiltrationControllerData Instance => Lazy.Value;
+
+            public static ExfiltrationPointData ExfiltrationPointHelper => ExfiltrationPointData.Instance;
+
+            public object ExfiltrationController =>
+                RefExfiltrationController.GetValue(GameWorldHelper.Instance.GameWorld);
+
+            public ScavExfiltrationPoint[] ScavExfiltrationPoints =>
+                RefScavExfiltrationPoints.GetValue(ExfiltrationController);
+
+            public readonly RefHelper.PropertyRef<GameWorld, object> RefExfiltrationController;
+
+            public readonly RefHelper.PropertyRef<object, ScavExfiltrationPoint[]> RefScavExfiltrationPoints;
+
+            private readonly Func<object, Profile, ExfiltrationPoint[]> _eligiblePoints;
+
+            private ExfiltrationControllerData()
+            {
+                RefExfiltrationController = RefHelper.PropertyRef<GameWorld, object>.Create("ExfiltrationController");
+
+                RefScavExfiltrationPoints =
+                    RefHelper.PropertyRef<object, ScavExfiltrationPoint[]>.Create(
+                        RefExfiltrationController.PropertyType, "ScavExfiltrationPoints");
+
+                _eligiblePoints = RefHelper.ObjectMethodDelegate<Func<object, Profile, ExfiltrationPoint[]>>(
+                    RefTool.GetEftMethod(RefExfiltrationController.PropertyType, RefTool.Public,
+                        x => x.GetParameters().Length == 1 && x.GetParameters()[0].ParameterType == typeof(Profile)));
+            }
+
+            public ExfiltrationPoint[] EligiblePoints(object instance, Profile profile)
+            {
+                return _eligiblePoints(instance, profile);
+            }
+
+            public class ExfiltrationPointData
+            {
+                private static readonly Lazy<ExfiltrationPointData> Lazy =
+                    new Lazy<ExfiltrationPointData>(() => new ExfiltrationPointData());
+
+                public static ExfiltrationPointData Instance => Lazy.Value;
+
+                public readonly RefHelper.FieldRef<ExfiltrationPoint, List<Switch>> RefSwitchs;
+
+                private ExfiltrationPointData()
+                {
+                    RefSwitchs =
+                        RefHelper.FieldRef<ExfiltrationPoint, List<Switch>>.Create(
+                            EFTVersion.AkiVersion > EFTVersion.Parse("3.6.1") ? "_switches" : "list_1");
                 }
             }
         }

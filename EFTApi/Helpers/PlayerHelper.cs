@@ -75,6 +75,8 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.FieldRef<object, int> RefExperience;
 
+        public readonly RefHelper.FieldRef<Player, object> RefQuestController;
+
 #pragma warning disable IDE0031
         public object Settings => RefSettings.GetValue(Player != null ? Player.Profile.Info : null);
 #pragma warning restore IDE0031
@@ -87,6 +89,11 @@ namespace EFTApi.Helpers
         {
             var playerType = typeof(Player);
 
+            RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
+            RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
+            RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
+            RefQuestController = RefHelper.FieldRef<Player, object>.Create("_questController");
+
             Init = RefHelper.HookRef.Create(playerType, "Init");
             Dispose = RefHelper.HookRef.Create(playerType, "Dispose");
             OnDead = RefHelper.HookRef.Create(playerType, "OnDead");
@@ -95,10 +102,6 @@ namespace EFTApi.Helpers
             OnPhraseTold = RefHelper.HookRef.Create(playerType, "OnPhraseTold");
 
             Init.Add(this, nameof(OnInit));
-
-            RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
-            RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
-            RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
         }
 
         private static async void OnInit(Player __instance, Task __result)

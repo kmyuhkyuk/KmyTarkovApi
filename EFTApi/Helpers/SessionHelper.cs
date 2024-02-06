@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
 using EFTReflection;
-using HarmonyLib;
 using UnityEngine;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -34,8 +33,25 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef CreateBackend;
 
+        public readonly RefHelper.PropertyRef<object, object> RefBackEndConfig;
+
+        public readonly Func<object, ISession> GetClientBackEndSession;
+
         private SessionHelper()
         {
+            var applicationType = EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
+                ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
+                : RefTool.GetEftType(x => x.Name == "MainApplication");
+
+            GetClientBackEndSession =
+                RefHelper.ObjectMethodDelegate<Func<object, ISession>>(
+                    applicationType.GetMethod("GetClientBackEndSession", RefTool.Public));
+
+            RefBackEndConfig = RefHelper.PropertyRef<object, object>.Create(
+                RefTool.GetEftType(x =>
+                    x.IsAbstract && x.IsClass && x.GetProperty("BackEndConfig", RefTool.Public) != null),
+                "BackEndConfig");
+
             CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
                     ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                     : RefTool.GetEftType(x => x.Name == "MainApplication"),
@@ -49,13 +65,11 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            var session = EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
-                ? Traverse.Create(__instance).Field("ClientBackEnd").Property("Session").GetValue<ISession>()
-                : Traverse.Create(__instance).Field("_backEnd").Property("Session").GetValue<ISession>();
+            var session = Instance.GetClientBackEndSession(__instance);
 
             Instance.Session = session;
 
-            var backEndConfig = Traverse.Create(session).Property("BackEndConfig").GetValue<object>();
+            var backEndConfig = Instance.RefBackEndConfig.GetValue(session);
 
             Instance.BackEndConfig = backEndConfig;
         }

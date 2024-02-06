@@ -40,7 +40,7 @@ namespace EFTReflection
             var returnNeedBox = delegateReturnType == typeof(object) && fieldInfo.FieldType.IsValueType;
 
             var dmd = new DynamicMethod($"__get_{declaringType.Name}_fi_{fieldInfo.Name}", delegateReturnType,
-                new[] { delegateInstanceType });
+                new[] { delegateInstanceType }, true);
 
             var ilGen = dmd.GetILGenerator();
 
@@ -110,7 +110,7 @@ namespace EFTReflection
             }
 
             var dmd = new DynamicMethod($"__set_{declaringType.Name}_fi_{fieldInfo.Name}", null,
-                new[] { delegateInstanceType, delegateParameterType });
+                new[] { delegateInstanceType, delegateParameterType }, true);
 
             var ilGen = dmd.GetILGenerator();
 
@@ -199,7 +199,7 @@ namespace EFTReflection
             var returnNeedBox = delegateReturnType == typeof(object) && returnType.IsValueType;
 
             var dmd = new DynamicMethod($"OpenInstanceDelegate_{methodInfo.Name}", delegateReturnType,
-                delegateParameterTypes);
+                delegateParameterTypes, true);
 
             var ilGen = dmd.GetILGenerator();
 

@@ -341,17 +341,6 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, string[] propertyNames, bool declaredOnly = false, object instance = null)
-            {
-                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
-
-                var propertyInfo =
-                    propertyNames.Select(x => type.GetProperty(x, flags)).FirstOrDefault(x => x != null) ??
-                    throw new Exception($"{string.Join("|", propertyNames)} All Property not exist");
-
-                Init(propertyInfo, instance);
-            }
-
             private void Init(PropertyInfo propertyInfo, object instance)
             {
                 _propertyInfo = propertyInfo;
@@ -395,22 +384,10 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(typeof(T), propertyName, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(string[] propertyNames, bool declaredOnly = false,
-                object instance = null)
-            {
-                return new PropertyRef<T, TF>(typeof(T), propertyNames, declaredOnly, instance);
-            }
-
             public static PropertyRef<T, TF> Create(Type type, string propertyName, bool declaredOnly = false,
                 object instance = null)
             {
                 return new PropertyRef<T, TF>(type, propertyName, declaredOnly, instance);
-            }
-
-            public static PropertyRef<T, TF> Create(Type type, string[] propertyNames, bool declaredOnly = false,
-                object instance = null)
-            {
-                return new PropertyRef<T, TF>(type, propertyNames, declaredOnly, instance);
             }
 
             public override TF GetValue(T instance)
@@ -500,16 +477,6 @@ namespace EFTReflection
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, string[] fieldNames, bool declaredOnly = false, object instance = null)
-            {
-                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
-
-                var fieldInfo = fieldNames.Select(x => type.GetField(x, flags)).FirstOrDefault(x => x != null) ??
-                                throw new Exception($"{string.Join("|", fieldNames)} All Field not exist");
-
-                Init(fieldInfo, instance);
-            }
-
             public static FieldRef<T, TF> Create(FieldInfo fieldInfo, object instance = null)
             {
                 return new FieldRef<T, TF>(fieldInfo, instance);
@@ -520,21 +487,10 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(typeof(T), fieldName, declaredOnly, instance);
             }
 
-            public static FieldRef<T, TF> Create(string[] fieldNames, bool declaredOnly = false, object instance = null)
-            {
-                return new FieldRef<T, TF>(typeof(T), fieldNames, declaredOnly, instance);
-            }
-
             public static FieldRef<T, TF> Create(Type type, string fieldName, bool declaredOnly = false,
                 object instance = null)
             {
                 return new FieldRef<T, TF>(type, fieldName, declaredOnly, instance);
-            }
-
-            public static FieldRef<T, TF> Create(Type type, string[] fieldNames, bool declaredOnly = false,
-                object instance = null)
-            {
-                return new FieldRef<T, TF>(type, fieldNames, declaredOnly, instance);
             }
 
             private void Init(FieldInfo fieldInfo, object instance)

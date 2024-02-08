@@ -156,7 +156,7 @@ namespace EFTConfiguration
                         $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
                 case ErrorType.None:
-                    return;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, null);
             }
@@ -168,6 +168,9 @@ namespace EFTConfiguration
                 return ErrorType.None;
 
             var logArg = eventArgs.Data.ToString();
+
+            if (string.IsNullOrEmpty(logArg))
+                return ErrorType.None;
 
             if (logArg.Contains(".Update ()"))
                 return ErrorType.Update;

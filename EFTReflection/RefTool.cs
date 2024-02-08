@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -260,7 +259,7 @@ namespace EFTReflection
         /// <param name="methodBase"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static IEnumerable<MethodInfo> GetNestedMethods(MethodBase methodBase)
+        public static MethodInfo[] GetNestedMethods(MethodBase methodBase)
         {
             if (methodBase == null)
             {
@@ -274,7 +273,7 @@ namespace EFTReflection
             }
 
             return declaringType.GetMethods(DeclaredStatic | NonPublic)
-                .Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodBase.Name}>"));
+                .Where(x => x.IsAssembly && x.Name.StartsWith($"<{methodBase.Name}>")).ToArray();
         }
 
         /// <summary>

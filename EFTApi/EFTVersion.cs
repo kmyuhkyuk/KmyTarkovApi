@@ -109,7 +109,7 @@ namespace EFTApi
                 {
                     var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
 
-                    if (version < Parse("3.5.7"))
+                    if (version < Parse("3.5.8"))
                     {
                         Logger.LogError(
                             "The com.spt-aki.core plugin version incorrect, please do not overwrite aki-core.dll file");

@@ -10,7 +10,7 @@ namespace EFTConfiguration
 {
     public class EFTDiskLogListener : ILogListener
     {
-        private static readonly ManualLogSource LogSource = Logger.CreateLogSource("EFTDiskLogListener");
+        private static readonly ManualLogSource LogSource = Logger.CreateLogSource(nameof(EFTDiskLogListener));
 
         private int _updateErrorCount;
 

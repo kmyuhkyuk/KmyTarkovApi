@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using BepInEx.Logging;
 using EFTApi.Patches;
 
 namespace EFTApi
@@ -8,12 +7,9 @@ namespace EFTApi
     [BepInDependency("com.kmyuhkyuk.EFTReflection", "1.1.8")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
-        private static readonly ManualLogSource EFTVersionLogSource =
-            BepInEx.Logging.Logger.CreateLogSource("EFTVersion");
-
         private void Start()
         {
-            EFTVersionLogSource.LogMessage($"GameVersion:{EFTVersion.GameVersion} AkiVersion:{EFTVersion.AkiVersion}");
+            EFTVersion.WriteVersionLog();
 
             //GameWorld
             new TriggerWithIdPatchs().Enable();

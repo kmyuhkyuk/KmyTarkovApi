@@ -61,8 +61,6 @@ namespace EFTApi
 
         private static Version GetAkiVersion()
         {
-            const string unknownVersion = "Unable to get current Aki version, which will cause errors in mod";
-
             if (GameVersionRange("0.12.12.17107", "0.12.12.17349"))
                 return Parse("2.3.0");
 
@@ -111,9 +109,9 @@ namespace EFTApi
                 {
                     var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
 
-                    if (version == Parse("0.0.0"))
+                    if (version < Parse("3.5.8"))
                     {
-                        Logger.LogError(unknownVersion);
+                        Logger.LogError("com.spt-aki.core plugin version incorrect, please do not overwrite aki-core.dll file");
                     }
 
                     return version;
@@ -122,7 +120,7 @@ namespace EFTApi
                 Logger.LogError("Can't get com.spt-aki.core plugin, please run on Spt Tarkov");
             }
 
-            Logger.LogError(unknownVersion);
+            Logger.LogError("Unable to get current Aki version, which will cause errors in mod");
 
             return Parse("0.0.0");
         }
@@ -181,6 +179,11 @@ namespace EFTApi
         public static bool VersionRange(Version targetVersion, Version minVersion, Version maxVersion)
         {
             return targetVersion >= minVersion && targetVersion < maxVersion;
+        }
+
+        public static void WriteVersionLog()
+        {
+            Logger.LogMessage($"GameVersion:{GameVersion} AkiVersion:{AkiVersion}");
         }
     }
 }

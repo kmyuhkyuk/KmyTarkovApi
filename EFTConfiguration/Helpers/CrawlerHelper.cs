@@ -25,7 +25,7 @@ namespace EFTConfiguration.Helpers
 
         private static readonly ConcurrentDictionary<string, string> IconURL;
 
-        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("CrawlerHelper");
+        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource(nameof(CrawlerHelper));
 
         static CrawlerHelper()
         {

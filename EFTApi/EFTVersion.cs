@@ -109,6 +109,7 @@ namespace EFTApi
                 {
                     var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
 
+                    //Add com.spt-aki.core plugin version in 3.5.8 
                     if (version < Parse("3.5.8"))
                     {
                         Logger.LogError(

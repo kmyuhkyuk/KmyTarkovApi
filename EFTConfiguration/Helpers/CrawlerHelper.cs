@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BepInEx.Logging;
 using EFTConfiguration.Models;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
@@ -23,6 +24,8 @@ namespace EFTConfiguration.Helpers
         private static readonly string CacheFilePath = Path.Combine(CachePath, "cache.json");
 
         private static readonly ConcurrentDictionary<string, string> IconURL;
+
+        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource("CrawlerHelper");
 
         static CrawlerHelper()
         {
@@ -125,7 +128,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                Console.WriteLine($"Can't write {CacheFilePath}");
+                LogSource.LogWarning($"Can't write {CacheFilePath}");
             }
 
             return LoadModIcon(url, false);

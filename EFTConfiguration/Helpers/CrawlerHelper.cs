@@ -25,7 +25,7 @@ namespace EFTConfiguration.Helpers
 
         private static readonly ConcurrentDictionary<string, string> IconURL;
 
-        private static readonly ManualLogSource LogSource = BepInEx.Logging.Logger.CreateLogSource(nameof(CrawlerHelper));
+        private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(CrawlerHelper));
 
         static CrawlerHelper()
         {
@@ -128,7 +128,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                LogSource.LogWarning($"Can't write {CacheFilePath}");
+                Logger.LogWarning($"Can't write {CacheFilePath}");
             }
 
             return LoadModIcon(url, false);

@@ -10,7 +10,8 @@ namespace EFTConfiguration
 {
     public class EFTDiskLogListener : ILogListener
     {
-        private static readonly ManualLogSource LogSource = Logger.CreateLogSource(nameof(EFTDiskLogListener));
+        private static readonly ManualLogSource Logger =
+            BepInEx.Logging.Logger.CreateLogSource(nameof(EFTDiskLogListener));
 
         private int _updateErrorCount;
 
@@ -63,12 +64,12 @@ namespace EFTConfiguration
             {
                 if (counter == fileLimit)
                 {
-                    LogSource.Log(LogLevel.Error, "Couldn't open a log file for writing. Skipping log file creation");
+                    Logger.Log(LogLevel.Error, "Couldn't open a log file for writing. Skipping log file creation");
 
                     return;
                 }
 
-                LogSource.Log(LogLevel.Warning, $"Couldn't open log file '{localPath}' for writing, trying another...");
+                Logger.Log(LogLevel.Warning, $"Couldn't open log file '{localPath}' for writing, trying another...");
 
                 localPath = $"{Path.GetFileNameWithoutExtension(localPath)}.{counter++}.{Path.GetExtension(localPath)}";
             }
@@ -143,7 +144,7 @@ namespace EFTConfiguration
             switch (error)
             {
                 case ErrorType.Update when _updateErrorCount == _maxErrorCount:
-                    LogSource.LogError(
+                    Logger.LogError(
                         "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
                     break;
                 case ErrorType.MemberAccessException when _memberAccessExceptionCount == _maxErrorCount:
@@ -152,7 +153,7 @@ namespace EFTConfiguration
                 case ErrorType.MissingMethodException when _missingMethodExceptionCount == _maxErrorCount:
                 case ErrorType.MissingFieldException when _missingFieldExceptionCount == _maxErrorCount:
                 case ErrorType.FieldAccessException when _fieldAccessExceptionCount == _maxErrorCount:
-                    LogSource.LogError(
+                    Logger.LogError(
                         $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
                     break;
                 case ErrorType.None:

@@ -112,7 +112,7 @@ namespace EFTApi
                     if (version < Parse("3.5.8"))
                     {
                         Logger.LogError(
-                            "com.spt-aki.core plugin version incorrect, please do not overwrite aki-core.dll file");
+                            "The com.spt-aki.core plugin version incorrect, please do not overwrite aki-core.dll file");
                     }
 
                     return version;

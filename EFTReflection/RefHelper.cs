@@ -275,7 +275,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     Reflection Wrapper Base Class
+        ///     Reflection Wrapper Interface
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>

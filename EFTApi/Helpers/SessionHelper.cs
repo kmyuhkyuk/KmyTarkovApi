@@ -255,12 +255,12 @@ namespace EFTApi.Helpers
 
             public int GetStreakExp(int exp, EPlayerSide side, int kills)
             {
-                return (int)(GetBaseExp(exp, side) * (GetKillingBonusPercent(kills) / 100f));
+                return (int)(GetBaseExp(exp, side) * (Kill != null ? GetKillingBonusPercent(Kill, kills) : 0 / 100f));
             }
 
-            public int GetKillingBonusPercent(int killed)
+            public int GetKillingBonusPercent(object instance, int killed)
             {
-                return Kill != null ? _refKillingBonusPercent(Kill, killed) : 0;
+                return _refKillingBonusPercent(instance, killed);
             }
         }
     }

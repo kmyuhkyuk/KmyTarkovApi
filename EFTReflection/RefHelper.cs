@@ -279,15 +279,15 @@ namespace EFTReflection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
-        public abstract class RefBase<T, TF>
+        public interface IRef<in T, TF>
         {
-            public abstract Type RefDeclaringType { get; }
+            Type RefDeclaringType { get; }
 
-            public abstract Type RefType { get; }
+            Type RefType { get; }
 
-            public abstract TF GetValue(T instance);
+            TF GetValue(T instance);
 
-            public abstract void SetValue(T instance, TF value);
+            void SetValue(T instance, TF value);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace EFTReflection
         /// <typeparam name="T">Instance</typeparam>
         /// <typeparam name="TF">Return</typeparam>
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
-        public class PropertyRef<T, TF> : RefBase<T, TF>
+        public class PropertyRef<T, TF> : IRef<T, TF>
         {
             private Func<T, TF> _refGetValue;
 
@@ -317,9 +317,9 @@ namespace EFTReflection
 
             public Type PropertyType => _propertyInfo.PropertyType;
 
-            [Obsolete("Used DeclaringType", true)] public override Type RefDeclaringType => DeclaringType;
+            [Obsolete("Used DeclaringType", true)] public Type RefDeclaringType => DeclaringType;
 
-            [Obsolete("Used PropertyType", true)] public override Type RefType => PropertyType;
+            [Obsolete("Used PropertyType", true)] public Type RefType => PropertyType;
 
             public PropertyRef(PropertyInfo propertyInfo, object instance = null)
             {
@@ -390,7 +390,7 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(type, propertyName, declaredOnly, instance);
             }
 
-            public override TF GetValue(T instance)
+            public TF GetValue(T instance)
             {
                 if (_refGetValue == null)
                 {
@@ -406,7 +406,7 @@ namespace EFTReflection
                 return default;
             }
 
-            public override void SetValue(T instance, TF value)
+            public void SetValue(T instance, TF value)
             {
                 if (_refSetValue == null)
                 {
@@ -436,7 +436,7 @@ namespace EFTReflection
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TF"></typeparam>
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
-        public class FieldRef<T, TF> : RefBase<T, TF>
+        public class FieldRef<T, TF> : IRef<T, TF>
         {
             private AccessTools.FieldRef<T, TF> _harmonyFieldRef;
 
@@ -454,9 +454,9 @@ namespace EFTReflection
 
             public Type FieldType => _fieldInfo.FieldType;
 
-            [Obsolete("Used DeclaringType", true)] public override Type RefDeclaringType => DeclaringType;
+            [Obsolete("Used DeclaringType", true)] public Type RefDeclaringType => DeclaringType;
 
-            [Obsolete("Used FieldType", true)] public override Type RefType => FieldType;
+            [Obsolete("Used FieldType", true)] public Type RefType => FieldType;
 
             public FieldRef(FieldInfo fieldInfo, object instance = null)
             {
@@ -517,7 +517,7 @@ namespace EFTReflection
                 }
             }
 
-            public override TF GetValue(T instance)
+            public TF GetValue(T instance)
             {
                 if (_useHarmony)
                 {
@@ -549,7 +549,7 @@ namespace EFTReflection
                 return default;
             }
 
-            public override void SetValue(T instance, TF value)
+            public void SetValue(T instance, TF value)
             {
                 if (_useHarmony)
                 {

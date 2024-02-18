@@ -446,7 +446,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     Weapon.Chambers
             /// </summary>
-            public readonly RefHelper.RefBase<Weapon, Slot[]> RefChambers;
+            public readonly RefHelper.IRef<Weapon, Slot[]> RefChambers;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon
@@ -471,7 +471,7 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.Chambers
             /// </summary>
-            [CanBeNull] public readonly RefHelper.RefBase<object, Slot[]> RefUnderbarrelChambers;
+            [CanBeNull] public readonly RefHelper.IRef<object, Slot[]> RefUnderbarrelChambers;
 
             /// <summary>
             ///     Player.FirearmController.UnderbarrelWeapon.WeaponTemplate

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace EFTConfiguration
 {
@@ -48,7 +47,8 @@ namespace EFTConfiguration
 
         [SerializeField] public GameObject unknownCustom;
 
-        public IEnumerable<GameObject> AllGameObject
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
+        public GameObject[] AllGameObject
         {
             get
             {

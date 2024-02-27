@@ -15,7 +15,7 @@ namespace Build
             var arg = args.ElementAtOrDefault(0);
 
             const string modPath =
-                @"R:\Battlestate Games\Client.0.14.1.0.28744\BepInEx\plugins\kmyuhkyuk-EFTApi";
+                @"R:\Battlestate Games\Client.0.14.1.1.28875\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 

@@ -183,7 +183,7 @@ namespace EFTApi
             return targetVersion >= minVersion && targetVersion < maxVersion;
         }
 
-        public static void WriteVersionLog()
+        internal static void WriteVersionLog()
         {
             Logger.LogMessage($"GameVersion:{GameVersion} AkiVersion:{AkiVersion}");
         }

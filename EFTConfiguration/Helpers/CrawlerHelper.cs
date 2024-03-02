@@ -155,7 +155,7 @@ namespace EFTConfiguration.Helpers
             }
             catch
             {
-                // ignored
+                Logger.LogWarning($"Can't write {filePath}");
             }
 
             return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),

@@ -13,6 +13,7 @@ namespace Build
         {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var arg = args.ElementAtOrDefault(0);
+            var sha = Copy.GetTipSha(args.ElementAtOrDefault(1));
 
             const string modPath =
                 @"R:\Battlestate Games\Client.0.14.1.1.28875\BepInEx\plugins\kmyuhkyuk-EFTApi";
@@ -38,16 +39,20 @@ namespace Build
                 "ConfigurationTest"
             });
 
-            Copy.CopyAssembly(arg, releasePreview, baseDirectory, modPath, new[]
+            Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
             {
-                "EFTApi",
-                "EFTUtils",
-                "EFTReflection",
-                "EFTConfiguration",
                 "HtmlAgilityPack",
                 "Crc32.NET",
                 "ConfigurationTest"
             });
+
+            Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
+            {
+                "EFTApi",
+                "EFTUtils",
+                "EFTReflection",
+                "EFTConfiguration"
+            }, sha);
 
             Copy.GenerateSevenZip(arg, "Release", modPath, null, @"BepInEx\plugins", new[]
             {

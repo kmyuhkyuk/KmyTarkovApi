@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -277,40 +278,45 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     If <see cref="MethodBase" /> Contains this IL then return <see langword="true" />
+        ///     <see cref="PatchProcessor.ReadMethodBody(MethodBase)" /> this <see cref="MethodBase" />
         /// </summary>
         /// <param name="methodBase"></param>
-        /// <param name="opcode"></param>
-        /// <param name="operand"></param>
+        /// <param name="realMethod"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static bool ContainsIL(this MethodBase methodBase, OpCode opcode, object operand = null)
+        public static IEnumerable<KeyValuePair<OpCode, object>> ReadMethodBody(this MethodBase methodBase,
+            bool realMethod = true)
         {
-            if (methodBase == null)
-            {
-                throw new ArgumentNullException(nameof(methodBase));
-            }
-
-            return PatchProcessor.ReadMethodBody(GetRealMethod(methodBase))
-                .Any(il => il.Key == opcode && il.Value == operand);
+            return PatchProcessor.ReadMethodBody(realMethod ? GetRealMethod(methodBase) : methodBase);
         }
 
         /// <summary>
-        ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="MethodBase" />
+        ///     If <see cref="IEnumerable{T}" /> Contains this IL then return <see langword="true" />
         /// </summary>
-        /// <param name="methodBase"></param>
+        /// <param name="methodBody"></param>
+        /// <param name="opcode"></param>
+        /// <param name="operand"></param>
+        /// <returns></returns>
+        public static bool ContainsIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody, OpCode opcode,
+            object operand = null)
+        {
+            return methodBody.Contains(new KeyValuePair<OpCode, object>(opcode, operand));
+        }
+
+        /// <summary>
+        ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="IEnumerable{T}" />
+        /// </summary>
+        /// <param name="methodBody"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static MethodInfo[] GetCallMethods(this MethodBase methodBase)
+        public static MethodInfo[] GetCallMethods(this IEnumerable<KeyValuePair<OpCode, object>> methodBody)
         {
-            if (methodBase == null)
+            if (methodBody == null)
             {
-                throw new ArgumentNullException(nameof(methodBase));
+                throw new ArgumentNullException(nameof(methodBody));
             }
 
-            return PatchProcessor.ReadMethodBody(GetRealMethod(methodBase))
-                .Where(x => x.Key == OpCodes.Call || x.Key == OpCodes.Callvirt).Select(x => (MethodInfo)x.Value)
-                .ToArray();
+            return methodBody.Where(x => x.Key == OpCodes.Call || x.Key == OpCodes.Callvirt)
+                .Select(x => (MethodInfo)x.Value).ToArray();
         }
 
         /// <summary>

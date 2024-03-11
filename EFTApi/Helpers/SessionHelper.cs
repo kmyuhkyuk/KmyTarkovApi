@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
 using EFTReflection;
+using HarmonyLib;
 using UnityEngine;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -33,6 +34,8 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef CreateBackend;
 
+        public readonly RefHelper.HookRef AfterApplicationLoaded;
+
         public readonly RefHelper.PropertyRef<ISession, object> RefBackEndConfig;
 
         public readonly Func<object, ISession> GetClientBackEndSession;
@@ -52,11 +55,22 @@ namespace EFTApi.Helpers
                 RefHelper.ObjectMethodDelegate<Func<object, ISession>>(
                     applicationType.GetMethod("GetClientBackEndSession", RefTool.Public));
 
-            CreateBackend = RefHelper.HookRef.Create(EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0")
-                    ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
-                    : RefTool.GetEftType(x => x.Name == "MainApplication"),
+            CreateBackend = RefHelper.HookRef.Create(applicationType,
                 x => x.IsAsync() && x.ReturnType == typeof(Task) &&
-                     x.ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
+                     x.ReadMethodBody().ContainsIL(OpCodes.Ldstr, "_backEnd.Session.GetGlobalConfig"));
+
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.3.0"))
+            {
+                AfterApplicationLoaded = RefHelper.HookRef.Create(applicationType,
+                    x => x.GetParameters().Length == 0 && x.ReturnType == typeof(void) &&
+                         x.ReadMethodBody().ContainsIL(OpCodes.Callvirt, AccessTools.Method(typeof(Action), "Invoke")));
+            }
+            else
+            {
+                AfterApplicationLoaded = RefHelper.HookRef.Create(applicationType,
+                    x => x.GetParameters().Length == 0 && x.ReturnType == typeof(void) &&
+                         x.ReadMethodBody().GetMultiplicity() == Utils.Multiplicity.One);
+            }
 
             CreateBackend.Add(this, nameof(OnCreateBackend));
         }

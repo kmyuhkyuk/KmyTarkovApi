@@ -16,7 +16,7 @@ namespace Build
             var sha = Copy.GetTipSha(args.ElementAtOrDefault(1));
 
             const string modPath =
-                @"R:\Battlestate Games\Client.0.14.1.1.28875\BepInEx\plugins\kmyuhkyuk-EFTApi";
+                @"R:\Battlestate Games\Client.0.14.1.1.28965\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 
@@ -28,56 +28,63 @@ namespace Build
                 "Preview"
             };
 
-            Copy.CopyAssembly(arg, releasePreview, baseDirectory, currentPath, new[]
+            try
             {
-                "EFTApi",
-                "EFTUtils",
-                "EFTReflection",
-                "EFTConfiguration",
-                "HtmlAgilityPack",
-                "Crc32.NET",
-                "ConfigurationTest"
-            });
+                Copy.CopyAssembly(arg, releasePreview, baseDirectory, currentPath, new[]
+                {
+                    "EFTApi",
+                    "EFTUtils",
+                    "EFTReflection",
+                    "EFTConfiguration",
+                    "HtmlAgilityPack",
+                    "Crc32.NET",
+                    "ConfigurationTest"
+                });
 
-            Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
-            {
-                "HtmlAgilityPack",
-                "Crc32.NET",
-                "ConfigurationTest"
-            });
+                Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
+                {
+                    "HtmlAgilityPack",
+                    "Crc32.NET",
+                    "ConfigurationTest"
+                });
 
-            Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
-            {
-                "EFTApi",
-                "EFTUtils",
-                "EFTReflection",
-                "EFTConfiguration"
-            }, sha);
+                Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
+                {
+                    "EFTApi",
+                    "EFTUtils",
+                    "EFTReflection",
+                    "EFTConfiguration"
+                }, sha);
 
-            Copy.GenerateSevenZip(arg, "Release", modPath, null, @"BepInEx\plugins", new[]
-            {
-                "ConfigurationTest.dll"
-            }, new[]
-            {
-                "cache"
-            }, Array.Empty<string>(), Array.Empty<string>());
+                Copy.GenerateSevenZip(arg, "Release", modPath, null, @"BepInEx\plugins", new[]
+                {
+                    "ConfigurationTest.dll"
+                }, new[]
+                {
+                    "cache"
+                }, Array.Empty<string>(), Array.Empty<string>());
 
-            Copy.GenerateSevenZip(arg, "Preview", modPath, previewName, @"BepInEx\plugins", new[]
-            {
-                "ConfigurationTest.dll"
-            }, new[]
-            {
-                "cache"
-            }, Array.Empty<string>(), Array.Empty<string>());
+                Copy.GenerateSevenZip(arg, "Preview", modPath, previewName, @"BepInEx\plugins", new[]
+                {
+                    "ConfigurationTest.dll"
+                }, new[]
+                {
+                    "cache"
+                }, Array.Empty<string>(), Array.Empty<string>());
 
-            //Unity
+                //Unity
 
-            const string unityEditorPath = @"C:\Users\24516\Documents\EFTConfiguration\Assets\Managed";
+                const string unityEditorPath = @"C:\Users\24516\Documents\EFTConfiguration\Assets\Managed";
 
-            Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]
+                Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]
+                {
+                    "EFTConfiguration"
+                });
+            }
+            catch (Exception ex)
             {
-                "EFTConfiguration"
-            });
+                Console.WriteLine(ex);
+            }
         }
     }
 }

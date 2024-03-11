@@ -278,7 +278,7 @@ namespace EFTReflection
         }
 
         /// <summary>
-        ///     <see cref="PatchProcessor.ReadMethodBody(MethodBase)" /> this <see cref="MethodBase" />
+        ///     <see cref="PatchProcessor.ReadMethodBody(MethodBase)" />
         /// </summary>
         /// <param name="methodBase"></param>
         /// <param name="realMethod"></param>

@@ -13,6 +13,17 @@ namespace EFTReflection
             Many
         }
 
+        /// <summary>
+        ///     Get <see cref="Multiplicity" /> from <see cref="IEnumerable{T}" /> count
+        ///     <para>If count is zero then return <see cref="Multiplicity.None" /></para>
+        ///     <para>If count is one then return <see cref="Multiplicity.One" /></para>
+        ///     <para>If count pass one then return <see cref="Multiplicity.Many" /></para>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static Multiplicity GetMultiplicity<T>(this IEnumerable<T> enumerable)
         {
             if (enumerable == null)

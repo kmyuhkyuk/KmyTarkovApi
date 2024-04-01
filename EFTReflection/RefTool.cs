@@ -303,6 +303,16 @@ namespace EFTReflection
         }
 
         /// <summary>
+        ///     If <see cref="IEnumerable{T}" /> not other IL then return <see langword="true" />
+        /// </summary>
+        /// <param name="methodBody"></param>
+        /// <returns></returns>
+        public static bool IsEmptyIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody)
+        {
+            return methodBody.ElementAtOrDefault(0).Key == OpCodes.Ret;
+        }
+
+        /// <summary>
         ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="IEnumerable{T}" />
         /// </summary>
         /// <param name="methodBody"></param>

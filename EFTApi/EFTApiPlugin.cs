@@ -11,6 +11,9 @@ namespace EFTApi
         {
             EFTVersion.WriteVersionLog();
 
+            //Player
+            new GamePlayerOwnerPatchs().Enable();
+
             //GameWorld
             new TriggerWithIdPatchs().Enable();
         }

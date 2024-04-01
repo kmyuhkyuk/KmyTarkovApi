@@ -504,7 +504,7 @@ namespace EFTReflection
                     _instance = (T)instance;
                 }
 
-                if (typeof(TF) == typeof(object))
+                if (typeof(TF) == typeof(object) || typeof(TF).IsValueType)
                 {
                     _refGetValue = ObjectFieldGetAccess<T, TF>(fieldInfo);
                     _refSetValue = ObjectFieldSetAccess<T, TF>(fieldInfo);

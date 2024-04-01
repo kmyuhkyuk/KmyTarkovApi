@@ -31,13 +31,22 @@ namespace EFTApi.Helpers
 
             [CanBeNull] public readonly RefHelper.HookRef OnBoxLand;
 
+            [CanBeNull] public readonly RefHelper.HookRef CoopOnBoxLand;
+
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0") &&
-                    RefTool.TryGetPlugin("com.spt-aki.custom", out var plugin))
+                if (EFTVersion.AkiVersion <= EFTVersion.Parse("3.5.0"))
+                    return;
+
+                OnBoxLand = RefHelper.HookRef.Create(
+                    RefTool.GetPluginType(EFTPlugins.AkiCustom, "Aki.Custom.Airdrops.AirdropBox"),
+                    "OnBoxLand");
+
+                if (EFTVersion.IsMPT)
                 {
-                    OnBoxLand = RefHelper.HookRef.Create(
-                        RefTool.GetPluginType(plugin, "Aki.Custom.Airdrops.AirdropBox"),
+                    CoopOnBoxLand = RefHelper.HookRef.Create(
+                        RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
+                            "MultiplayerTarkov.AkiSupport.Airdrops.MPTAirdropBox"),
                         "OnBoxLand");
                 }
             }

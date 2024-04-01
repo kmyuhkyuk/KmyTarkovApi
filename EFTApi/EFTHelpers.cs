@@ -70,6 +70,10 @@ namespace EFTApi
 
         public static HealthControllerData _HealthControllerHelper = HealthControllerData.Instance;
 
+        public static GamePlayerOwnerData _GamePlayerOwnerHelper = GamePlayerOwnerData.Instance;
+
+        public static MovementContextData _MovementContextHelper = MovementContextData.Instance;
+
         /// <summary>
         ///     Session Helper
         /// </summary>

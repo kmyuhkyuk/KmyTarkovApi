@@ -38,7 +38,7 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.PropertyRef<ISession, object> RefBackEndConfig;
 
-        public readonly Func<object, ISession> GetClientBackEndSession;
+        private readonly Func<object, ISession> _refGetClientBackEndSession;
 
         private SessionHelper()
         {
@@ -48,10 +48,11 @@ namespace EFTApi.Helpers
 
             RefBackEndConfig = RefHelper.PropertyRef<ISession, object>.Create(
                 RefTool.GetEftType(x =>
-                    x.IsAbstract && x.IsClass && x.GetProperty("BackEndConfig", RefTool.Public) != null),
+                    x.GetProperty("BackEndConfig", RefTool.Public) != null &&
+                    x.GetField("cancellationTokenSource_0", RefTool.NonPublic) != null),
                 "BackEndConfig");
 
-            GetClientBackEndSession =
+            _refGetClientBackEndSession =
                 RefHelper.ObjectMethodDelegate<Func<object, ISession>>(
                     applicationType.GetMethod("GetClientBackEndSession", RefTool.Public));
 
@@ -69,7 +70,7 @@ namespace EFTApi.Helpers
             {
                 AfterApplicationLoaded = RefHelper.HookRef.Create(applicationType,
                     x => x.GetParameters().Length == 0 && x.ReturnType == typeof(void) &&
-                         x.ReadMethodBody().GetMultiplicity() == Utils.Multiplicity.One);
+                         x.ReadMethodBody().IsEmptyIL());
             }
 
             CreateBackend.Add(this, nameof(OnCreateBackend));
@@ -79,7 +80,7 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            var session = Instance.GetClientBackEndSession(__instance);
+            var session = Instance._refGetClientBackEndSession(__instance);
 
             Instance.Session = session;
 
@@ -121,8 +122,8 @@ namespace EFTApi.Helpers
             private TradersData()
             {
                 var sessionType = RefTool.GetEftType(x =>
-                    typeof(ISession).IsAssignableFrom(x) && x.DeclaringType == null &&
-                    x.GetProperty("Traders", RefTool.Public) != null);
+                    x.GetProperty("BackEndConfig", RefTool.Public) != null &&
+                    x.GetField("taskCompletionSource_0", RefTool.NonPublic) != null);
 
                 RefTraders = RefHelper.PropertyRef<object, IEnumerable>.Create(sessionType, "Traders");
             }
@@ -145,7 +146,8 @@ namespace EFTApi.Helpers
 
                 private TradersAvatarData()
                 {
-                    var traderType = RefTool.GetEftType(x => x.GetMethod("GetAssortmentPrice", RefTool.Public) != null);
+                    var traderType =
+                        RefTool.GetEftType(x => x.GetProperty("CurrentAssortment", RefTool.Public) != null);
 
                     RefSettings = RefHelper.PropertyRef<object, object>.Create(traderType, "Settings");
                     RefId = RefHelper.FieldRef<object, string>.Create(RefSettings.PropertyType, "Id");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
 using EFT.HealthSystem;
@@ -42,6 +43,10 @@ namespace EFTApi.Helpers
 
         public HealthControllerData HealthControllerHelper => HealthControllerData.Instance;
 
+        public GamePlayerOwnerData GamePlayerOwnerHelper => GamePlayerOwnerData.Instance;
+
+        public MovementContextData MovementContextHelper => MovementContextData.Instance;
+
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -56,9 +61,21 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef ApplyDamageInfo;
 
+        private readonly Func<Player, int, bool> _refGetBleedBlock;
+
+        /// <summary>
+        ///     MultiplayerTarkov.Coop.Players.ObservedCoopPlayer.ApplyDamageInfo
+        /// </summary>
+        [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyDamageInfo;
+
         public readonly RefHelper.HookRef OnBeenKilledByAggressor;
 
         public readonly RefHelper.HookRef OnPhraseTold;
+
+        /// <summary>
+        ///     MultiplayerTarkov.Coop.Players.ObservedCoopPlayer.OnPhraseTold
+        /// </summary>
+        [CanBeNull] public readonly RefHelper.HookRef ObservedCoopOnPhraseTold;
 
         /// <summary>
         ///     InfoClass.Settings
@@ -77,6 +94,10 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.FieldRef<Player, object> RefQuestController;
 
+        public readonly RefHelper.FieldRef<Player, object> RefInventoryController;
+
+        public readonly RefHelper.PropertyRef<Player, object> RefSkills;
+
 #pragma warning disable IDE0031
         public object Settings => RefSettings.GetValue(Player != null ? Player.Profile.Info : null);
 #pragma warning restore IDE0031
@@ -93,6 +114,8 @@ namespace EFTApi.Helpers
             RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
             RefQuestController = RefHelper.FieldRef<Player, object>.Create("_questController");
+            RefInventoryController = RefHelper.FieldRef<Player, object>.Create("_inventoryController");
+            RefSkills = RefHelper.PropertyRef<Player, object>.Create("Skills");
 
             Init = RefHelper.HookRef.Create(playerType, "Init");
             Dispose = RefHelper.HookRef.Create(playerType, "Dispose");
@@ -101,6 +124,24 @@ namespace EFTApi.Helpers
             OnBeenKilledByAggressor = RefHelper.HookRef.Create(playerType, "OnBeenKilledByAggressor");
             OnPhraseTold = RefHelper.HookRef.Create(playerType, "OnPhraseTold");
 
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
+            {
+                _refGetBleedBlock =
+                    RefHelper.ObjectMethodDelegate<Func<Player, int, bool>>(
+                        RefTool.GetEftMethod(playerType, AccessTools.allDeclared,
+                            x => x.ReturnType == typeof(bool) && x.ReadMethodBody().ContainsIL(OpCodes.Ldfld,
+                                AccessTools.Field(RefSkills.PropertyType, "LightVestBleedingProtection"))));
+            }
+
+            if (EFTVersion.IsMPT)
+            {
+                var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
+                    "MultiplayerTarkov.Coop.Players.ObservedCoopPlayer");
+
+                ObservedCoopApplyDamageInfo = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyDamageInfo");
+                ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
+            }
+
             Init.Add(this, nameof(OnInit));
         }
 
@@ -108,10 +149,20 @@ namespace EFTApi.Helpers
         {
             await __result;
 
-            if (EFTVersion.AkiVersion > EFTVersion.Parse("2.3.1") ? __instance.IsYourPlayer : __instance.Id == 1)
+            if (Instance.IsYourPlayer(__instance))
             {
                 Instance.Player = __instance;
             }
+        }
+
+        public bool CoopGetBleedBlock(Player __instance, int colliderType)
+        {
+            return _refGetBleedBlock(__instance, colliderType);
+        }
+
+        public bool IsYourPlayer(Player player)
+        {
+            return EFTVersion.AkiVersion > EFTVersion.Parse("2.3.1") ? player.IsYourPlayer : player.Id == 1;
         }
 
         public class FirearmControllerData
@@ -550,15 +601,23 @@ namespace EFTApi.Helpers
             public readonly RefHelper.FieldRef<DamageInfo, object> RefPlayer;
 
             /// <summary>
+            ///     DamageInfo.BleedBlock
+            /// </summary>
+            [CanBeNull] public readonly RefHelper.FieldRef<DamageInfo, bool> RefBleedBlock;
+
+            /// <summary>
             ///     DamageInfo.Player.iPlayer
             /// </summary>
             [CanBeNull] public readonly RefHelper.PropertyRef<object, object> RefIPlayer;
 
             private DamageInfoData()
             {
-                var damageInfoType = typeof(DamageInfo);
+                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create("Player");
 
-                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create(damageInfoType.GetField("Player"));
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
+                {
+                    RefBleedBlock = RefHelper.FieldRef<DamageInfo, bool>.Create("BleedBlock");
+                }
 
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8"))
                 {
@@ -667,6 +726,27 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.PropertyRef<object, bool> RefIsAlive;
 
+            private readonly Action<object, float, EBodyPart> _refDoWoundRelapse;
+
+            private readonly Action<object, EBodyPart, float> _refBluntContusion;
+
+            private readonly TryApplySideEffectsDelegate _refTryApplySideEffects;
+
+            public delegate bool TryApplySideEffectsDelegate(object instance, DamageInfo damage, EBodyPart bodyPart,
+                out SideEffectComponent sideEffectComponent);
+
+            /// <summary>
+            ///     MultiplayerTarkov.Coop.CoopHealthController.ApplyDamage
+            /// </summary>
+            private readonly Func<object, EBodyPart, float, DamageInfo, float> _refCoopApplyDamage;
+
+            /// <summary>
+            ///     MultiplayerTarkov.Coop.ObservedHealthController.Store
+            /// </summary>
+            private readonly Func<object, object, object> _refObservedCoopStore;
+
+            private readonly Type _coopHealthControllerType;
+
             public ValueStruct Hydration => RefHydration.GetValue(HealthController);
 
             public ValueStruct Energy => RefEnergy.GetValue(HealthController);
@@ -686,6 +766,17 @@ namespace EFTApi.Helpers
                         RefTool.Public,
                         x => x.Name == "GetBodyPartHealth"));
 
+                var activeHealthControllerType = RefTool.GetEftType(x =>
+                    x.GetMethod("SetDamageCoeff", BindingFlags.DeclaredOnly | RefTool.Public) != null);
+
+                _refDoWoundRelapse =
+                    RefHelper.ObjectMethodDelegate<Action<object, float, EBodyPart>>(
+                        activeHealthControllerType.GetMethod("DoWoundRelapse", RefTool.Public));
+                _refBluntContusion = RefHelper.ObjectMethodDelegate<Action<object, EBodyPart, float>>(
+                    activeHealthControllerType.GetMethod("BluntContusion", RefTool.Public));
+                _refTryApplySideEffects = RefHelper.ObjectMethodDelegate<TryApplySideEffectsDelegate>(
+                    activeHealthControllerType.GetMethod("TryApplySideEffects", RefTool.Public));
+
                 RefHealthController = RefHelper.PropertyRef<Player, object>.Create("HealthController");
                 RefHydration =
                     RefHelper.PropertyRef<object, ValueStruct>.Create(RefHealthController.PropertyType, "Hydration");
@@ -698,11 +789,111 @@ namespace EFTApi.Helpers
                 RefEnergyRate =
                     RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "EnergyRate");
                 RefIsAlive = RefHelper.PropertyRef<object, bool>.Create(RefHealthController.PropertyType, "IsAlive");
+
+                if (!EFTVersion.IsMPT)
+                    return;
+
+                _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
+                    "MultiplayerTarkov.Coop.CoopHealthController");
+
+                _refCoopApplyDamage =
+                    RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, DamageInfo, float>>(
+                        _coopHealthControllerType.GetMethod("ApplyDamage", RefTool.Public));
+
+                _refObservedCoopStore =
+                    RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
+                        .GetPluginType(EFTPlugins.MultiplayerTarkov,
+                            "MultiplayerTarkov.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
             }
 
-            public ValueStruct GetBodyPartHealth(object healthController, EBodyPart bodyPart, bool rounded = false)
+            public ValueStruct GetBodyPartHealth(object __instance, EBodyPart bodyPart, bool rounded = false)
             {
-                return _refGetBodyPartHealth(healthController, bodyPart, rounded);
+                return _refGetBodyPartHealth(__instance, bodyPart, rounded);
+            }
+
+            public void DoWoundRelapse(object __instance, float relapseValue, EBodyPart bodyPart)
+            {
+                _refDoWoundRelapse(__instance, relapseValue, bodyPart);
+            }
+
+            public void BluntContusion(object __instance, EBodyPart bodyPartType, float absorbed)
+            {
+                _refBluntContusion(__instance, bodyPartType, absorbed);
+            }
+
+            public bool TryApplySideEffects(object __instance, DamageInfo damage, EBodyPart bodyPart,
+                out SideEffectComponent sideEffectComponent)
+            {
+                return _refTryApplySideEffects(__instance, damage, bodyPart, out sideEffectComponent);
+            }
+
+            public float CoopApplyDamage(object __instance, EBodyPart bodyPart, float damage, DamageInfo damageInfo)
+            {
+                return _refCoopApplyDamage(__instance, bodyPart, damage, damageInfo);
+            }
+
+            public object CoopHealthControllerCreate(object healthInfo, Player player, object inventoryController,
+                object skillManager, bool aiHealth)
+            {
+                return Activator.CreateInstance(_coopHealthControllerType, healthInfo, player, inventoryController,
+                    skillManager, aiHealth);
+            }
+
+            public object ObservedCoopStore(object __instance, object healthInfo = null)
+            {
+                return _refObservedCoopStore(__instance, healthInfo);
+            }
+        }
+
+        public class GamePlayerOwnerData
+        {
+            private static readonly Lazy<GamePlayerOwnerData> Lazy =
+                new Lazy<GamePlayerOwnerData>(() => new GamePlayerOwnerData());
+
+            public static GamePlayerOwnerData Instance => Lazy.Value;
+
+            public GamePlayerOwner GamePlayerOwner { get; internal set; }
+
+            private readonly TranslateAxesDelegate _refTranslateAxes;
+
+            public delegate void TranslateAxesDelegate(GamePlayerOwner instance, ref float[] axes);
+
+            private GamePlayerOwnerData()
+            {
+                var gamePlayerOwnerType = typeof(GamePlayerOwner);
+
+                _refTranslateAxes =
+                    AccessTools.MethodDelegate<TranslateAxesDelegate>(
+                        gamePlayerOwnerType.GetMethod("TranslateAxes", AccessTools.all));
+            }
+
+            public void TranslateAxes(GamePlayerOwner instance, ref float[] axes)
+            {
+                _refTranslateAxes(instance, ref axes);
+            }
+        }
+
+        public class MovementContextData
+        {
+            private static readonly Lazy<MovementContextData> Lazy =
+                new Lazy<MovementContextData>(() => new MovementContextData());
+
+            public static MovementContextData Instance => Lazy.Value;
+
+            public object MovementContext => RefMovementContext.GetValue(PlayerHelper.Instance.Player);
+
+            public readonly RefHelper.PropertyRef<Player, object> RefMovementContext;
+
+            /// <summary>
+            ///     MovementContext.Rotation
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, Vector2> RefRotation;
+
+            private MovementContextData()
+            {
+                RefMovementContext = RefHelper.PropertyRef<Player, object>.Create("MovementContext");
+                RefRotation =
+                    RefHelper.PropertyRef<object, Vector2>.Create(RefMovementContext.PropertyType, "Rotation");
             }
         }
     }

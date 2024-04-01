@@ -17,8 +17,11 @@ namespace EFTApi.Helpers
 
         private QuestHelper()
         {
-            var questControllerType = RefTool.GetEftType(x =>
-                x.GetMethod("IsQuestForCurrentProfile", BindingFlags.DeclaredOnly | RefTool.Public) != null);
+            var questControllerType = EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1")
+                ? RefTool.GetEftType(x =>
+                    x.GetMethod("TryExecuteTransition", BindingFlags.DeclaredOnly | RefTool.Public) != null)
+                : RefTool.GetEftType(x =>
+                    x.GetMethod("CheckUseItemCounter", BindingFlags.DeclaredOnly | RefTool.Public) != null);
 
             if (EFTVersion.AkiVersion > EFTVersion.Parse("3.7.6"))
             {

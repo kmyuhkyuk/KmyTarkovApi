@@ -1,6 +1,5 @@
 ﻿#if !UNITY_EDITOR
 
-using System;
 using System.IO;
 using System.Threading;
 using BepInEx;
@@ -13,220 +12,48 @@ namespace EFTConfiguration
         private static readonly ManualLogSource Logger =
             BepInEx.Logging.Logger.CreateLogSource(nameof(EFTDiskLogListener));
 
-        private int _updateErrorCount;
-
-        private int _memberAccessExceptionCount;
-
-        private int _missingMemberExceptionCount;
-
-        private int _methodAccessExceptionCount;
-
-        private int _missingMethodExceptionCount;
-
-        private int _missingFieldExceptionCount;
-
-        private int _fieldAccessExceptionCount;
-
-        private readonly int _maxErrorCount;
-
         private readonly TextWriter _logWriter;
 
         private readonly Timer _flushTimer;
 
-        private readonly bool _instantFlushing;
-
-        private enum ErrorType
-        {
-            None,
-            Update,
-            MemberAccessException,
-            MissingMemberException,
-            MethodAccessException,
-            MissingMethodException,
-            MissingFieldException,
-            FieldAccessException
-        }
-
         //Modify from BepInEx.Core.Logging.DiskLogListener
-        public EFTDiskLogListener(string localPath,
-            int maxErrorCount = 3,
-            bool appendLog = false,
-            bool delayedFlushing = true,
-            int fileLimit = 5)
+        public EFTDiskLogListener(string localPath, bool appendLog = false)
         {
-            _maxErrorCount = maxErrorCount;
-
             var counter = 1;
+
             FileStream fileStream;
+
             while (!Utility.TryOpenFileStream(Path.Combine(Paths.BepInExRootPath, localPath),
-                       appendLog ? FileMode.Append : FileMode.Create, out fileStream,
-                       share: FileShare.Read, access: FileAccess.Write))
+                       appendLog ? FileMode.Append : FileMode.Create, out fileStream, share: FileShare.Read,
+                       access: FileAccess.Write))
             {
-                if (counter == fileLimit)
+                if (counter == 5)
                 {
-                    Logger.Log(LogLevel.Error, "Couldn't open a log file for writing. Skipping log file creation");
+                    Logger.LogError("Couldn't open a log file for writing. Skipping log file creation");
 
                     return;
                 }
 
-                Logger.Log(LogLevel.Warning, $"Couldn't open log file '{localPath}' for writing, trying another...");
+                Logger.LogWarning($"Couldn't open log file '{localPath}' for writing, trying another...");
 
                 localPath = $"{Path.GetFileNameWithoutExtension(localPath)}.{counter++}.{Path.GetExtension(localPath)}";
             }
 
             _logWriter = TextWriter.Synchronized(new StreamWriter(fileStream, Utility.UTF8NoBom));
 
-            if (delayedFlushing)
-            {
-                _flushTimer = new Timer(o => _logWriter?.Flush(), null, 2000, 2000);
-            }
-
-            _instantFlushing = !delayedFlushing;
+            _flushTimer = new Timer(o => { _logWriter?.Flush(); }, null, 2000, 2000);
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)
         {
-            if (_logWriter == null)
-                return;
-
-            var error = GetErrorType(eventArgs);
-
-            switch (error)
-            {
-                case ErrorType.None:
-                    ClearErrorCount(ref _updateErrorCount);
-                    ClearErrorCount(ref _memberAccessExceptionCount);
-                    ClearErrorCount(ref _missingMemberExceptionCount);
-                    ClearErrorCount(ref _methodAccessExceptionCount);
-                    ClearErrorCount(ref _missingMethodExceptionCount);
-                    ClearErrorCount(ref _missingFieldExceptionCount);
-                    ClearErrorCount(ref _fieldAccessExceptionCount);
-                    break;
-                case ErrorType.Update:
-                    if (NeedFilterLog(ref _updateErrorCount))
-                        return;
-                    break;
-                case ErrorType.MemberAccessException:
-                    if (NeedFilterLog(ref _memberAccessExceptionCount))
-                        return;
-                    break;
-                case ErrorType.MissingMemberException:
-                    if (NeedFilterLog(ref _missingMemberExceptionCount))
-                        return;
-                    break;
-                case ErrorType.MethodAccessException:
-                    if (NeedFilterLog(ref _methodAccessExceptionCount))
-                        return;
-                    break;
-                case ErrorType.MissingMethodException:
-                    if (NeedFilterLog(ref _missingMethodExceptionCount))
-                        return;
-                    break;
-                case ErrorType.MissingFieldException:
-                    if (NeedFilterLog(ref _missingFieldExceptionCount))
-                        return;
-                    break;
-                case ErrorType.FieldAccessException:
-                    if (NeedFilterLog(ref _fieldAccessExceptionCount))
-                        return;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(error), error, null);
-            }
-
-            _logWriter.WriteLine(eventArgs);
-
-            if (_instantFlushing)
-            {
-                _logWriter.Flush();
-            }
-
-            switch (error)
-            {
-                case ErrorType.Update when _updateErrorCount == _maxErrorCount:
-                    Logger.LogError(
-                        "Major Error, This method loop throw error in Update (), Now hidden all Update () error, Please contact dev");
-                    break;
-                case ErrorType.MemberAccessException when _memberAccessExceptionCount == _maxErrorCount:
-                case ErrorType.MissingMemberException when _missingMemberExceptionCount == _maxErrorCount:
-                case ErrorType.MethodAccessException when _methodAccessExceptionCount == _maxErrorCount:
-                case ErrorType.MissingMethodException when _missingMethodExceptionCount == _maxErrorCount:
-                case ErrorType.MissingFieldException when _missingFieldExceptionCount == _maxErrorCount:
-                case ErrorType.FieldAccessException when _fieldAccessExceptionCount == _maxErrorCount:
-                    Logger.LogError(
-                        $"Major Error, Loop throw {error}, Now hidden all {error} error, Please contact dev");
-                    break;
-                case ErrorType.None:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(error), error, null);
-            }
-        }
-
-        private static ErrorType GetErrorType(LogEventArgs eventArgs)
-        {
-            if (eventArgs.Data == null)
-                return ErrorType.None;
-
-            var logArg = eventArgs.Data.ToString();
-
-            if (string.IsNullOrEmpty(logArg))
-                return ErrorType.None;
-
-            if (logArg.Contains(".Update ()"))
-                return ErrorType.Update;
-
-            if (logArg.StartsWith(nameof(MemberAccessException)))
-                return ErrorType.MemberAccessException;
-
-            if (logArg.StartsWith(nameof(MissingMemberException)))
-                return ErrorType.MissingMemberException;
-
-            if (logArg.StartsWith(nameof(MethodAccessException)))
-                return ErrorType.MethodAccessException;
-
-            if (logArg.StartsWith(nameof(MissingMethodException)))
-                return ErrorType.MissingMethodException;
-
-            if (logArg.StartsWith(nameof(MissingFieldException)))
-                return ErrorType.MissingFieldException;
-
-            return logArg.StartsWith(nameof(FieldAccessException)) ? ErrorType.FieldAccessException : ErrorType.None;
-        }
-
-        private void ClearErrorCount(ref int errorCount)
-        {
-            if (errorCount < _maxErrorCount)
-            {
-                errorCount = 0;
-            }
-        }
-
-        private bool NeedFilterLog(ref int errorCount)
-        {
-            if (errorCount == _maxErrorCount)
-                return true;
-
-            if (errorCount < _maxErrorCount)
-            {
-                errorCount++;
-            }
-
-            return false;
+            _logWriter.WriteLine(eventArgs.ToString());
         }
 
         public void Dispose()
         {
             _flushTimer?.Dispose();
-
-            try
-            {
-                _logWriter?.Flush();
-                _logWriter?.Dispose();
-            }
-            catch (ObjectDisposedException)
-            {
-            }
+            _logWriter?.Flush();
+            _logWriter?.Dispose();
         }
 
         ~EFTDiskLogListener()

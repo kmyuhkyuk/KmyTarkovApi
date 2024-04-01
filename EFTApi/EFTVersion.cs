@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
-using EFTReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -14,6 +13,8 @@ namespace EFTApi
     public static class EFTVersion
     {
         private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(EFTVersion));
+
+        public static readonly bool IsMPT = EFTPlugins.MultiplayerTarkov != null;
 
         /// <summary>
         ///     Current Game File Version
@@ -105,9 +106,9 @@ namespace EFTApi
 
             if (GameVersion > Parse("0.13.0.23399"))
             {
-                if (RefTool.TryGetPlugin("com.spt-aki.core", out var plugin))
+                if (EFTPlugins.AkiCore != null)
                 {
-                    var version = plugin.GetType().GetCustomAttribute<BepInPlugin>().Version;
+                    var version = EFTPlugins.AkiCore.GetType().GetCustomAttribute<BepInPlugin>().Version;
 
                     //Add com.spt-aki.core plugin version in 3.5.8 
                     if (version < Parse("3.5.8"))

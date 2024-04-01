@@ -61,6 +61,18 @@
     <Reference Include="BepInEx">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils, Version=22.1.29.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
@@ -78,6 +90,7 @@
     <Compile Include="EFTApiPlugin.cs" />
     <Compile Include="EFTGlobal.cs" />
     <Compile Include="EFTHelpers.cs" />
+    <Compile Include="EFTPlugins.cs" />
     <Compile Include="EFTVersion.cs" />
     <Compile Include="Helpers\AbstractGameHelper.cs" />
     <Compile Include="Helpers\AirdropHelper.cs" />
@@ -90,6 +103,7 @@
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Helpers\LocalizedHelper.cs" />
+    <Compile Include="Patches\GamePlayerOwnerPatchs.cs" />
     <Compile Include="Patches\TriggerWithIdPatchs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

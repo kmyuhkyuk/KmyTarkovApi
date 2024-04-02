@@ -47,11 +47,11 @@ namespace EFTConfiguration.Helpers
             }
         }
 
-        public static Task<HtmlDocument> CreateHtmlDocument(string url)
+        public static async Task<HtmlDocument> CreateHtmlDocument(string url)
         {
             try
             {
-                return new HtmlWeb().LoadFromWebAsync(url);
+                return await new HtmlWeb().LoadFromWebAsync(url);
             }
             catch
             {

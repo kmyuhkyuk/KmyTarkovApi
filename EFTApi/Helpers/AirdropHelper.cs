@@ -45,8 +45,8 @@ namespace EFTApi.Helpers
                 if (EFTVersion.IsMPT)
                 {
                     CoopOnBoxLand = RefHelper.HookRef.Create(
-                        RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
-                            "MultiplayerTarkov.AkiSupport.Airdrops.MPTAirdropBox"),
+                        RefTool.GetPluginType(EFTPlugins.MPTCore,
+                            "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox"),
                         "OnBoxLand");
                 }
             }

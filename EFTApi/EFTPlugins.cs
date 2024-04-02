@@ -33,7 +33,7 @@ namespace EFTApi
         /// <summary>
         ///     com.mpt.core
         /// </summary>
-        public static readonly BaseUnityPlugin MultiplayerTarkov;
+        public static readonly BaseUnityPlugin MPTCore;
 
         static EFTPlugins()
         {
@@ -57,7 +57,7 @@ namespace EFTApi
                 Logger.LogWarning("Can't get com.spt-aki.singleplayer plugin(aki-singleplayer.dll)");
             }
 
-            RefTool.TryGetPlugin("com.mpt.core", out MultiplayerTarkov);
+            RefTool.TryGetPlugin("com.mpt.core", out MPTCore);
         }
     }
 }

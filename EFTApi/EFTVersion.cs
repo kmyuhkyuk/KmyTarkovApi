@@ -14,7 +14,7 @@ namespace EFTApi
     {
         private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(EFTVersion));
 
-        public static readonly bool IsMPT = EFTPlugins.MultiplayerTarkov != null;
+        public static readonly bool IsMPT = EFTPlugins.MPTCore != null;
 
         /// <summary>
         ///     Current Game File Version

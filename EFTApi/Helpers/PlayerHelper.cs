@@ -64,7 +64,7 @@ namespace EFTApi.Helpers
         private readonly Func<Player, int, bool> _refGetBleedBlock;
 
         /// <summary>
-        ///     MultiplayerTarkov.Coop.Players.ObservedCoopPlayer.ApplyDamageInfo
+        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.ApplyDamageInfo
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyDamageInfo;
 
@@ -73,7 +73,7 @@ namespace EFTApi.Helpers
         public readonly RefHelper.HookRef OnPhraseTold;
 
         /// <summary>
-        ///     MultiplayerTarkov.Coop.Players.ObservedCoopPlayer.OnPhraseTold
+        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.OnPhraseTold
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopOnPhraseTold;
 
@@ -135,8 +135,8 @@ namespace EFTApi.Helpers
 
             if (EFTVersion.IsMPT)
             {
-                var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
-                    "MultiplayerTarkov.Coop.Players.ObservedCoopPlayer");
+                var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
+                    "MPT.Core.Coop.Players.ObservedCoopPlayer");
 
                 ObservedCoopApplyDamageInfo = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyDamageInfo");
                 ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
@@ -736,12 +736,12 @@ namespace EFTApi.Helpers
                 out SideEffectComponent sideEffectComponent);
 
             /// <summary>
-            ///     MultiplayerTarkov.Coop.CoopHealthController.ApplyDamage
+            ///     MPT.Core.Coop.CoopHealthController.ApplyDamage
             /// </summary>
             private readonly Func<object, EBodyPart, float, DamageInfo, float> _refCoopApplyDamage;
 
             /// <summary>
-            ///     MultiplayerTarkov.Coop.ObservedHealthController.Store
+            ///     MPT.Core.Coop.ObservedHealthController.Store
             /// </summary>
             private readonly Func<object, object, object> _refObservedCoopStore;
 
@@ -793,8 +793,8 @@ namespace EFTApi.Helpers
                 if (!EFTVersion.IsMPT)
                     return;
 
-                _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MultiplayerTarkov,
-                    "MultiplayerTarkov.Coop.CoopHealthController");
+                _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
+                    "MPT.Core.Coop.CoopHealthController");
 
                 _refCoopApplyDamage =
                     RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, DamageInfo, float>>(
@@ -802,8 +802,8 @@ namespace EFTApi.Helpers
 
                 _refObservedCoopStore =
                     RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
-                        .GetPluginType(EFTPlugins.MultiplayerTarkov,
-                            "MultiplayerTarkov.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
+                        .GetPluginType(EFTPlugins.MPTCore,
+                            "MPT.Core.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
             }
 
             public ValueStruct GetBodyPartHealth(object __instance, EBodyPart bodyPart, bool rounded = false)

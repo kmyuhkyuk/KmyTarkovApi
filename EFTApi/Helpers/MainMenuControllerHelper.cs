@@ -26,9 +26,13 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.HookRef Unsubscribe;
 
+        public readonly RefHelper.PropertyRef<MainMenuController, object> RefHealthController;
+
         private MainMenuControllerHelper()
         {
             var mainMenuControllerType = typeof(MainMenuController);
+
+            RefHealthController = RefHelper.PropertyRef<MainMenuController, object>.Create("HealthController");
 
             Execute = RefHelper.HookRef.Create(mainMenuControllerType, "Execute");
             Unsubscribe = RefHelper.HookRef.Create(mainMenuControllerType, "Unsubscribe");

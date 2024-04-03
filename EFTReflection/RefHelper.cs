@@ -341,7 +341,8 @@ namespace EFTReflection
                 Init(propertyInfo, instance);
             }
 
-            public PropertyRef(Type type, Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false, object instance = null)
+            public PropertyRef(Type type, Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false,
+                object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
@@ -394,7 +395,8 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(typeof(T), propertyName, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false,
+            public static PropertyRef<T, TF> Create(Func<PropertyInfo, bool> propertyPredicate,
+                bool declaredOnly = false,
                 object instance = null)
             {
                 return new PropertyRef<T, TF>(typeof(T), propertyPredicate, declaredOnly, instance);
@@ -406,7 +408,8 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(type, propertyName, declaredOnly, instance);
             }
 
-            public static PropertyRef<T, TF> Create(Type type, Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false,
+            public static PropertyRef<T, TF> Create(Type type, Func<PropertyInfo, bool> propertyPredicate,
+                bool declaredOnly = false,
                 object instance = null)
             {
                 return new PropertyRef<T, TF>(type, propertyPredicate, declaredOnly, instance);
@@ -494,16 +497,19 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var fieldInfo = type.GetField(fieldName, flags) ?? throw new Exception($"{type} {fieldName} Field not exist");
+                var fieldInfo = type.GetField(fieldName, flags) ??
+                                throw new Exception($"{type} {fieldName} Field not exist");
 
                 Init(fieldInfo, instance);
             }
 
-            public FieldRef(Type type, Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false, object instance = null)
+            public FieldRef(Type type, Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false,
+                object instance = null)
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var fieldInfo = type.GetFields(flags).SingleOrDefault(fieldPredicate) ?? throw new Exception($"{type} {nameof(fieldPredicate)} Field not exist");
+                var fieldInfo = type.GetFields(flags).SingleOrDefault(fieldPredicate) ??
+                                throw new Exception($"{type} {nameof(fieldPredicate)} Field not exist");
 
                 Init(fieldInfo, instance);
             }
@@ -518,7 +524,8 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(typeof(T), fieldName, declaredOnly, instance);
             }
 
-            public static FieldRef<T, TF> Create(Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false, object instance = null)
+            public static FieldRef<T, TF> Create(Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false,
+                object instance = null)
             {
                 return new FieldRef<T, TF>(typeof(T), fieldPredicate, declaredOnly, instance);
             }
@@ -529,7 +536,8 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(type, fieldName, declaredOnly, instance);
             }
 
-            public static FieldRef<T, TF> Create(Type type, Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false,
+            public static FieldRef<T, TF> Create(Type type, Func<FieldInfo, bool> fieldPredicate,
+                bool declaredOnly = false,
                 object instance = null)
             {
                 return new FieldRef<T, TF>(type, fieldPredicate, declaredOnly, instance);

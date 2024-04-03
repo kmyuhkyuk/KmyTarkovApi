@@ -64,7 +64,7 @@ namespace EFTApi.Helpers
 
             public static AirdropLogicClassData Instance => Lazy.Value;
 
-            public readonly RefHelper.HookRef OnBoxLand;
+            public readonly RefHelper.HookRef RaycastGround;
 
             private AirdropLogicClassData()
             {
@@ -84,8 +84,9 @@ namespace EFTApi.Helpers
                     airdropLogicClassType = typeof(AirdropLogicClass);
                 }
 
-                OnBoxLand = RefHelper.HookRef.Create(airdropLogicClassType, x => x
-                    .ReadMethodBody().ContainsIL(OpCodes.Ldstr, "Raycast to ground returns no hit. Raycast from position {0} on distance {1}. Choose Concrete sound landing set"));
+                RaycastGround = RefHelper.HookRef.Create(airdropLogicClassType, x => x
+                    .ReadMethodBody().ContainsIL(OpCodes.Ldstr,
+                        "Raycast to ground returns no hit. Raycast from position {0} on distance {1}. Choose Concrete sound landing set"));
             }
         }
 

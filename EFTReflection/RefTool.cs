@@ -313,12 +313,13 @@ namespace EFTReflection
         }
 
         /// <summary>
-        /// If <see cref="IEnumerable{T}" /> Contains sequence then return <see langword="true" />
+        ///     If <see cref="IEnumerable{T}" /> Contains sequence then return <see langword="true" />
         /// </summary>
         /// <param name="methodBody"></param>
         /// <param name="sequence"></param>
         /// <returns></returns>
-        public static bool ContainsSequenceIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody, IEnumerable<KeyValuePair<OpCode, object>> sequence)
+        public static bool ContainsSequenceIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody,
+            IEnumerable<KeyValuePair<OpCode, object>> sequence)
         {
             var methodBodyArray = methodBody.ToArray();
             var sequenceArray = sequence.ToArray();

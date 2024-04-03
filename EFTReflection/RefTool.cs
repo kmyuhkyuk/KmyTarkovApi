@@ -313,6 +313,26 @@ namespace EFTReflection
         }
 
         /// <summary>
+        /// If <see cref="IEnumerable{T}" /> Contains sequence then return <see langword="true" />
+        /// </summary>
+        /// <param name="methodBody"></param>
+        /// <param name="sequence"></param>
+        /// <returns></returns>
+        public static bool ContainsSequenceIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody, IEnumerable<KeyValuePair<OpCode, object>> sequence)
+        {
+            var methodBodyArray = methodBody.ToArray();
+            var sequenceArray = sequence.ToArray();
+
+            for (var i = 0; i < methodBodyArray.Length - sequenceArray.Length; i++)
+            {
+                if (methodBodyArray.Skip(i).Take(sequenceArray.Length).SequenceEqual(sequenceArray))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     Find all <see cref="OpCodes.Call " /> or <see cref="OpCodes.Callvirt" /> Methods from <see cref="IEnumerable{T}" />
         /// </summary>
         /// <param name="methodBody"></param>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using EFTReflection;
 using JetBrains.Annotations;
 
@@ -67,13 +69,16 @@ namespace EFTApi.Helpers
 
             private AirdropLogicClassData()
             {
-                OnBoxLand = RefHelper.HookRef.Create(
-                    EFTVersion.GameVersion == EFTVersion.Parse("3.0.0")
-                        ? RefTool.GetEftType(x => x.Name == "AirdropLogic2Class")
-                        : typeof(AirdropLogicClass),
-                    x => x.GetParameters().Length == 2 &&
-                         x.GetParameters()[0].ParameterType == typeof(TaggedClip) &&
-                         x.GetParameters()[1].ParameterType == typeof(bool));
+                var airdropLogicClassType = EFTVersion.GameVersion == EFTVersion.Parse("3.0.0")
+                    ? RefTool.GetEftType(x => x.Name == "AirdropLogic2Class")
+                    : typeof(AirdropLogicClass);
+
+                OnBoxLand = RefHelper.HookRef.Create(airdropLogicClassType, x => x.ReturnType == typeof(void) && x
+                    .ReadMethodBody().ContainsSequenceIL(new[]
+                    {
+                        new KeyValuePair<OpCode, object>(OpCodes.Ldstr, "collision"),
+                        new KeyValuePair<OpCode, object>(OpCodes.Ldc_I4_1, null)
+                    }));
             }
         }
 

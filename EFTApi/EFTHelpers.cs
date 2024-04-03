@@ -74,6 +74,10 @@ namespace EFTApi
 
         public static MovementContextData _MovementContextHelper = MovementContextData.Instance;
 
+        public static QuestControllerData _QuestControllerHelper = QuestControllerData.Instance;
+
+        public static InventoryControllerData _InventoryControllerHelper = InventoryControllerData.Instance;
+
         /// <summary>
         ///     Session Helper
         /// </summary>
@@ -99,6 +103,8 @@ namespace EFTApi
 
         public static AirdropSynchronizableObjectData _AirdropSynchronizableObjectHelper =
             AirdropSynchronizableObjectData.Instance;
+
+        public static AirdropLogicClassData _AirdropLogicClassHelper = AirdropLogicClassData.Instance;
 
         /// <summary>
         ///     EnvironmentUIRoot Helper

@@ -47,6 +47,10 @@ namespace EFTApi.Helpers
 
         public MovementContextData MovementContextHelper => MovementContextData.Instance;
 
+        public QuestControllerData QuestControllerHelper => QuestControllerData.Instance;
+
+        public InventoryControllerData InventoryControllerHelper => InventoryControllerData.Instance;
+
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -92,10 +96,6 @@ namespace EFTApi.Helpers
         /// </summary>
         public readonly RefHelper.FieldRef<object, int> RefExperience;
 
-        public readonly RefHelper.FieldRef<Player, object> RefQuestController;
-
-        public readonly RefHelper.FieldRef<Player, object> RefInventoryController;
-
         public readonly RefHelper.PropertyRef<Player, object> RefSkills;
 
 #pragma warning disable IDE0031
@@ -113,8 +113,6 @@ namespace EFTApi.Helpers
             RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
             RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
             RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
-            RefQuestController = RefHelper.FieldRef<Player, object>.Create("_questController");
-            RefInventoryController = RefHelper.FieldRef<Player, object>.Create("_inventoryController");
             RefSkills = RefHelper.PropertyRef<Player, object>.Create("Skills");
 
             Init = RefHelper.HookRef.Create(playerType, "Init");
@@ -894,6 +892,40 @@ namespace EFTApi.Helpers
                 RefMovementContext = RefHelper.PropertyRef<Player, object>.Create("MovementContext");
                 RefRotation =
                     RefHelper.PropertyRef<object, Vector2>.Create(RefMovementContext.PropertyType, "Rotation");
+            }
+        }
+
+        public class QuestControllerData
+        {
+            private static readonly Lazy<QuestControllerData> Lazy =
+                new Lazy<QuestControllerData>(() => new QuestControllerData());
+
+            public static QuestControllerData Instance => Lazy.Value;
+
+            public readonly RefHelper.FieldRef<Player, object> RefQuestController;
+
+            public object QuestController => RefQuestController.GetValue(PlayerHelper.Instance.Player);
+
+            private QuestControllerData()
+            {
+                RefQuestController = RefHelper.FieldRef<Player, object>.Create("_questController");
+            }
+        }
+
+        public class InventoryControllerData
+        {
+            private static readonly Lazy<InventoryControllerData> Lazy =
+                new Lazy<InventoryControllerData>(() => new InventoryControllerData());
+
+            public static InventoryControllerData Instance => Lazy.Value;
+
+            public readonly RefHelper.FieldRef<Player, object> RefInventoryController;
+
+            public object InventoryController => RefInventoryController.GetValue(PlayerHelper.Instance.Player);
+
+            private InventoryControllerData()
+            {
+                RefInventoryController = RefHelper.FieldRef<Player, object>.Create("_inventoryController");
             }
         }
     }

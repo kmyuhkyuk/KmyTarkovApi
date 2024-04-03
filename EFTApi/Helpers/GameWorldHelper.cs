@@ -6,7 +6,6 @@ using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFTReflection;
-using JetBrains.Annotations;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberHidesStaticFromOuterClass
@@ -161,20 +160,14 @@ namespace EFTApi.Helpers
 
             public static SearchableItemClassData Instance => Lazy.Value;
 
-            /// <summary>
-            ///     SearchableItemClass.ItemOwner
-            /// </summary>
-            [CanBeNull] public readonly RefHelper.FieldRef<Item, List<string>> RefAllSearchersIds;
+            public readonly RefHelper.FieldRef<Item, Dictionary<string, BindableState<SearchedState>>> RefSearchStates;
 
             private SearchableItemClassData()
             {
-                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0"))
-                {
-                    RefAllSearchersIds = RefHelper.FieldRef<Item, List<string>>.Create(
-                        RefTool.GetEftType(x =>
-                            x.GetMethod("AddNewSearcher", BindingFlags.DeclaredOnly | RefTool.Public) != null),
-                        "_allSearchersIds");
-                }
+                RefSearchStates = RefHelper.FieldRef<Item, Dictionary<string, BindableState<SearchedState>>>.Create(
+                    RefTool.GetEftType(x =>
+                        x.GetMethod("HasUnknownItems", BindingFlags.DeclaredOnly | RefTool.Public) != null),
+                    "SearchStates");
             }
         }
 

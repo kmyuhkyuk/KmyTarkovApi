@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using EFTReflection;
-using HarmonyLib;
 
 // ReSharper disable NotAccessedField.Global
 
@@ -34,7 +33,7 @@ namespace EFTApi.Helpers
             }
 
             OnConditionValueChanged =
-                RefHelper.HookRef.Create(questControllerType.GetMethod("OnConditionValueChanged", AccessTools.all));
+                RefHelper.HookRef.Create(questControllerType, "OnConditionValueChanged", false);
         }
     }
 }

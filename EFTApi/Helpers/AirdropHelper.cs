@@ -16,6 +16,8 @@ namespace EFTApi.Helpers
 
         public AirdropBoxData AirdropBoxHelper => AirdropBoxData.Instance;
 
+        public AirdropLogicClassData AirdropLogicClassHelper => AirdropLogicClassData.Instance;
+
         public AirdropSynchronizableObjectData AirdropSynchronizableObjectHelper =>
             AirdropSynchronizableObjectData.Instance;
 
@@ -35,20 +37,43 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion <= EFTVersion.Parse("3.5.0"))
-                    return;
-
-                OnBoxLand = RefHelper.HookRef.Create(
-                    RefTool.GetPluginType(EFTPlugins.AkiCustom, "Aki.Custom.Airdrops.AirdropBox"),
-                    "OnBoxLand");
-
-                if (EFTVersion.IsMPT)
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
                 {
-                    CoopOnBoxLand = RefHelper.HookRef.Create(
-                        RefTool.GetPluginType(EFTPlugins.MPTCore,
-                            "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox"),
+                    var airdropBoxType = RefTool.GetPluginType(EFTPlugins.AkiCustom, "Aki.Custom.Airdrops.AirdropBox");
+
+                    OnBoxLand = RefHelper.HookRef.Create(airdropBoxType,
                         "OnBoxLand");
+
+                    if (EFTVersion.IsMPT)
+                    {
+                        var mptAirdropBoxType = RefTool.GetPluginType(EFTPlugins.MPTCore,
+                            "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox");
+
+                        CoopOnBoxLand = RefHelper.HookRef.Create(mptAirdropBoxType,
+                            "OnBoxLand");
+                    }
                 }
+            }
+        }
+
+        public class AirdropLogicClassData
+        {
+            private static readonly Lazy<AirdropLogicClassData> Lazy =
+                new Lazy<AirdropLogicClassData>(() => new AirdropLogicClassData());
+
+            public static AirdropLogicClassData Instance => Lazy.Value;
+
+            public readonly RefHelper.HookRef OnBoxLand;
+
+            private AirdropLogicClassData()
+            {
+                OnBoxLand = RefHelper.HookRef.Create(
+                    EFTVersion.GameVersion == EFTVersion.Parse("3.0.0")
+                        ? RefTool.GetEftType(x => x.Name == "AirdropLogic2Class")
+                        : typeof(AirdropLogicClass),
+                    x => x.GetParameters().Length == 2 &&
+                         x.GetParameters()[0].ParameterType == typeof(TaggedClip) &&
+                         x.GetParameters()[1].ParameterType == typeof(bool));
             }
         }
 
@@ -66,7 +91,7 @@ namespace EFTApi.Helpers
 
             private AirdropSynchronizableObjectData()
             {
-                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.0"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.0.0"))
                 {
                     RefAirdropType =
                         RefHelper.FieldRef<object, int>.Create(

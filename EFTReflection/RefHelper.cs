@@ -336,7 +336,17 @@ namespace EFTReflection
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
                 var propertyInfo = type.GetProperty(propertyName, flags) ??
-                                   throw new Exception($"{propertyName} Property not exist");
+                                   throw new Exception($"{type} {propertyName} Property not exist");
+
+                Init(propertyInfo, instance);
+            }
+
+            public PropertyRef(Type type, Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false, object instance = null)
+            {
+                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
+
+                var propertyInfo = type.GetProperties(flags).SingleOrDefault(propertyPredicate) ??
+                                   throw new Exception($"{type} {nameof(propertyPredicate)} Property not exist");
 
                 Init(propertyInfo, instance);
             }
@@ -384,10 +394,22 @@ namespace EFTReflection
                 return new PropertyRef<T, TF>(typeof(T), propertyName, declaredOnly, instance);
             }
 
+            public static PropertyRef<T, TF> Create(Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false,
+                object instance = null)
+            {
+                return new PropertyRef<T, TF>(typeof(T), propertyPredicate, declaredOnly, instance);
+            }
+
             public static PropertyRef<T, TF> Create(Type type, string propertyName, bool declaredOnly = false,
                 object instance = null)
             {
                 return new PropertyRef<T, TF>(type, propertyName, declaredOnly, instance);
+            }
+
+            public static PropertyRef<T, TF> Create(Type type, Func<PropertyInfo, bool> propertyPredicate, bool declaredOnly = false,
+                object instance = null)
+            {
+                return new PropertyRef<T, TF>(type, propertyPredicate, declaredOnly, instance);
             }
 
             public TF GetValue(T instance)
@@ -472,7 +494,16 @@ namespace EFTReflection
             {
                 var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
 
-                var fieldInfo = type.GetField(fieldName, flags) ?? throw new Exception($"{fieldName} Field not exist");
+                var fieldInfo = type.GetField(fieldName, flags) ?? throw new Exception($"{type} {fieldName} Field not exist");
+
+                Init(fieldInfo, instance);
+            }
+
+            public FieldRef(Type type, Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false, object instance = null)
+            {
+                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
+
+                var fieldInfo = type.GetFields(flags).SingleOrDefault(fieldPredicate) ?? throw new Exception($"{type} {nameof(fieldPredicate)} Field not exist");
 
                 Init(fieldInfo, instance);
             }
@@ -487,10 +518,21 @@ namespace EFTReflection
                 return new FieldRef<T, TF>(typeof(T), fieldName, declaredOnly, instance);
             }
 
+            public static FieldRef<T, TF> Create(Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false, object instance = null)
+            {
+                return new FieldRef<T, TF>(typeof(T), fieldPredicate, declaredOnly, instance);
+            }
+
             public static FieldRef<T, TF> Create(Type type, string fieldName, bool declaredOnly = false,
                 object instance = null)
             {
                 return new FieldRef<T, TF>(type, fieldName, declaredOnly, instance);
+            }
+
+            public static FieldRef<T, TF> Create(Type type, Func<FieldInfo, bool> fieldPredicate, bool declaredOnly = false,
+                object instance = null)
+            {
+                return new FieldRef<T, TF>(type, fieldPredicate, declaredOnly, instance);
             }
 
             private void Init(FieldInfo fieldInfo, object instance)
@@ -599,16 +641,20 @@ namespace EFTReflection
                 TargetMethod = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod));
             }
 
-            public HookRef(Type targetType, string targetMethodName)
+            public HookRef(Type targetType, string targetMethodName, bool declaredOnly = true)
             {
-                TargetMethod = targetType.GetMethod(targetMethodName, AccessTools.allDeclared) ??
-                               throw new Exception($"{targetType} can't find {targetMethodName} method");
+                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
+
+                TargetMethod = targetType.GetMethod(targetMethodName, flags) ??
+                               throw new Exception($"{targetType} {targetMethodName} Method not exist");
             }
 
-            public HookRef(Type targetType, Func<MethodInfo, bool> targetMethodPredicate)
+            public HookRef(Type targetType, Func<MethodInfo, bool> targetMethodPredicate, bool declaredOnly = true)
             {
-                TargetMethod = targetType.GetMethods(AccessTools.allDeclared).SingleOrDefault(targetMethodPredicate) ??
-                               throw new Exception($"{targetType} can't find {targetMethodPredicate}");
+                var flags = declaredOnly ? AccessTools.allDeclared : AccessTools.all;
+
+                TargetMethod = targetType.GetMethods(flags).SingleOrDefault(targetMethodPredicate) ??
+                               throw new Exception($"{targetType} {nameof(targetMethodPredicate)} Method not exist");
             }
 
             public static HookRef Create(MethodBase targetMethod)
@@ -616,14 +662,15 @@ namespace EFTReflection
                 return new HookRef(targetMethod);
             }
 
-            public static HookRef Create(Type targetType, string targetMethodName)
+            public static HookRef Create(Type targetType, string targetMethodName, bool declaredOnly = true)
             {
-                return new HookRef(targetType, targetMethodName);
+                return new HookRef(targetType, targetMethodName, declaredOnly);
             }
 
-            public static HookRef Create(Type targetType, Func<MethodInfo, bool> targetMethodPredicate)
+            public static HookRef Create(Type targetType, Func<MethodInfo, bool> targetMethodPredicate,
+                bool declaredOnly = true)
             {
-                return new HookRef(targetType, targetMethodPredicate);
+                return new HookRef(targetType, targetMethodPredicate, declaredOnly);
             }
 
             public void Add(object hookObject, string hookMethodName,

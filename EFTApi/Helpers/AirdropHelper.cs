@@ -48,17 +48,17 @@ namespace EFTApi.Helpers
                     OnBoxLand = RefHelper.HookRef.Create(airdropBoxType,
                         "OnBoxLand");
 
-                    if (EFTVersion.IsMPT)
-                    {
-                        var mptAirdropBoxType = RefTool.GetPluginType(EFTPlugins.MPTCore,
-                            "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox");
+                    if (!EFTVersion.IsMPT) 
+                        return;
 
-                        RefCoopContainer =
-                            RefHelper.PropertyRef<object, LootableContainer>.Create(mptAirdropBoxType, "Container");
+                    var mptAirdropBoxType = RefTool.GetPluginType(EFTPlugins.MPTCore,
+                        "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox");
 
-                        CoopOnBoxLand = RefHelper.HookRef.Create(mptAirdropBoxType,
-                            "OnBoxLand");
-                    }
+                    RefCoopContainer =
+                        RefHelper.PropertyRef<object, LootableContainer>.Create(mptAirdropBoxType, "Container");
+
+                    CoopOnBoxLand = RefHelper.HookRef.Create(mptAirdropBoxType,
+                        "OnBoxLand");
                 }
             }
         }

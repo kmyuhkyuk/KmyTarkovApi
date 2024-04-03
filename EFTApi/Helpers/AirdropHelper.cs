@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
+using EFT.Interactive;
 using EFTReflection;
 using JetBrains.Annotations;
 
@@ -36,6 +37,8 @@ namespace EFTApi.Helpers
 
             [CanBeNull] public readonly RefHelper.HookRef CoopOnBoxLand;
 
+            [CanBeNull] public readonly RefHelper.PropertyRef<object, LootableContainer> RefCoopContainer;
+
             private AirdropBoxData()
             {
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
@@ -49,6 +52,9 @@ namespace EFTApi.Helpers
                     {
                         var mptAirdropBoxType = RefTool.GetPluginType(EFTPlugins.MPTCore,
                             "MPT.Core.AkiSupport.Airdrops.MPTAirdropBox");
+
+                        RefCoopContainer =
+                            RefHelper.PropertyRef<object, LootableContainer>.Create(mptAirdropBoxType, "Container");
 
                         CoopOnBoxLand = RefHelper.HookRef.Create(mptAirdropBoxType,
                             "OnBoxLand");

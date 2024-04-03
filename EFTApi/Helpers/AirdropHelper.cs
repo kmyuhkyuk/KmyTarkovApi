@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection.Emit;
 using EFTReflection;
 using JetBrains.Annotations;
@@ -69,16 +68,24 @@ namespace EFTApi.Helpers
 
             private AirdropLogicClassData()
             {
-                var airdropLogicClassType = EFTVersion.GameVersion == EFTVersion.Parse("3.0.0")
-                    ? RefTool.GetEftType(x => x.Name == "AirdropLogic2Class")
-                    : typeof(AirdropLogicClass);
+                Type airdropLogicClassType;
 
-                OnBoxLand = RefHelper.HookRef.Create(airdropLogicClassType, x => x.ReturnType == typeof(void) && x
-                    .ReadMethodBody().ContainsSequenceIL(new[]
-                    {
-                        new KeyValuePair<OpCode, object>(OpCodes.Ldstr, "collision"),
-                        new KeyValuePair<OpCode, object>(OpCodes.Ldc_I4_1, null)
-                    }));
+                if (EFTVersion.AkiVersion == EFTVersion.Parse("2.3.1"))
+                {
+                    airdropLogicClassType =
+                        RefTool.GetEftType(x => x.GetMethod("ParachuteFadeCoroutine", RefTool.Public) != null);
+                }
+                else if (EFTVersion.AkiVersion == EFTVersion.Parse("3.0.0"))
+                {
+                    airdropLogicClassType = RefTool.GetEftType(x => x.Name == "AirdropLogic2Class");
+                }
+                else
+                {
+                    airdropLogicClassType = typeof(AirdropLogicClass);
+                }
+
+                OnBoxLand = RefHelper.HookRef.Create(airdropLogicClassType, x => x
+                    .ReadMethodBody().ContainsIL(OpCodes.Ldstr, "Raycast to ground returns no hit. Raycast from position {0} on distance {1}. Choose Concrete sound landing set"));
             }
         }
 

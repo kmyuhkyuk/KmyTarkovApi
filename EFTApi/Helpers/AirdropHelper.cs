@@ -48,7 +48,7 @@ namespace EFTApi.Helpers
                     OnBoxLand = RefHelper.HookRef.Create(airdropBoxType,
                         "OnBoxLand");
 
-                    if (!EFTVersion.IsMPT) 
+                    if (!EFTVersion.IsMPT)
                         return;
 
                     var mptAirdropBoxType = RefTool.GetPluginType(EFTPlugins.MPTCore,

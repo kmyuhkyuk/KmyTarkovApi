@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,28 +29,6 @@ namespace EFTApi.Helpers
 
         public ZoneData ZoneHelper => ZoneData.Instance;
 
-        public List<Player> AllBot
-        {
-            get
-            {
-                if (GameWorld == null)
-                    return null;
-
-                var list = new List<Player>();
-
-                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-                foreach (var player in GameWorld.AllPlayers)
-                {
-                    if (player != PlayerHelper.Instance.Player)
-                    {
-                        list.Add(player);
-                    }
-                }
-
-                return list;
-            }
-        }
-
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -62,13 +41,42 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef OnGameStarted;
 
-        public readonly RefHelper.FieldRef<GameWorld, object> RefLootItems;
+        public readonly RefHelper.FieldRef<GameWorld, IList> RefLootList;
+
+        public readonly RefHelper.PropertyRef<GameWorld, IEnumerable<Player>> RefAllPlayers;
+
+        public List<Player> AllBot
+        {
+            get
+            {
+                if (GameWorld == null)
+                    return null;
+
+                var list = new List<Player>();
+
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var player in RefAllPlayers.GetValue(GameWorld))
+                {
+                    if (player.IsAI)
+                    {
+                        list.Add(player);
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        public IList LootList => RefLootList.GetValue(GameWorld);
 
         private GameWorldHelper()
         {
             var gameWorldType = typeof(GameWorld);
 
-            RefLootItems = RefHelper.FieldRef<GameWorld, object>.Create("LootItems");
+            RefLootList = RefHelper.FieldRef<GameWorld, IList>.Create("LootList");
+
+            RefAllPlayers = RefHelper.PropertyRef<GameWorld, IEnumerable<Player>>.Create(
+                EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8") ? "AllPlayersEverExisted" : "AllPlayers");
 
             Awake = RefHelper.HookRef.Create(gameWorldType, "Awake");
             Dispose = RefHelper.HookRef.Create(gameWorldType, "Dispose");

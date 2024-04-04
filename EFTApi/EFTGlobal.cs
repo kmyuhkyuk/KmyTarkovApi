@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using EFT;
 using EFT.InventoryLogic;
 using EFT.UI;
@@ -27,14 +28,19 @@ namespace EFTApi
         public static GameWorld GameWorld => GameWorldHelper.Instance.GameWorld;
 
         /// <summary>
-        ///     Current Traders
-        /// </summary>
-        public static List<object> Traders => SessionHelper.TradersData.Instance.Traders;
-
-        /// <summary>
         ///     Current AllBot
         /// </summary>
         public static List<Player> AllBot => GameWorldHelper.Instance.AllBot;
+
+        /// <summary>
+        ///     Current LootList
+        /// </summary>
+        public static IList LootList => GameWorldHelper.Instance.LootList;
+
+        /// <summary>
+        ///     Current Traders
+        /// </summary>
+        public static List<object> Traders => SessionHelper.TradersData.Instance.Traders;
 
         /// <summary>
         ///     Current Player
@@ -56,6 +62,11 @@ namespace EFTApi
         ///     Current UnderbarrelWeapon
         /// </summary>
         public static Item UnderbarrelWeapon => PlayerHelper.WeaponData.Instance.UnderbarrelWeapon;
+
+        /// <summary>
+        ///     Current GamePlayerOwner
+        /// </summary>
+        public static GamePlayerOwner GamePlayerOwner => PlayerHelper.GamePlayerOwnerData.Instance.GamePlayerOwner;
 
         /// <summary>
         ///     Current MainMenuController

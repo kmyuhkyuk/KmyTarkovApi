@@ -74,6 +74,9 @@ namespace EFTConfiguration.Controllers
         {
             configurationData = null;
 
+            if (pluginInfo == null)
+                return false;
+
             var instance = pluginInfo.Instance;
 
             if (instance == null)

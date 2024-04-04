@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CopyBuildAssembly;
@@ -84,6 +85,10 @@ namespace Build
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+
+                Console.ReadKey();
+
+                Process.GetCurrentProcess().Kill();
             }
         }
     }

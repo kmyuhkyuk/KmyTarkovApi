@@ -8,7 +8,7 @@ using EFTConfiguration.Patches;
 
 namespace EFTConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "EFTConfiguration", "1.1.8")]
+    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "EFTConfiguration", "1.2.0")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {

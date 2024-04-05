@@ -84,14 +84,12 @@ namespace EFTConfiguration.Controllers
             var eftConfigurationPluginAttributes = new EFTConfigurationPluginAttributes(string.Empty);
 
             var hasAttributes = false;
-            foreach (var attribute in type.GetCustomAttributes())
+            foreach (var attribute in type.CustomAttributes)
             {
-                var attributeType = attribute.GetType();
-
-                if (attributeType.Name != nameof(EFTConfigurationPluginAttributes))
+                if (attribute.AttributeType.Name != nameof(EFTConfigurationPluginAttributes))
                     continue;
 
-                var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
+                var eftConfigurationPluginExternalAttributesFieldInfos = attribute.AttributeType.GetFields();
 
                 foreach (var eftConfigurationPluginAttributesFieldInfo in
                          EFTConfigurationPluginAttributesFields)

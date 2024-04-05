@@ -21,6 +21,10 @@ namespace Build
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 
+            var versionName = "1.1.8";
+
+            var releaseName = $"{new DirectoryInfo(modPath).Name}-({versionName} Release).7z";
+
             var previewName = $"{new DirectoryInfo(modPath).Name}-(Preview).7z";
 
             var releasePreview = new[]
@@ -57,7 +61,7 @@ namespace Build
                     "EFTConfiguration"
                 }, sha);
 
-                Copy.GenerateSevenZip(arg, "Release", modPath, null, @"BepInEx\plugins", new[]
+                Copy.GenerateSevenZip(arg, "Release", modPath, releaseName, @"BepInEx\plugins", new[]
                 {
                     "ConfigurationTest.dll"
                 }, new[]

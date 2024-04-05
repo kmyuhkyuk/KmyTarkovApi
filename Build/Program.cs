@@ -23,7 +23,7 @@ namespace Build
 
             var versionName = "1.2.0";
 
-            var releaseName = $"{new DirectoryInfo(modPath).Name}-({versionName} Release).7z";
+            var releaseName = $"{new DirectoryInfo(modPath).Name}-(Release_{versionName}).7z";
 
             var previewName = $"{new DirectoryInfo(modPath).Name}-(Preview).7z";
 

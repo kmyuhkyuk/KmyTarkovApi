@@ -79,17 +79,26 @@ namespace EFTConfiguration.Controllers
             if (instance == null)
                 return false;
 
+            var configFile = instance.Config;
+
+            if (configFile == null)
+                return false;
+
+            var metaData = pluginInfo.Metadata;
+
             var type = instance.GetType();
 
             var eftConfigurationPluginAttributes = new EFTConfigurationPluginAttributes(string.Empty);
 
             var hasAttributes = false;
-            foreach (var attribute in type.CustomAttributes)
+            foreach (var attribute in type.GetCustomAttributes())
             {
-                if (attribute.AttributeType.Name != nameof(EFTConfigurationPluginAttributes))
+                var attributeType = attribute.GetType();
+
+                if (attributeType.Name != nameof(EFTConfigurationPluginAttributes))
                     continue;
 
-                var eftConfigurationPluginExternalAttributesFieldInfos = attribute.AttributeType.GetFields();
+                var eftConfigurationPluginExternalAttributesFieldInfos = attributeType.GetFields();
 
                 foreach (var eftConfigurationPluginAttributesFieldInfo in
                          EFTConfigurationPluginAttributesFields)
@@ -118,13 +127,6 @@ namespace EFTConfiguration.Controllers
                 eftConfigurationPluginAttributes.HidePlugin =
                     type.GetCustomAttributes<BrowsableAttribute>().Any(x => !x.Browsable);
             }
-
-            var configFile = instance.Config;
-
-            if (configFile == null)
-                return false;
-
-            var metaData = pluginInfo.Metadata;
 
             LocalizedHelper.LanguageDictionary.Add(metaData.Name,
                 GetLanguageDictionary(pluginInfo, eftConfigurationPluginAttributes.LocalizedPath));

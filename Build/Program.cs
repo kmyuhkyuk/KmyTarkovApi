@@ -35,6 +35,8 @@ namespace Build
 
             try
             {
+                Copy.CopyFolder(arg, releasePreview, Path.Combine(baseDirectory, "localized"), Path.Combine(modPath, "localized"));
+
                 Copy.CopyAssembly(arg, releasePreview, baseDirectory, currentPath, new[]
                 {
                     "EFTApi",

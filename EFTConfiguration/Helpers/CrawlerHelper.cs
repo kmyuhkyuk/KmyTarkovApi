@@ -29,12 +29,7 @@ namespace EFTConfiguration.Helpers
 
         static CrawlerHelper()
         {
-            var cacheDirectory = new DirectoryInfo(CachePath);
-
-            if (!cacheDirectory.Exists)
-            {
-                cacheDirectory.Create();
-            }
+            Directory.CreateDirectory(CachePath);
 
             if (!File.Exists(CacheFilePath))
             {

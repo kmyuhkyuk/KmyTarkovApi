@@ -67,6 +67,28 @@ namespace EFTApi.Helpers
             }
         }
 
+        public List<Player> AllOtherPlayer
+        {
+            get
+            {
+                if (GameWorld == null)
+                    return null;
+
+                var list = new List<Player>();
+
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var player in RefAllPlayers.GetValue(GameWorld))
+                {
+                    if (player != PlayerHelper.Instance.Player)
+                    {
+                        list.Add(player);
+                    }
+                }
+
+                return list;
+            }
+        }
+
         public IList LootList => RefLootList.GetValue(GameWorld);
 
         private GameWorldHelper()

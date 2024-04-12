@@ -3,6 +3,7 @@ using static EFTApi.Helpers.AirdropHelper;
 using static EFTApi.Helpers.GameWorldHelper;
 using static EFTApi.Helpers.GameWorldHelper.ExfiltrationControllerData;
 using static EFTApi.Helpers.PlayerHelper;
+using static EFTApi.Helpers.PoolManagerHelper;
 using static EFTApi.Helpers.SessionHelper;
 using static EFTApi.Helpers.SessionHelper.TradersData;
 
@@ -115,5 +116,17 @@ namespace EFTApi
         ///     AbstractGame Helper
         /// </summary>
         public static AbstractGameHelper _AbstractGameHelper = AbstractGameHelper.Instance;
+
+        /// <summary>
+        ///     PoolManager Helper
+        /// </summary>
+        public static PoolManagerHelper _PoolManagerHelper = PoolManagerHelper.Instance;
+
+        public static JobPriorityData _JobPriorityHelper = JobPriorityData.Instance;
+
+        /// <summary>
+        ///     Voice Helper
+        /// </summary>
+        public static VoiceHelper _VoiceHelper = VoiceHelper.Instance;
     }
 }

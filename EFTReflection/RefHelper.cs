@@ -285,6 +285,8 @@ namespace EFTReflection
 
             Type RefType { get; }
 
+            bool IsStatic { get; }
+
             TF GetValue(T instance);
 
             void SetValue(T instance, TF value);
@@ -316,6 +318,8 @@ namespace EFTReflection
             public Type DeclaringType { get; private set; }
 
             public Type PropertyType => _propertyInfo.PropertyType;
+
+            public bool IsStatic => (_getMethodInfo?.IsStatic ?? false) || (_setMethodInfo?.IsStatic ?? false);
 
             [Obsolete("Used DeclaringType", true)] public Type RefDeclaringType => DeclaringType;
 
@@ -422,7 +426,7 @@ namespace EFTReflection
                     throw new ArgumentNullException(nameof(_refGetValue));
                 }
 
-                if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                     return _refGetValue(instance);
 
                 if (_instance != null && instance == null)
@@ -438,7 +442,7 @@ namespace EFTReflection
                     throw new ArgumentNullException(nameof(_refSetValue));
                 }
 
-                if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                 {
                     _refSetValue(instance, value);
                 }
@@ -478,6 +482,8 @@ namespace EFTReflection
             public Type DeclaringType { get; private set; }
 
             public Type FieldType => _fieldInfo.FieldType;
+
+            public bool IsStatic => _fieldInfo.IsStatic;
 
             [Obsolete("Used DeclaringType", true)] public Type RefDeclaringType => DeclaringType;
 
@@ -576,7 +582,7 @@ namespace EFTReflection
                         throw new ArgumentNullException(nameof(_harmonyFieldRef));
                     }
 
-                    if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                    if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                         return _harmonyFieldRef(instance);
 
                     if (_instance != null && instance == null)
@@ -590,7 +596,7 @@ namespace EFTReflection
                     throw new ArgumentNullException(nameof(_refGetValue));
                 }
 
-                if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                     return _refGetValue(instance);
 
                 if (_instance != null && instance == null)
@@ -608,7 +614,7 @@ namespace EFTReflection
                         throw new ArgumentNullException(nameof(_harmonyFieldRef));
                     }
 
-                    if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                    if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                     {
                         _harmonyFieldRef(instance) = value;
                     }
@@ -624,7 +630,7 @@ namespace EFTReflection
                         throw new ArgumentNullException(nameof(_refSetValue));
                     }
 
-                    if (instance != null && DeclaringType.IsInstanceOfType(instance))
+                    if (IsStatic || instance != null && DeclaringType.IsInstanceOfType(instance))
                     {
                         _refSetValue(instance, value);
                     }

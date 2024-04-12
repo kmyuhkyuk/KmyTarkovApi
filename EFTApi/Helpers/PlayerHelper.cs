@@ -666,6 +666,8 @@ namespace EFTApi.Helpers
 
             public string PlayerVoice => RefPlayerVoice.GetValue(Speaker);
 
+            private readonly Action<object, EPlayerSide, int, string, bool> _refInit;
+
             private SpeakerData()
             {
                 var playerType = typeof(Player);
@@ -675,6 +677,15 @@ namespace EFTApi.Helpers
                 RefClip = RefHelper.FieldRef<object, TaggedClip>.Create(RefSpeaker.FieldType, "Clip");
 
                 RefPlayerVoice = RefHelper.PropertyRef<object, string>.Create(RefSpeaker.FieldType, "PlayerVoice");
+
+                _refInit = RefHelper.ObjectMethodDelegate<Action<object, EPlayerSide, int, string, bool>>(
+                    RefSpeaker.FieldType.GetMethod("Init", RefTool.Public));
+            }
+
+            public void Init(object instance, EPlayerSide side, int id, string playerVoice,
+                bool registerInSpeakerManager = true)
+            {
+                _refInit(instance, side, id, playerVoice, registerInSpeakerManager);
             }
         }
 

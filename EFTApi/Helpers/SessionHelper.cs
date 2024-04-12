@@ -36,9 +36,17 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.HookRef AfterApplicationLoaded;
 
-        public readonly RefHelper.PropertyRef<ISession, object> RefBackEndConfig;
+        public readonly RefHelper.PropertyRef<object, object> RefBackEndConfig;
+
+        public readonly RefHelper.PropertyRef<object, Profile> RefProfile;
+
+        public readonly RefHelper.PropertyRef<object, Profile> RefProfileOfPet;
 
         private readonly Func<object, ISession> _refGetClientBackEndSession;
+
+        public Profile Profile => RefProfile.GetValue(Session);
+
+        public Profile ProfileOfPet => RefProfileOfPet.GetValue(Session);
 
         private SessionHelper()
         {
@@ -46,11 +54,14 @@ namespace EFTApi.Helpers
                 ? RefTool.GetEftType(x => x.Name == "TarkovApplication")
                 : RefTool.GetEftType(x => x.Name == "MainApplication");
 
-            RefBackEndConfig = RefHelper.PropertyRef<ISession, object>.Create(
+            var backEndConfigType =
                 RefTool.GetEftType(x =>
                     x.GetProperty("BackEndConfig", RefTool.Public) != null &&
-                    x.GetField("cancellationTokenSource_0", RefTool.NonPublic) != null),
-                "BackEndConfig");
+                    x.GetField("cancellationTokenSource_0", RefTool.NonPublic) != null);
+
+            RefBackEndConfig = RefHelper.PropertyRef<object, object>.Create(backEndConfigType, "BackEndConfig");
+            RefProfile = RefHelper.PropertyRef<object, Profile>.Create(backEndConfigType, "Profile");
+            RefProfileOfPet = RefHelper.PropertyRef<object, Profile>.Create(backEndConfigType, "ProfileOfPet");
 
             _refGetClientBackEndSession =
                 RefHelper.ObjectMethodDelegate<Func<object, ISession>>(

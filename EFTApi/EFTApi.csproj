@@ -100,9 +100,11 @@
     <Compile Include="Helpers\LevelSettingsHelper.cs" />
     <Compile Include="Helpers\MainMenuControllerHelper.cs" />
     <Compile Include="Helpers\PlayerHelper.cs" />
+    <Compile Include="Helpers\PoolManagerHelper.cs" />
     <Compile Include="Helpers\QuestHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Helpers\LocalizedHelper.cs" />
+    <Compile Include="Helpers\VoiceHelper.cs" />
     <Compile Include="Patches\GamePlayerOwnerPatchs.cs" />
     <Compile Include="Patches\TriggerWithIdPatchs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

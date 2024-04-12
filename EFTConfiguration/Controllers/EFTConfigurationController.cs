@@ -67,7 +67,7 @@ namespace EFTConfiguration.Controllers
 
             eftConfigurationModel.Configurations = configurationList.ToArray();
 
-            EFTConfigurationModel.Instance.CreateUI();
+            eftConfigurationModel.CreateUI();
         }
 
         private static bool TryGetConfigurationData(PluginInfo pluginInfo, out ConfigurationModel configurationData)

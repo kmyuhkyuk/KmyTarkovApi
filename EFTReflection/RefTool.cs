@@ -321,8 +321,8 @@ namespace EFTReflection
         public static bool ContainsSequenceIL(this IEnumerable<KeyValuePair<OpCode, object>> methodBody,
             IEnumerable<KeyValuePair<OpCode, object>> sequence)
         {
-            var methodBodyArray = methodBody.ToArray();
-            var sequenceArray = sequence.ToArray();
+            var methodBodyArray = methodBody as KeyValuePair<OpCode, object>[] ?? methodBody.ToArray();
+            var sequenceArray = sequence as KeyValuePair<OpCode, object>[] ?? sequence.ToArray();
 
             for (var i = 0; i < methodBodyArray.Length - sequenceArray.Length; i++)
             {

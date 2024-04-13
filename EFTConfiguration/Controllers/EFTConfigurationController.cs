@@ -168,7 +168,7 @@ namespace EFTConfiguration.Controllers
             if (!localizedDirectory.Exists)
                 return localizedDictionary;
 
-            foreach (var localized in localizedDirectory.GetFiles("*.json"))
+            foreach (var localized in localizedDirectory.EnumerateFiles("*.json"))
             {
                 localizedDictionary.Add(Path.GetFileNameWithoutExtension(localized.Name),
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(localized.FullName)));

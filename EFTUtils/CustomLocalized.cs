@@ -69,6 +69,6 @@ namespace EFTUtils
             LanguageAdd?.Invoke();
         }
 
-        public abstract string Localized(T tKey, TV key);
+        public abstract string Localized(T key);
     }
 }

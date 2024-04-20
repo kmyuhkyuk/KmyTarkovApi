@@ -26,6 +26,11 @@ namespace EFTApi
         /// </summary>
         public static readonly Version AkiVersion;
 
+        /// <summary>
+        /// Current MPT Version
+        /// </summary>
+        public static readonly Version MPTVersion;
+
         private static readonly Dictionary<string, Version> SaveVersions =
             new Dictionary<string, Version>();
 
@@ -46,6 +51,8 @@ namespace EFTApi
             GameVersion = gameVersion;
 
             AkiVersion = GetAkiVersion();
+
+            MPTVersion = GetMPTVersion();
         }
 
         public static Version Parse(string version)
@@ -126,6 +133,11 @@ namespace EFTApi
             Logger.LogError("Unable to get current Aki version, which will cause errors in mod");
 
             return Parse("0.0.0");
+        }
+
+        private static Version GetMPTVersion()
+        {
+            return EFTPlugins.MPTCore != null ? EFTPlugins.MPTCore.GetType().Assembly.GetName().Version : Version.Parse("0.0.0.0");
         }
 
         /// <summary>

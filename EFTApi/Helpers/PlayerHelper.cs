@@ -802,17 +802,28 @@ namespace EFTApi.Helpers
                 if (!EFTVersion.IsMPT)
                     return;
 
-                _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
-                    "MPT.Core.Coop.CoopHealthController");
+                if (EFTVersion.MPTVersion > Version.Parse("0.9.8865.35167"))
+                {
+                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.ClientClasses.CoopClientHealthController");
+
+                    _refObservedCoopStore =
+                        RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
+                            .GetPluginType(EFTPlugins.MPTCore,
+                                "MPT.Core.Coop.ObservedClasses.ObservedHealthController").GetMethod("Store", RefTool.Public));
+                }
+                else
+                {
+                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.CoopHealthController");
+
+                    _refObservedCoopStore =
+                        RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
+                            .GetPluginType(EFTPlugins.MPTCore,
+                                "MPT.Core.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
+                }
 
                 _refCoopApplyDamage =
                     RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, DamageInfo, float>>(
                         _coopHealthControllerType.GetMethod("ApplyDamage", RefTool.Public));
-
-                _refObservedCoopStore =
-                    RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
-                        .GetPluginType(EFTPlugins.MPTCore,
-                            "MPT.Core.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
             }
 
             public ValueStruct GetBodyPartHealth(object __instance, EBodyPart bodyPart, bool rounded = false)

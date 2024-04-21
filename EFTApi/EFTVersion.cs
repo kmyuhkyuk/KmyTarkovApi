@@ -198,9 +198,9 @@ namespace EFTApi
 
         internal static void WriteVersionLog()
         {
-            var versionString = $"GameVersion:{GameVersion} AkiVersion:{AkiVersion}";
+            var baseVersion = $"GameVersion:{GameVersion} AkiVersion:{AkiVersion}";
 
-            Logger.LogMessage(EFTPlugins.MPTCore != null ? $"{versionString} MPTVersion:{MPTVersion}" : versionString);
+            Logger.LogMessage(EFTPlugins.MPTCore != null ? $"{baseVersion} MPTVersion:{MPTVersion}" : baseVersion);
         }
     }
 }

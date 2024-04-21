@@ -27,7 +27,7 @@ namespace EFTApi
         public static readonly Version AkiVersion;
 
         /// <summary>
-        /// Current MPT Version
+        ///     Current MPT Version
         /// </summary>
         public static readonly Version MPTVersion;
 
@@ -137,7 +137,9 @@ namespace EFTApi
 
         private static Version GetMPTVersion()
         {
-            return EFTPlugins.MPTCore != null ? EFTPlugins.MPTCore.GetType().Assembly.GetName().Version : Version.Parse("0.0.0.0");
+            return EFTPlugins.MPTCore != null
+                ? EFTPlugins.MPTCore.GetType().Assembly.GetName().Version
+                : Version.Parse("0.0.0.0");
         }
 
         /// <summary>

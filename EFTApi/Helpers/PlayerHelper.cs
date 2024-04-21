@@ -68,9 +68,9 @@ namespace EFTApi.Helpers
         private readonly Func<Player, int, bool> _refGetBleedBlock;
 
         /// <summary>
-        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.ApplyDamageInfo
+        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.ApplyShot
         /// </summary>
-        [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyDamageInfo;
+        [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyShot;
 
         public readonly RefHelper.HookRef OnBeenKilledByAggressor;
 
@@ -136,7 +136,7 @@ namespace EFTApi.Helpers
                 var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
                     "MPT.Core.Coop.Players.ObservedCoopPlayer");
 
-                ObservedCoopApplyDamageInfo = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyDamageInfo");
+                ObservedCoopApplyShot = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyShot");
                 ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
             }
 
@@ -804,16 +804,19 @@ namespace EFTApi.Helpers
 
                 if (EFTVersion.MPTVersion > Version.Parse("0.9.8865.35167"))
                 {
-                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.ClientClasses.CoopClientHealthController");
+                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
+                        "MPT.Core.Coop.ClientClasses.CoopClientHealthController");
 
                     _refObservedCoopStore =
                         RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
                             .GetPluginType(EFTPlugins.MPTCore,
-                                "MPT.Core.Coop.ObservedClasses.ObservedHealthController").GetMethod("Store", RefTool.Public));
+                                "MPT.Core.Coop.ObservedClasses.ObservedHealthController")
+                            .GetMethod("Store", RefTool.Public));
                 }
                 else
                 {
-                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.CoopHealthController");
+                    _coopHealthControllerType =
+                        RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.CoopHealthController");
 
                     _refObservedCoopStore =
                         RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool

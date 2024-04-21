@@ -7,8 +7,10 @@
     public class AcceptableValueCustomList<T> : BepInEx.Configuration.AcceptableValueList<T>
         where T : System.IEquatable<T>
     {
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         [System.Obsolete("Used AcceptableValuesCustom", true)]
         public override T[] AcceptableValues => AcceptableValuesCustom;
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
 
         public T[] AcceptableValuesCustom
         {

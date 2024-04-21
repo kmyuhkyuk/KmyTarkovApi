@@ -10,11 +10,13 @@
     public class AcceptableValueCustomRange<T> : BepInEx.Configuration.AcceptableValueRange<T>
         where T : System.IComparable
     {
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         [System.Obsolete("Used MinValueCustom", true)]
         public override T MinValue => MinValueCustom;
 
         [System.Obsolete("Used MaxValueCustom", true)]
         public override T MaxValue => MaxValueCustom;
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
 
         public T MinValueCustom
         {

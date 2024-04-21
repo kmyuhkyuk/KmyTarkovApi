@@ -10,11 +10,13 @@ namespace EFTReflection.Patching
         private const string Tip =
             "Please do not override GetTargetMethod () in ModulePatchs, Used GetTargetMethods ()";
 
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         [Obsolete(Tip, true)]
         protected override MethodBase GetTargetMethod()
         {
             return null;
         }
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
 
         /// <summary>
         ///     Get original methods

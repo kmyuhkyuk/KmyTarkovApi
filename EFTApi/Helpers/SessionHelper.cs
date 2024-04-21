@@ -106,6 +106,8 @@ namespace EFTApi.Helpers
 
             public static TradersData Instance => Lazy.Value;
 
+            public TradersAvatarData TradersAvatarHelper => TradersAvatarData.Instance;
+
             public List<object> Traders
             {
                 get
@@ -127,8 +129,6 @@ namespace EFTApi.Helpers
             }
 
             public readonly RefHelper.PropertyRef<object, IEnumerable> RefTraders;
-
-            public TradersAvatarData TradersAvatarHelper => TradersAvatarData.Instance;
 
             private TradersData()
             {

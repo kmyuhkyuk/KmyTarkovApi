@@ -14,7 +14,7 @@ namespace EFTApi
     {
         private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(EFTVersion));
 
-        public static readonly bool IsMPT = EFTPlugins.MPTCore != null;
+        public static readonly bool IsFika = EFTPlugins.FikaCore != null;
 
         /// <summary>
         ///     Current Game File Version
@@ -27,9 +27,9 @@ namespace EFTApi
         public static readonly Version AkiVersion;
 
         /// <summary>
-        ///     Current MPT Version
+        ///     Current Fika Version
         /// </summary>
-        public static readonly Version MPTVersion;
+        public static readonly Version FikaVersion;
 
         private static readonly Dictionary<string, Version> SaveVersions =
             new Dictionary<string, Version>();
@@ -52,7 +52,7 @@ namespace EFTApi
 
             AkiVersion = GetAkiVersion();
 
-            MPTVersion = GetMPTVersion();
+            FikaVersion = GetFikaVersion();
         }
 
         public static Version Parse(string version)
@@ -135,10 +135,10 @@ namespace EFTApi
             return Parse("0.0.0");
         }
 
-        private static Version GetMPTVersion()
+        private static Version GetFikaVersion()
         {
-            return EFTPlugins.MPTCore != null
-                ? EFTPlugins.MPTCore.GetType().Assembly.GetName().Version
+            return EFTPlugins.FikaCore != null
+                ? EFTPlugins.FikaCore.GetType().Assembly.GetName().Version
                 : Version.Parse("0.0.0.0");
         }
 
@@ -202,7 +202,7 @@ namespace EFTApi
         {
             var baseVersion = $"GameVersion:{GameVersion} AkiVersion:{AkiVersion}";
 
-            Logger.LogMessage(EFTPlugins.MPTCore != null ? $"{baseVersion} MPTVersion:{MPTVersion}" : baseVersion);
+            Logger.LogMessage(EFTPlugins.FikaCore != null ? $"{baseVersion} FikaVersion:{FikaVersion}" : baseVersion);
         }
     }
 }

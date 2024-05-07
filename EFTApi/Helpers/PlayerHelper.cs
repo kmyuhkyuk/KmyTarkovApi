@@ -68,7 +68,7 @@ namespace EFTApi.Helpers
         private readonly Func<Player, int, bool> _refGetBleedBlock;
 
         /// <summary>
-        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.ApplyShot
+        ///     Fika.Core.Coop.Players.ObservedCoopPlayer.ApplyShot
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyShot;
 
@@ -77,7 +77,7 @@ namespace EFTApi.Helpers
         public readonly RefHelper.HookRef OnPhraseTold;
 
         /// <summary>
-        ///     MPT.Core.Coop.Players.ObservedCoopPlayer.OnPhraseTold
+        ///     Fika.Core.Coop.Players.ObservedCoopPlayer.OnPhraseTold
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopOnPhraseTold;
 
@@ -131,10 +131,10 @@ namespace EFTApi.Helpers
                                 AccessTools.Field(RefSkills.PropertyType, "LightVestBleedingProtection"))));
             }
 
-            if (EFTVersion.IsMPT)
+            if (EFTVersion.IsFika)
             {
-                var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
-                    "MPT.Core.Coop.Players.ObservedCoopPlayer");
+                var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.FikaCore,
+                    "Fika.Core.Coop.Players.ObservedCoopPlayer");
 
                 ObservedCoopApplyShot = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyShot");
                 ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
@@ -745,12 +745,12 @@ namespace EFTApi.Helpers
                 out SideEffectComponent sideEffectComponent);
 
             /// <summary>
-            ///     MPT.Core.Coop.CoopHealthController.ApplyDamage
+            ///     Fika.Core.Coop.ClientClasses.CoopClientHealthController.ApplyDamage
             /// </summary>
             private readonly Func<object, EBodyPart, float, DamageInfo, float> _refCoopApplyDamage;
 
             /// <summary>
-            ///     MPT.Core.Coop.ObservedHealthController.Store
+            ///     Fika.Core.Coop.ObservedClasses.ObservedHealthController.Store
             /// </summary>
             private readonly Func<object, object, object> _refObservedCoopStore;
 
@@ -799,30 +799,17 @@ namespace EFTApi.Helpers
                     RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "EnergyRate");
                 RefIsAlive = RefHelper.PropertyRef<object, bool>.Create(RefHealthController.PropertyType, "IsAlive");
 
-                if (!EFTVersion.IsMPT)
+                if (!EFTVersion.IsFika)
                     return;
 
-                if (EFTVersion.MPTVersion > Version.Parse("0.9.8865.35167"))
-                {
-                    _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.MPTCore,
-                        "MPT.Core.Coop.ClientClasses.CoopClientHealthController");
+                _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.FikaCore,
+                    "Fika.Core.Coop.ClientClasses.CoopClientHealthController");
 
-                    _refObservedCoopStore =
-                        RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
-                            .GetPluginType(EFTPlugins.MPTCore,
-                                "MPT.Core.Coop.ObservedClasses.ObservedHealthController")
-                            .GetMethod("Store", RefTool.Public));
-                }
-                else
-                {
-                    _coopHealthControllerType =
-                        RefTool.GetPluginType(EFTPlugins.MPTCore, "MPT.Core.Coop.CoopHealthController");
-
-                    _refObservedCoopStore =
-                        RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
-                            .GetPluginType(EFTPlugins.MPTCore,
-                                "MPT.Core.Coop.ObservedHealthController").GetMethod("Store", RefTool.Public));
-                }
+                _refObservedCoopStore =
+                    RefHelper.ObjectMethodDelegate<Func<object, object, object>>(RefTool
+                        .GetPluginType(EFTPlugins.FikaCore,
+                            "Fika.Core.Coop.ObservedClasses.ObservedHealthController")
+                        .GetMethod("Store", RefTool.Public));
 
                 _refCoopApplyDamage =
                     RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, DamageInfo, float>>(

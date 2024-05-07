@@ -31,9 +31,9 @@ namespace EFTApi
         public static readonly BaseUnityPlugin AkiSinglePlayer;
 
         /// <summary>
-        ///     com.mpt.core
+        ///     com.fika.core
         /// </summary>
-        public static readonly BaseUnityPlugin MPTCore;
+        public static readonly BaseUnityPlugin FikaCore;
 
         static EFTPlugins()
         {
@@ -57,7 +57,7 @@ namespace EFTApi
                 Logger.LogWarning("Can't get com.spt-aki.singleplayer plugin(aki-singleplayer.dll)");
             }
 
-            RefTool.TryGetPlugin("com.mpt.core", out MPTCore);
+            RefTool.TryGetPlugin("com.fika.core", out FikaCore);
         }
     }
 }

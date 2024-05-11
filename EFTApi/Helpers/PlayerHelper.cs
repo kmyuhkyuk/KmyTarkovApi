@@ -480,7 +480,7 @@ namespace EFTApi.Helpers
             public Animator WeaponAnimator =>
                 RefAnimator.GetValue(RefWeaponIAnimator.GetValue(PlayerHelper.Instance.Player));
 
-            public Animator LauncherIAnimator =>
+            public Animator LauncherAnimator =>
                 RefAnimator.GetValue(RefUnderbarrelWeaponIAnimator?.GetValue(PlayerHelper.Instance.Player));
 
             public Slot[] UnderbarrelChambers => RefUnderbarrelChambers?.GetValue(UnderbarrelWeapon);

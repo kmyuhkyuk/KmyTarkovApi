@@ -12,68 +12,68 @@ namespace EFTUtils
 
     public class UpdateManger
     {
-        private readonly List<IUpdate> _updates = new List<IUpdate>();
+        protected readonly List<IUpdate> Updates = new List<IUpdate>();
 
-        private readonly List<IUpdate> _stopUpdates = new List<IUpdate>();
+        protected readonly List<IUpdate> StopUpdates = new List<IUpdate>();
 
-        private readonly List<IUpdate> _removeUpdates = new List<IUpdate>();
+        protected readonly List<IUpdate> RemoveUpdates = new List<IUpdate>();
 
-        public void Register(IUpdate update)
+        public virtual void Register(IUpdate update)
         {
-            if (!_updates.Contains(update))
+            if (!Updates.Contains(update))
             {
-                _updates.Add(update);
+                Updates.Add(update);
             }
         }
 
-        public void Run(IUpdate update)
+        public virtual void Run(IUpdate update)
         {
-            _stopUpdates.Remove(update);
+            StopUpdates.Remove(update);
         }
 
-        public void Stop(IUpdate update)
+        public virtual void Stop(IUpdate update)
         {
-            if (!_stopUpdates.Contains(update))
+            if (!StopUpdates.Contains(update))
             {
-                _stopUpdates.Add(update);
+                StopUpdates.Add(update);
             }
         }
 
-        public void Remove(IUpdate update)
+        public virtual void Remove(IUpdate update)
         {
-            if (!_removeUpdates.Contains(update))
+            if (!RemoveUpdates.Contains(update))
             {
-                _removeUpdates.Add(update);
+                RemoveUpdates.Add(update);
             }
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            if (_updates.Count == 0)
+            if (Updates.Count == 0)
                 return;
 
-            for (var i = 0; i < _updates.Count; i++)
+            for (var i = 0; i < Updates.Count; i++)
             {
                 try
                 {
-                    var update = _updates[i];
+                    var update = Updates[i];
 
-                    if (_removeUpdates.Contains(update))
+                    if (RemoveUpdates.Contains(update))
                     {
-                        var num = _removeUpdates.IndexOf(update);
+                        var num = RemoveUpdates.IndexOf(update);
 
-                        _updates.RemoveAt(i);
+                        Updates.RemoveAt(i);
 
-                        _removeUpdates.RemoveAt(num);
+                        RemoveUpdates.RemoveAt(num);
                     }
-                    else if (!_stopUpdates.Contains(update))
+                    else if (!StopUpdates.Contains(update))
                     {
                         update.CustomUpdate();
                     }
                 }
                 catch
                 {
-                    _updates.RemoveAt(i);
+                    Updates.RemoveAt(i);
 
                     throw;
                 }

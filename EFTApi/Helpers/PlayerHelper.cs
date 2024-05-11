@@ -322,7 +322,7 @@ namespace EFTApi.Helpers
                 }
             }
 
-            public HashSet<string> EquipmentHash
+            public HashSet<string> EquipmentItemHashSet
             {
                 get
                 {
@@ -388,7 +388,7 @@ namespace EFTApi.Helpers
                 }
             }
 
-            public HashSet<string> QuestRaidItemsHash
+            public HashSet<string> QuestRaidItemHashSet
             {
                 get
                 {

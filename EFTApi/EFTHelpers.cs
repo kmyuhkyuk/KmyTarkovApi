@@ -128,5 +128,13 @@ namespace EFTApi
         ///     Voice Helper
         /// </summary>
         public static VoiceHelper _VoiceHelper = VoiceHelper.Instance;
+
+        /// <summary>
+        ///     EasyAssets Helper
+        /// </summary>
+        public static EasyAssetsHelper _EasyAssetsHelper = EasyAssetsHelper.Instance;
+
+        public static EasyAssetsHelper.EasyAssetsExtensionData _EasyAssetsExtensionHelper =
+            EasyAssetsHelper.EasyAssetsExtensionData.Instance;
     }
 }

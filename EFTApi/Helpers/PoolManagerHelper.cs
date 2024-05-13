@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using EFT;
 using EFTReflection;
 
+// ReSharper disable UnusedMember.Global
+
 namespace EFTApi.Helpers
 {
     public class PoolManagerHelper
@@ -12,6 +14,8 @@ namespace EFTApi.Helpers
             new Lazy<PoolManagerHelper>(() => new PoolManagerHelper());
 
         public static PoolManagerHelper Instance => Lazy.Value;
+
+        public static JobPriorityData JobPriorityHelper => JobPriorityData.Instance;
 
         public PoolManager PoolManager { get; private set; }
 

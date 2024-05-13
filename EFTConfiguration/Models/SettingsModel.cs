@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace EFTConfiguration.Models
 {
-    public class SettingsModel
+    internal class SettingsModel
     {
         public static SettingsModel Instance { get; private set; }
 

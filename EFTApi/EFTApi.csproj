@@ -87,6 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\EasyAssetsHelper.cs" />
     <Compile Include="EFTApiPlugin.cs" />
     <Compile Include="EFTGlobal.cs" />
     <Compile Include="EFTHelpers.cs" />

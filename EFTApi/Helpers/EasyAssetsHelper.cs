@@ -107,7 +107,7 @@ namespace EFTApi.Helpers
 
             public GameObject GetAsset(EasyAssets easyAssets, ResourceKey key)
             {
-                return GetAsset(easyAssets, key.path, key.rcid);
+                return _refGetAssets(easyAssets, key.path, key.rcid);
             }
 
             public GameObject GetAsset(EasyAssets easyAssets, string key, string assetName = null)

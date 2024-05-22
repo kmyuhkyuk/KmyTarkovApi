@@ -125,7 +125,7 @@ namespace EFTApi.Helpers
             if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
             {
                 _refGetBleedBlock =
-                    RefHelper.ObjectMethodDelegate<Func<Player, int, bool>>(
+                    AccessTools.MethodDelegate<Func<Player, int, bool>>(
                         RefTool.GetEftMethod(playerType, AccessTools.allDeclared,
                             x => x.ReturnType == typeof(bool) && x.ReadMethodBody().ContainsIL(OpCodes.Ldfld,
                                 AccessTools.Field(RefSkills.PropertyType, "LightVestBleedingProtection"))));

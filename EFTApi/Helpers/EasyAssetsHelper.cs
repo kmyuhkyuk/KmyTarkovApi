@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Diz.Resources;
 using EFT;
 using EFTReflection;
+using HarmonyLib;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 // ReSharper disable UnusedMember.Global
 
@@ -54,7 +56,11 @@ namespace EFTApi.Helpers
 
             private readonly Func<object, Task> _refLoadBundles;
 
-            private readonly Func<EasyAssets, ResourceKey, GameObject> _refGetAsset;
+            private readonly MethodInfo _getAssetMethodInfo;
+
+            private readonly Func<EasyAssets, string, string, GameObject> _refGetAssets;
+
+            private readonly Dictionary<Type, Func<EasyAssets, string, string, Object>> _getAssetsDictionary;
 
             private EasyAssetsExtensionData()
             {
@@ -74,11 +80,18 @@ namespace EFTApi.Helpers
                             x => x.Name == "LoadBundles"
                                  && !x.GetParameters()[0].ParameterType.IsArray));
 
-                _refGetAsset = RefHelper.ObjectMethodDelegate<Func<EasyAssets, ResourceKey, GameObject>>(
-                    RefTool.GetEftMethod(easyAssetsExtensionType, BindingFlags.Static | RefTool.Public,
-                            x => x.Name == "GetAsset" && x.GetParameters().Length == 2
-                                                      && x.GetParameters()[1].ParameterType == typeof(ResourceKey))
-                        .MakeGenericMethod(typeof(GameObject)));
+                _getAssetMethodInfo = RefTool.GetEftMethod(easyAssetsExtensionType,
+                    BindingFlags.Static | RefTool.Public,
+                    x => x.Name == "GetAsset" && x.GetParameters().Length == 3
+                                              && x.GetParameters()[1].ParameterType == typeof(string));
+
+                _refGetAssets = AccessTools.MethodDelegate<Func<EasyAssets, string, string, GameObject>>(
+                    _getAssetMethodInfo.MakeGenericMethod(typeof(GameObject)));
+
+                _getAssetsDictionary = new Dictionary<Type, Func<EasyAssets, string, string, Object>>
+                {
+                    { typeof(GameObject), _refGetAssets }
+                };
             }
 
             public object Retain(EasyAssets easyAssets, IEnumerable<string> keys, IProgress<float> progress = null,
@@ -94,7 +107,27 @@ namespace EFTApi.Helpers
 
             public GameObject GetAsset(EasyAssets easyAssets, ResourceKey key)
             {
-                return _refGetAsset(easyAssets, key);
+                return GetAsset(easyAssets, key.path, key.rcid);
+            }
+
+            public GameObject GetAsset(EasyAssets easyAssets, string key, string assetName = null)
+            {
+                return _refGetAssets(easyAssets, key, assetName);
+            }
+
+            public Func<EasyAssets, string, string, T> GetAssetDelegate<T>() where T : Object
+            {
+                if (_getAssetsDictionary.TryGetValue(typeof(T), out var value))
+                {
+                    return (Func<EasyAssets, string, string, T>)value;
+                }
+
+                var newValue = AccessTools.MethodDelegate<Func<EasyAssets, string, string, T>>(
+                    _getAssetMethodInfo.MakeGenericMethod(typeof(T)));
+
+                _getAssetsDictionary.Add(typeof(T), newValue);
+
+                return newValue;
             }
         }
     }

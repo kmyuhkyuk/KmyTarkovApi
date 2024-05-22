@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using EFTReflection;
+using HarmonyLib;
 
 namespace EFTApi.Helpers
 {
@@ -27,7 +28,7 @@ namespace EFTApi.Helpers
                 RefHelper.FieldRef<object, Dictionary<string, string>>.Create(voiceClassType, "dictionary_0");
 
             _refTakePhrasePath =
-                RefHelper.ObjectMethodDelegate<Func<string, string>>(voiceClassType.GetMethod("TakePhrasePath",
+                AccessTools.MethodDelegate<Func<string, string>>(voiceClassType.GetMethod("TakePhrasePath",
                     BindingFlags.Static | RefTool.Public));
         }
 

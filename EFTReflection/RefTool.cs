@@ -153,41 +153,21 @@ namespace EFTReflection
             return methodBase.IsDefined(typeof(AsyncStateMachineAttribute));
         }
 
-        #region IsCompilerGenerated
-
         /// <summary>
-        ///     If <see cref="Type" /> is Compiler Generate then return <see langword="true" />
+        ///     If <see cref="MemberInfo" /> is Compiler Generate then return <see langword="true" />
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="member"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static bool IsCompilerGenerated(this Type type)
+        public static bool IsCompilerGenerated(this MemberInfo member)
         {
-            if (type == null)
+            if (member == null)
             {
-                throw new ArgumentNullException(nameof(type));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            return type.IsDefined(typeof(CompilerGeneratedAttribute));
+            return member.IsDefined(typeof(CompilerGeneratedAttribute));
         }
-
-        /// <summary>
-        ///     If <see cref="MethodBase" /> is Compiler Generate then return <see langword="true" />
-        /// </summary>
-        /// <param name="methodBase"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static bool IsCompilerGenerated(this MethodBase methodBase)
-        {
-            if (methodBase == null)
-            {
-                throw new ArgumentNullException(nameof(methodBase));
-            }
-
-            return methodBase.IsDefined(typeof(CompilerGeneratedAttribute));
-        }
-
-        #endregion
 
         /// <summary>
         ///     Get Async Struct from <see cref="MethodBase" />

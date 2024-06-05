@@ -4,6 +4,7 @@ using EFT;
 using EFT.InventoryLogic;
 using EFT.UI;
 using EFTApi.Helpers;
+using UnityEngine;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -74,9 +75,9 @@ namespace EFTApi
         public static MainMenuController MainMenuController => MainMenuControllerHelper.Instance.MainMenuController;
 
         /// <summary>
-        ///     Current GameUI
+        ///     Current BattleUIScreen
         /// </summary>
-        public static GameUI GameUI => GameUIHelper.Instance.GameUI;
+        public static MonoBehaviour BattleUIScreen => BattleUIScreenHelper.Instance.BattleUIScreen;
 
         /// <summary>
         ///     Current EnvironmentUIRoot

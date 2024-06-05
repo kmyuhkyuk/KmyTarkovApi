@@ -52,9 +52,6 @@
     <Reference Include="0Harmony">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Aki.Reflection">
-      <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\EscapeFromTarkov_Data\Managed\Aki.Reflection.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>R:\Battlestate Games\Client.0.12.12.15.17349\EscapeFromTarkov_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -96,7 +93,7 @@
     <Compile Include="Helpers\AbstractGameHelper.cs" />
     <Compile Include="Helpers\AirdropHelper.cs" />
     <Compile Include="Helpers\EnvironmentUIRootHelper.cs" />
-    <Compile Include="Helpers\GameUIHelper.cs" />
+    <Compile Include="Helpers\BattleUIScreenHelper.cs" />
     <Compile Include="Helpers\GameWorldHelper.cs" />
     <Compile Include="Helpers\LevelSettingsHelper.cs" />
     <Compile Include="Helpers\MainMenuControllerHelper.cs" />

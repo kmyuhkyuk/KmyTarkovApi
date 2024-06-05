@@ -37,24 +37,28 @@ namespace EFTApi
 
         static EFTPlugins()
         {
-            if (!RefTool.TryGetPlugin("com.spt-aki.core", out AkiCore))
+            if (!RefTool.TryGetPlugin("com.SPT.core", out AkiCore) &&
+                !RefTool.TryGetPlugin("com.spt-aki.core", out AkiCore))
             {
-                Logger.LogWarning("Can't get com.spt-aki.core plugin(aki-core.dll)");
+                Logger.LogWarning("Can't get com.SPT.core plugin(spt-core.dll)");
             }
 
-            if (!RefTool.TryGetPlugin("com.spt-aki.custom", out AkiCustom))
+            if (!RefTool.TryGetPlugin("com.SPT.custom", out AkiCustom) &&
+                !RefTool.TryGetPlugin("com.spt-aki.custom", out AkiCustom))
             {
-                Logger.LogWarning("Can't get com.spt-aki.custom plugin(aki-custom.dll)");
+                Logger.LogWarning("Can't get ccom.SPT.custom plugin(spt-custom.dll)");
             }
 
-            if (!RefTool.TryGetPlugin("com.spt-aki.debugging", out AkiDebugging))
+            if (!RefTool.TryGetPlugin("com.SPT.debugging", out AkiDebugging) &&
+                !RefTool.TryGetPlugin("com.spt-aki.debugging", out AkiDebugging))
             {
-                Logger.LogWarning("Can't get com.spt-aki.debugging plugin(aki-debugging.dll)");
+                Logger.LogWarning("Can't get com.SPT.debugging plugin(spt-debugging.dll)");
             }
 
-            if (!RefTool.TryGetPlugin("com.spt-aki.singleplayer", out AkiSinglePlayer))
+            if (!RefTool.TryGetPlugin("com.SPT.singleplayer", out AkiSinglePlayer) &&
+                !RefTool.TryGetPlugin("com.spt-aki.singleplayer", out AkiSinglePlayer))
             {
-                Logger.LogWarning("Can't get com.spt-aki.singleplayer plugin(aki-singleplayer.dll)");
+                Logger.LogWarning("Can't get com.SPT.singleplayer plugin(spt-singleplayer.dll)");
             }
 
             RefTool.TryGetPlugin("com.fika.core", out FikaCore);

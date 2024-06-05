@@ -43,7 +43,9 @@ namespace EFTApi.Helpers
             {
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
                 {
-                    var airdropBoxType = RefTool.GetPluginType(EFTPlugins.AkiCustom, "Aki.Custom.Airdrops.AirdropBox");
+                    var airdropBoxType = EFTVersion.AkiVersion > EFTVersion.Parse("3.8.3")
+                        ? RefTool.GetPluginType(EFTPlugins.AkiCustom, "SPT.Custom.Airdrops.AirdropBox")
+                        : RefTool.GetPluginType(EFTPlugins.AkiCustom, "Aki.Custom.Airdrops.AirdropBox");
 
                     OnBoxLand = RefHelper.HookRef.Create(airdropBoxType,
                         "OnBoxLand");

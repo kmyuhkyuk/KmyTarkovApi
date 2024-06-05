@@ -17,7 +17,7 @@ namespace Build
             var sha = Copy.GetTipSha(args.ElementAtOrDefault(1));
 
             const string modPath =
-                @"R:\Battlestate Games\Client.0.14.1.2.29197\BepInEx\plugins\kmyuhkyuk-EFTApi";
+                @"R:\Battlestate Games\Client.0.14.8.6.30268\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 

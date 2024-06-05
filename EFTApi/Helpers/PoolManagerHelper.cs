@@ -19,7 +19,7 @@ namespace EFTApi.Helpers
 
         public PoolManager PoolManager { get; private set; }
 
-        public readonly RefHelper.HookRef PoolManagerConstructor;
+        public readonly RefHelper.HookRef Constructor;
 
         private readonly
             Func<PoolManager, PoolManager.PoolsCategory, PoolManager.AssemblyType, ResourceKey[], object, object,
@@ -34,12 +34,12 @@ namespace EFTApi.Helpers
                     [], object, object,
                     CancellationToken, Task>>(poolManagerType.GetMethod("LoadBundlesAndCreatePools", RefTool.Public));
 
-            PoolManagerConstructor = RefHelper.HookRef.Create(poolManagerType.GetConstructors()[0]);
+            Constructor = RefHelper.HookRef.Create(poolManagerType.GetConstructors()[0]);
 
-            PoolManagerConstructor.Add(this, nameof(OnPoolManagerConstructor));
+            Constructor.Add(this, nameof(OnConstructor));
         }
 
-        private static void OnPoolManagerConstructor(PoolManager __instance)
+        private static void OnConstructor(PoolManager __instance)
         {
             Instance.PoolManager = __instance;
         }

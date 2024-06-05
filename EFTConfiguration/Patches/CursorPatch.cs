@@ -1,39 +1,24 @@
 ﻿#if !UNITY_EDITOR
 
-using System.Reflection;
-using Aki.Reflection.Patching;
 using EFTConfiguration.Models;
+using HarmonyLib;
 using UnityEngine;
 
 namespace EFTConfiguration.Patches
 {
-    public class CursorLockStatePatch : ModulePatch
+    [HarmonyPatch(typeof(Cursor), "lockState", MethodType.Setter)]
+    public class CursorLockStatePatch
     {
-        protected override MethodBase GetTargetMethod()
-        {
-            return typeof(Cursor)
-                .GetProperty("lockState", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
-                ?.GetSetMethod();
-        }
-
-        [PatchPrefix]
-        private static bool PatchPrefix()
+        private static bool Prefix()
         {
             return !EFTConfigurationModel.Instance.Unlock;
         }
     }
 
-    public class CursorVisiblePatch : ModulePatch
+    [HarmonyPatch(typeof(Cursor), "visible", MethodType.Setter)]
+    public class CursorVisiblePatch
     {
-        protected override MethodBase GetTargetMethod()
-        {
-            return typeof(Cursor)
-                .GetProperty("visible", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
-                ?.GetSetMethod();
-        }
-
-        [PatchPrefix]
-        private static bool PatchPrefix()
+        private static bool Prefix()
         {
             return !EFTConfigurationModel.Instance.Unlock;
         }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using Aki.Reflection.Utils;
 using BepInEx;
 using BepInEx.Bootstrap;
+using EFT;
 using HarmonyLib;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -16,6 +16,8 @@ namespace EFTReflection
 {
     public static class RefTool
     {
+        public static readonly Type[] EftTypes = typeof(AbstractGame).Assembly.GetTypes();
+
         #region BindingFlags
 
         /// <summary>
@@ -42,7 +44,7 @@ namespace EFTReflection
         /// <returns></returns>
         public static Type GetEftType(Func<Type, bool> typePredicate)
         {
-            return PatchConstants.EftTypes.Single(typePredicate);
+            return EftTypes.Single(typePredicate);
         }
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace EFTReflection
         /// <returns></returns>
         public static bool TryGetEftType(Func<Type, bool> typePredicate, out Type eftType)
         {
-            eftType = PatchConstants.EftTypes.SingleOrDefault(typePredicate);
+            eftType = EftTypes.SingleOrDefault(typePredicate);
 
             return eftType != null;
         }

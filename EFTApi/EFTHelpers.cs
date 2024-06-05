@@ -16,9 +16,9 @@ namespace EFTApi
     public static class EFTHelpers
     {
         /// <summary>
-        ///     GameUI Helper
+        ///     BattleUIScreen Helper
         /// </summary>
-        public static GameUIHelper _GameUIHelper = GameUIHelper.Instance;
+        public static BattleUIScreenHelper _BattleUIScreenHelper = BattleUIScreenHelper.Instance;
 
         /// <summary>
         ///     LevelSettings Helper

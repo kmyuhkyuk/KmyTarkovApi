@@ -5,6 +5,7 @@ using BepInEx;
 using EFTConfiguration.Attributes;
 using EFTConfiguration.Models;
 using EFTConfiguration.Patches;
+using HarmonyLib;
 
 namespace EFTConfiguration
 {
@@ -23,8 +24,8 @@ namespace EFTConfiguration
 
         private void Start()
         {
-            new CursorLockStatePatch().Enable();
-            new CursorVisiblePatch().Enable();
+            Harmony.CreateAndPatchAll(typeof(CursorLockStatePatch));
+            Harmony.CreateAndPatchAll(typeof(CursorVisiblePatch));
         }
     }
 }

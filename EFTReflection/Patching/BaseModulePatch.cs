@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Aki.Reflection.Patching;
 using BepInEx.Logging;
 using HarmonyLib;
 using JetBrains.Annotations;
@@ -14,6 +13,36 @@ namespace EFTReflection.Patching
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
     public class PatchReverseAttribute : Attribute
+    {
+    }
+
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchPrefixAttribute : Attribute
+    {
+    }
+
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchPostfixAttribute : Attribute
+    {
+    }
+
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchTranspilerAttribute : Attribute
+    {
+    }
+
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchFinalizerAttribute : Attribute
+    {
+    }
+
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchILManipulatorAttribute : Attribute
     {
     }
 
@@ -35,7 +64,7 @@ namespace EFTReflection.Patching
         {
             if (Logger == null)
             {
-                Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(ModulePatch));
+                Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(BaseModulePatch));
             }
         }
 

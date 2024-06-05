@@ -19,7 +19,7 @@ namespace EFTConfiguration
 
             SettingsModel.Create(Config);
 
-            EFTConfigurationModel.Create(GetType().GetCustomAttribute<BepInPlugin>().Name, Info).LoadConfiguration();
+            EFTConfigurationModel.Create("EFTConfiguration", Info).LoadConfiguration();
         }
 
         private void Start()

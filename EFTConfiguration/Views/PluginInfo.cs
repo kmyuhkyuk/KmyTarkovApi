@@ -152,7 +152,7 @@ namespace EFTConfiguration.Views
                 toggle.onValueChanged.AddListener(value =>
                 {
                     version.text =
-                        $"<color=yellow>{_modVersion}</color><color={(value ? "black" : "white")}<</color><color=green>{modVersion}</color>";
+                        $"<color=yellow>{_modVersion}</color><color={(value ? "black" : "white")}><</color><color=green>{modVersion}</color>";
                 });
             }
         }

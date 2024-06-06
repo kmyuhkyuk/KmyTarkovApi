@@ -45,6 +45,10 @@ namespace EFTApi.Helpers
             }
             else if (EFTVersion.AkiVersion > EFTVersion.Parse("3.7.6"))
             {
+                _refPutJson = AccessTools.MethodDelegate<Func<string, string, string>>(
+                    RefTool.GetEftMethod(requestHandlerType, BindingFlags.Static | RefTool.Public,
+                        x => x.Name == "PutJson" && x.GetParameters().Length == 2));
+
                 _refBelow390PutJson = AccessTools.MethodDelegate<Action<string, string>>(
                     RefTool.GetEftMethod(requestHandlerType, BindingFlags.Static | RefTool.Public,
                         x => x.Name == "PutJson" && x.GetParameters().Length == 2));

@@ -136,5 +136,10 @@ namespace EFTApi
 
         public static EasyAssetsHelper.EasyAssetsExtensionData _EasyAssetsExtensionHelper =
             EasyAssetsHelper.EasyAssetsExtensionData.Instance;
+
+        /// <summary>
+        ///     RequestHandler Helper
+        /// </summary>
+        public static RequestHandlerHelper _RequestHandlerHelper = RequestHandlerHelper.Instance;
     }
 }

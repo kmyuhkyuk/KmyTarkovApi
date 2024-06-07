@@ -19,7 +19,9 @@ namespace Build
             const string modPath =
                 @"R:\Battlestate Games\Client.0.14.8.6.30268\BepInEx\plugins\kmyuhkyuk-EFTApi";
 
-            var modDirectoryName = Path.GetDirectoryName(modPath);
+            var modDirectoryName = new DirectoryInfo(modPath).Name;
+
+            Console.WriteLine(modDirectoryName);
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 

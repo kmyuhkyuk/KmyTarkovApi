@@ -18,6 +18,38 @@ namespace EFTReflection
     {
         public static readonly Type[] EftTypes = typeof(AbstractGame).Assembly.GetTypes();
 
+        public static Assembly[] Assemblies => AppDomain.CurrentDomain.GetAssemblies();
+
+        #region GetAssembly
+
+        public static Assembly GetAssembly(string name)
+        {
+            return GetAssembly(x => x.GetName().Name == name);
+        }
+
+        public static Assembly GetAssembly(Func<Assembly, bool> assemblyPredicate)
+        {
+            return Assemblies.Single(assemblyPredicate);
+        }
+
+        #endregion
+
+        #region TryGetAssembly
+
+        public static bool TryGetAssembly(string name, out Assembly assembly)
+        {
+            return TryGetAssembly(x => x.GetName().Name == name, out assembly);
+        }
+
+        public static bool TryGetAssembly(Func<Assembly, bool> assemblyPredicate, out Assembly assembly)
+        {
+            assembly = Assemblies.SingleOrDefault(assemblyPredicate);
+
+            return assembly != null;
+        }
+
+        #endregion
+
         #region BindingFlags
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using EFTReflection;
 using HarmonyLib;
@@ -28,10 +27,8 @@ namespace EFTApi.Helpers
         private RequestHandlerHelper()
         {
             var requestHandlerType = EFTVersion.AkiVersion > EFTVersion.Parse("3.8.3")
-                ? AppDomain.CurrentDomain.GetAssemblies().Single(x => x.ManifestModule.Name == "spt-common.dll")
-                    .GetType("SPT.Common.Http.RequestHandler")
-                : AppDomain.CurrentDomain.GetAssemblies().Single(x => x.ManifestModule.Name == "Aki.Common.dll")
-                    .GetType("Aki.Common.Http.RequestHandler");
+                ? EFTPlugins.AkiCommon.GetType("SPT.Common.Http.RequestHandler")
+                : EFTPlugins.AkiCommon.GetType("Aki.Common.Http.RequestHandler");
 
             if (EFTVersion.AkiVersion > EFTVersion.Parse("3.8.3"))
             {

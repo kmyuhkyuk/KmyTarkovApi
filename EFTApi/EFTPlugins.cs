@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System.Reflection;
+using BepInEx;
 using BepInEx.Logging;
 using EFTReflection;
 
@@ -35,6 +36,16 @@ namespace EFTApi
         /// </summary>
         public static readonly BaseUnityPlugin FikaCore;
 
+        /// <summary>
+        ///     Aki.Common.dll
+        /// </summary>
+        public static readonly Assembly AkiCommon;
+
+        /// <summary>
+        ///     Aki.Reflection.dll
+        /// </summary>
+        public static readonly Assembly AkiReflection;
+
         static EFTPlugins()
         {
             if (!RefTool.TryGetPlugin("com.SPT.core", out AkiCore) &&
@@ -62,6 +73,18 @@ namespace EFTApi
             }
 
             RefTool.TryGetPlugin("com.fika.core", out FikaCore);
+
+            if (!RefTool.TryGetAssembly("spt-common", out AkiCommon) &&
+                !RefTool.TryGetAssembly("Aki.Common", out AkiCommon))
+            {
+                Logger.LogWarning("Can't get spt-common.dll");
+            }
+
+            if (!RefTool.TryGetAssembly("spt-reflection", out AkiReflection) &&
+                !RefTool.TryGetAssembly("Aki.Reflection", out AkiReflection))
+            {
+                Logger.LogWarning("Can't get spt-reflection.dll");
+            }
         }
     }
 }

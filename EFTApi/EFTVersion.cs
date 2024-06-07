@@ -139,7 +139,7 @@ namespace EFTApi
         {
             return EFTPlugins.FikaCore != null
                 ? EFTPlugins.FikaCore.GetType().Assembly.GetName().Version
-                : Version.Parse("0.0.0.0");
+                : Parse("0.0.0.0");
         }
 
         /// <summary>

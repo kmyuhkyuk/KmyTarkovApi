@@ -21,7 +21,7 @@
         ///     Never displayed Plugin
         /// </summary>
         /// <remarks>
-        ///     Copy <see cref="BrowsableAttribute" />
+        ///     Copy <see cref="System.ComponentModel.BrowsableAttribute" />
         /// </remarks>
         public bool HidePlugin;
 

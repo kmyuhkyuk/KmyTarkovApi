@@ -20,6 +20,25 @@ namespace EFTReflection
 
         public static Assembly[] Assemblies => AppDomain.CurrentDomain.GetAssemblies();
 
+        #region BindingFlags
+
+        /// <summary>
+        ///     <see cref="BindingFlags.NonPublic" /> and <see cref="BindingFlags.Instance" />
+        /// </summary>
+        public const BindingFlags NonPublic = BindingFlags.NonPublic | BindingFlags.Instance;
+
+        /// <summary>
+        ///     <see cref="BindingFlags.Public" /> and <see cref="BindingFlags.Instance" />
+        /// </summary>
+        public const BindingFlags Public = BindingFlags.Public | BindingFlags.Instance;
+
+        /// <summary>
+        ///     <see cref="BindingFlags.DeclaredOnly" /> and <see cref="BindingFlags.Static" />
+        /// </summary>
+        public const BindingFlags DeclaredStatic = BindingFlags.DeclaredOnly | BindingFlags.Static;
+
+        #endregion
+
         #region GetAssembly
 
         public static Assembly GetAssembly(string name)
@@ -47,25 +66,6 @@ namespace EFTReflection
 
             return assembly != null;
         }
-
-        #endregion
-
-        #region BindingFlags
-
-        /// <summary>
-        ///     <see cref="BindingFlags.NonPublic" /> and <see cref="BindingFlags.Instance" />
-        /// </summary>
-        public const BindingFlags NonPublic = BindingFlags.NonPublic | BindingFlags.Instance;
-
-        /// <summary>
-        ///     <see cref="BindingFlags.Public" /> and <see cref="BindingFlags.Instance" />
-        /// </summary>
-        public const BindingFlags Public = BindingFlags.Public | BindingFlags.Instance;
-
-        /// <summary>
-        ///     <see cref="BindingFlags.DeclaredOnly" /> and <see cref="BindingFlags.Static" />
-        /// </summary>
-        public const BindingFlags DeclaredStatic = BindingFlags.DeclaredOnly | BindingFlags.Static;
 
         #endregion
 

@@ -54,7 +54,9 @@ namespace EFTApi.Helpers
                         return;
 
                     var coopAirdropBoxType = RefTool.GetPluginType(EFTPlugins.FikaCore,
-                        "Fika.Core.AkiSupport.Airdrops.FikaAirdropBox");
+                        EFTVersion.FikaVersion > EFTVersion.Parse("0.9.8944.20016")
+                            ? "Fika.Core.Coop.Airdrops.FikaAirdropBox"
+                            : "Fika.Core.AkiSupport.Airdrops.FikaAirdropBox");
 
                     RefCoopContainer =
                         RefHelper.PropertyRef<object, LootableContainer>.Create(coopAirdropBoxType, "Container");

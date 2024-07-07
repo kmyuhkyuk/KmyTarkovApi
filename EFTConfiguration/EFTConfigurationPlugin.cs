@@ -8,7 +8,7 @@ using HarmonyLib;
 
 namespace EFTConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "EFTConfiguration", "1.2.1")]
+    [BepInPlugin("com.kmyuhkyuk.EFTConfiguration", "EFTConfiguration", "1.2.2")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
     public class EFTConfigurationPlugin : BaseUnityPlugin
     {

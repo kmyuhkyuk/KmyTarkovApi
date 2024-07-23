@@ -50,7 +50,7 @@ namespace EFTApi.Helpers
                     OnBoxLand = RefHelper.HookRef.Create(airdropBoxType,
                         "OnBoxLand");
 
-                    if (!EFTVersion.IsFika)
+                    if (!EFTVersion.IsFika || EFTVersion.FikaVersion > EFTVersion.Parse("0.9.8954.37147"))
                         return;
 
                     var coopAirdropBoxType = RefTool.GetPluginType(EFTPlugins.FikaCore,

@@ -14,27 +14,27 @@
 
         public T[] AcceptableValuesCustom
         {
-            get => acceptableValuesCustom;
+            get => _acceptableValuesCustom;
             set
             {
-                if (acceptableValuesCustom == null)
+                if (_acceptableValuesCustom == null)
                 {
-                    throw new System.ArgumentNullException(nameof(acceptableValuesCustom));
+                    throw new System.ArgumentNullException(nameof(_acceptableValuesCustom));
                 }
 
-                acceptableValuesCustom = value.Length > 0
+                _acceptableValuesCustom = value.Length > 0
                     ? value
                     : throw new System.ArgumentException("At least one acceptable value is needed",
-                        nameof(acceptableValuesCustom));
+                        nameof(_acceptableValuesCustom));
             }
         }
 
-        private T[] acceptableValuesCustom;
+        private T[] _acceptableValuesCustom;
 
         public AcceptableValueCustomList(params T[] acceptableValues) : base(acceptableValues)
         {
             //Base constructor already checked
-            acceptableValuesCustom = acceptableValues;
+            _acceptableValuesCustom = acceptableValues;
         }
     }
 }

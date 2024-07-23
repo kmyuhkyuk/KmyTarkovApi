@@ -20,7 +20,7 @@
 
         public T MinValueCustom
         {
-            get => minValueCustom;
+            get => _minValueCustom;
             set
             {
                 if (value == null)
@@ -28,27 +28,27 @@
                     throw new System.ArgumentNullException(nameof(value));
                 }
 
-                minValueCustom = value.CompareTo(maxValueCustom) < 0
+                _minValueCustom = value.CompareTo(_maxValueCustom) < 0
                     ? value
                     : throw new System.ArgumentException("minValue has to be lower than maxValue");
             }
         }
 
-        private T minValueCustom;
+        private T _minValueCustom;
 
         public T MaxValueCustom
         {
-            get => maxValueCustom;
-            set => maxValueCustom = value;
+            get => _maxValueCustom;
+            set => _maxValueCustom = value;
         }
 
-        private T maxValueCustom;
+        private T _maxValueCustom;
 
         public AcceptableValueCustomRange(T minValue, T maxValue) : base(minValue, maxValue)
         {
             //Base constructor already checked
-            maxValueCustom = maxValue;
-            minValueCustom = minValue;
+            _maxValueCustom = maxValue;
+            _minValueCustom = minValue;
         }
     }
 }

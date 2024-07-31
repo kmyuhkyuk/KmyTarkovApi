@@ -118,9 +118,7 @@ namespace EFTApi.Helpers
             public Func<EasyAssets, string, string, T> GetAssetDelegate<T>() where T : Object
             {
                 if (_getAssetsDictionary.TryGetValue(typeof(T), out var value))
-                {
                     return (Func<EasyAssets, string, string, T>)value;
-                }
 
                 var newValue = AccessTools.MethodDelegate<Func<EasyAssets, string, string, T>>(
                     _getAssetMethodInfo.MakeGenericMethod(typeof(T)));

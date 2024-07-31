@@ -98,9 +98,7 @@ namespace EFTApi.Helpers
 
         public readonly RefHelper.PropertyRef<Player, object> RefSkills;
 
-#pragma warning disable IDE0031
-        public object Settings => RefSettings.GetValue(Player != null ? Player.Profile.Info : null);
-#pragma warning restore IDE0031
+        public object Settings => RefSettings.GetValue(Player?.Profile.Info);
 
         public WildSpawnType Role => RefRole.GetValue(Settings);
 
@@ -170,9 +168,8 @@ namespace EFTApi.Helpers
 
             public static FirearmControllerData Instance => Lazy.Value;
 
-            public Player.FirearmController FirearmController => PlayerHelper.Instance.Player != null
-                ? PlayerHelper.Instance.Player.HandsController as Player.FirearmController
-                : null;
+            public Player.FirearmController FirearmController =>
+                PlayerHelper.Instance.Player?.HandsController as Player.FirearmController;
 
             public readonly RefHelper.HookRef InitiateShot;
 
@@ -263,11 +260,7 @@ namespace EFTApi.Helpers
 
             public static InventoryData Instance => Lazy.Value;
 
-#pragma warning disable IDE0031
-            public object Inventory =>
-                RefInventory.GetValue(
-                    PlayerHelper.Instance.Player != null ? PlayerHelper.Instance.Player.Profile : null);
-#pragma warning restore IDE0031
+            public object Inventory => RefInventory.GetValue(PlayerHelper.Instance.Player?.Profile);
 
             public object Equipment => RefEquipment.GetValue(Inventory);
 
@@ -473,11 +466,7 @@ namespace EFTApi.Helpers
 
             public static WeaponData Instance => Lazy.Value;
 
-#pragma warning disable IDE0031
-            public Weapon Weapon => FirearmControllerData.Instance.FirearmController != null
-                ? FirearmControllerData.Instance.FirearmController.Item
-                : null;
-#pragma warning restore IDE0031
+            public Weapon Weapon => FirearmControllerData.Instance.FirearmController?.Item;
 
             public object CurrentMagazine => GetCurrentMagazine(Weapon);
 

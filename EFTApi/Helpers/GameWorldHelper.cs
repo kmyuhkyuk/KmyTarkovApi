@@ -153,9 +153,11 @@ namespace EFTApi.Helpers
                 else
                 {
                     triggers = null;
+
+                    return false;
                 }
 
-                return triggers != null && triggers.Any();
+                return triggers.Any();
             }
         }
 

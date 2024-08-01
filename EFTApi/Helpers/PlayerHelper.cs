@@ -81,6 +81,8 @@ namespace EFTApi.Helpers
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopOnPhraseTold;
 
+        public readonly RefHelper.HookRef SetPropVisibility;
+
         /// <summary>
         ///     InfoClass.Settings
         /// </summary>
@@ -119,6 +121,7 @@ namespace EFTApi.Helpers
             ApplyDamageInfo = RefHelper.HookRef.Create(playerType, "ApplyDamageInfo");
             OnBeenKilledByAggressor = RefHelper.HookRef.Create(playerType, "OnBeenKilledByAggressor");
             OnPhraseTold = RefHelper.HookRef.Create(playerType, "OnPhraseTold");
+            SetPropVisibility = RefHelper.HookRef.Create(playerType, "SetPropVisibility");
 
             if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
             {
@@ -151,9 +154,9 @@ namespace EFTApi.Helpers
             }
         }
 
-        public bool CoopGetBleedBlock(Player __instance, int colliderType)
+        public bool CoopGetBleedBlock(Player instance, int colliderType)
         {
-            return _refGetBleedBlock(__instance, colliderType);
+            return _refGetBleedBlock(instance, colliderType);
         }
 
         public bool IsYourPlayer(Player player)
@@ -814,30 +817,30 @@ namespace EFTApi.Helpers
                         _coopHealthControllerType.GetMethod("ApplyDamage", RefTool.Public));
             }
 
-            public ValueStruct GetBodyPartHealth(object __instance, EBodyPart bodyPart, bool rounded = false)
+            public ValueStruct GetBodyPartHealth(object instance, EBodyPart bodyPart, bool rounded = false)
             {
-                return _refGetBodyPartHealth(__instance, bodyPart, rounded);
+                return _refGetBodyPartHealth(instance, bodyPart, rounded);
             }
 
-            public void DoWoundRelapse(object __instance, float relapseValue, EBodyPart bodyPart)
+            public void DoWoundRelapse(object instance, float relapseValue, EBodyPart bodyPart)
             {
-                _refDoWoundRelapse(__instance, relapseValue, bodyPart);
+                _refDoWoundRelapse(instance, relapseValue, bodyPart);
             }
 
-            public void BluntContusion(object __instance, EBodyPart bodyPartType, float absorbed)
+            public void BluntContusion(object instance, EBodyPart bodyPartType, float absorbed)
             {
-                _refBluntContusion(__instance, bodyPartType, absorbed);
+                _refBluntContusion(instance, bodyPartType, absorbed);
             }
 
-            public bool TryApplySideEffects(object __instance, DamageInfo damage, EBodyPart bodyPart,
+            public bool TryApplySideEffects(object instance, DamageInfo damage, EBodyPart bodyPart,
                 out SideEffectComponent sideEffectComponent)
             {
-                return _refTryApplySideEffects(__instance, damage, bodyPart, out sideEffectComponent);
+                return _refTryApplySideEffects(instance, damage, bodyPart, out sideEffectComponent);
             }
 
-            public float CoopApplyDamage(object __instance, EBodyPart bodyPart, float damage, DamageInfo damageInfo)
+            public float CoopApplyDamage(object instance, EBodyPart bodyPart, float damage, DamageInfo damageInfo)
             {
-                return _refCoopApplyDamage(__instance, bodyPart, damage, damageInfo);
+                return _refCoopApplyDamage(instance, bodyPart, damage, damageInfo);
             }
 
             public object CoopHealthControllerCreate(object healthInfo, Player player, object inventoryController,
@@ -847,9 +850,9 @@ namespace EFTApi.Helpers
                     skillManager, aiHealth);
             }
 
-            public object ObservedCoopStore(object __instance, object healthInfo = null)
+            public object ObservedCoopStore(object instance, object healthInfo = null)
             {
-                return _refObservedCoopStore(__instance, healthInfo);
+                return _refObservedCoopStore(instance, healthInfo);
             }
         }
 

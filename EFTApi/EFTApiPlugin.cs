@@ -11,17 +11,17 @@ namespace EFTApi
         {
             //Init EFTHelpers Constructor
             EFTHelpers.Init();
-        }
-
-        private void Start()
-        {
-            EFTVersion.WriteVersionLog();
 
             //Player
             new GamePlayerOwnerPatchs().Enable();
 
             //GameWorld
             new TriggerWithIdPatchs().Enable();
+        }
+
+        private void Start()
+        {
+            EFTVersion.WriteVersionLog();
         }
     }
 }

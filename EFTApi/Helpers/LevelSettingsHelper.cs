@@ -31,7 +31,11 @@ namespace EFTApi.Helpers
 
             Awake = RefHelper.HookRef.Create(levelSettingsType, "Awake");
             OnDestroy = RefHelper.HookRef.Create(levelSettingsType, "OnDestroy");
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Awake.Add(this, nameof(OnAwake));
         }
 

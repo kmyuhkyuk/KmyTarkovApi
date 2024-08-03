@@ -35,7 +35,11 @@ namespace EFTApi.Helpers
                     CancellationToken, Task>>(poolManagerType.GetMethod("LoadBundlesAndCreatePools", RefTool.Public));
 
             Constructor = RefHelper.HookRef.Create(poolManagerType.GetConstructors()[0]);
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Constructor.Add(this, nameof(OnConstructor));
         }
 

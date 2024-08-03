@@ -37,7 +37,11 @@ namespace EFTApi.Helpers
                 RefHelper.FieldRef<MonoBehaviour, AmmoCountPanel>.Create(battleUIScreenType, "_ammoCountPanel");
 
             Constructor = RefHelper.HookRef.Create(battleUIScreenType?.GetConstructors()[0]);
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Constructor.Add(this, nameof(OnConstructor));
         }
 

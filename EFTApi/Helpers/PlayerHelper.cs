@@ -140,7 +140,11 @@ namespace EFTApi.Helpers
                 ObservedCoopApplyShot = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyShot");
                 ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
             }
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Init.Add(this, nameof(OnInit));
         }
 

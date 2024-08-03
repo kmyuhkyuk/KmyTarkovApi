@@ -83,7 +83,11 @@ namespace EFTApi.Helpers
                     x => x.GetParameters().Length == 0 && x.ReturnType == typeof(void) &&
                          x.ReadMethodBody().IsEmptyIL());
             }
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             CreateBackend.Add(this, nameof(OnCreateBackend));
         }
 

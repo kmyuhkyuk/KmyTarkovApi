@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx.Logging;
 using EFTApi.Helpers;
 using EFTReflection;
+using JetBrains.Annotations;
 using static EFTApi.Helpers.AirdropHelper;
 using static EFTApi.Helpers.GameWorldHelper;
 using static EFTApi.Helpers.GameWorldHelper.ExfiltrationControllerData;
@@ -11,13 +12,19 @@ using static EFTApi.Helpers.PoolManagerHelper;
 using static EFTApi.Helpers.SessionHelper;
 using static EFTApi.Helpers.SessionHelper.TradersData;
 
-// ReSharper disable UnassignedReadonlyField
+#pragma warning disable IDE1006
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
 namespace EFTApi
 {
+    [MeansImplicitUse]
+    [AttributeUsage(AttributeTargets.Method)]
+    public class EFTHelperHookAttribute : Attribute
+    {
+    }
+
     public static class EFTHelpers
     {
         private static readonly ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(nameof(EFTHelpers));
@@ -25,149 +32,153 @@ namespace EFTApi
         /// <summary>
         ///     BattleUIScreen Helper
         /// </summary>
-        public static readonly BattleUIScreenHelper _BattleUIScreenHelper;
+        public static BattleUIScreenHelper _BattleUIScreenHelper => BattleUIScreenHelper.Instance;
 
         /// <summary>
         ///     LevelSettings Helper
         /// </summary>
-        public static readonly LevelSettingsHelper _LevelSettingsHelper;
+        public static LevelSettingsHelper _LevelSettingsHelper => LevelSettingsHelper.Instance;
 
         /// <summary>
         ///     GameWorld Helper
         /// </summary>
-        public static readonly GameWorldHelper _GameWorldHelper;
+        public static GameWorldHelper _GameWorldHelper => GameWorldHelper.Instance;
 
-        public static readonly ZoneData _ZoneHelper;
+        public static ZoneData _ZoneHelper => ZoneData.Instance;
 
-        public static readonly LootableContainerData _LootableContainerHelper;
+        public static LootableContainerData _LootableContainerHelper => LootableContainerData.Instance;
 
-        public static readonly SearchableItemClassData _SearchableItemClassHelper;
+        public static SearchableItemClassData _SearchableItemClassHelper => SearchableItemClassData.Instance;
 
-        public static readonly ExfiltrationControllerData _ExfiltrationControllerHelper;
+        public static ExfiltrationControllerData _ExfiltrationControllerHelper => ExfiltrationControllerData.Instance;
 
-        public static readonly ExfiltrationPointData _ExfiltrationPointHelper;
+        public static ExfiltrationPointData _ExfiltrationPointHelper => ExfiltrationPointData.Instance;
 
         /// <summary>
         ///     Localized Helper
         /// </summary>
-        public static readonly LocalizedHelper _LocalizedHelper;
+        public static LocalizedHelper _LocalizedHelper => LocalizedHelper.Instance;
 
         /// <summary>
         ///     MainMenuController Helper
         /// </summary>
-        public static readonly MainMenuControllerHelper _MainMenuControllerHelper;
+        public static MainMenuControllerHelper _MainMenuControllerHelper => MainMenuControllerHelper.Instance;
 
         /// <summary>
         ///     Player Helper
         /// </summary>
-        public static readonly PlayerHelper _PlayerHelper;
+        public static PlayerHelper _PlayerHelper => PlayerHelper.Instance;
 
-        public static readonly FirearmControllerData _FirearmControllerHelper;
+        public static FirearmControllerData _FirearmControllerHelper => FirearmControllerData.Instance;
 
-        public static readonly ArmorComponentData _ArmorComponentHelper;
+        public static ArmorComponentData _ArmorComponentHelper => ArmorComponentData.Instance;
 
-        public static readonly RoleData _RoleHelper;
+        public static RoleData _RoleHelper => RoleData.Instance;
 
-        public static readonly InventoryData _InventoryHelper;
+        public static InventoryData _InventoryHelper => InventoryData.Instance;
 
-        public static readonly WeaponData _WeaponHelper;
+        public static WeaponData _WeaponHelper => WeaponData.Instance;
 
-        public static readonly DamageInfoData _DamageInfoHelper;
+        public static DamageInfoData _DamageInfoHelper => DamageInfoData.Instance;
 
-        public static readonly SpeakerData _SpeakerHelper;
+        public static SpeakerData _SpeakerHelper => SpeakerData.Instance;
 
-        public static readonly HealthControllerData _HealthControllerHelper;
+        public static HealthControllerData _HealthControllerHelper => HealthControllerData.Instance;
 
-        public static readonly GamePlayerOwnerData _GamePlayerOwnerHelper;
+        public static GamePlayerOwnerData _GamePlayerOwnerHelper => GamePlayerOwnerData.Instance;
 
-        public static readonly MovementContextData _MovementContextHelper;
+        public static MovementContextData _MovementContextHelper => MovementContextData.Instance;
 
-        public static readonly QuestControllerData _QuestControllerHelper;
+        public static QuestControllerData _QuestControllerHelper => QuestControllerData.Instance;
 
-        public static readonly InventoryControllerData _InventoryControllerHelper;
+        public static InventoryControllerData _InventoryControllerHelper => InventoryControllerData.Instance;
 
         /// <summary>
         ///     Session Helper
         /// </summary>
-        public static readonly SessionHelper _SessionHelper;
+        public static SessionHelper _SessionHelper => SessionHelper.Instance;
 
-        public static readonly TradersData _TradersHelper;
+        public static TradersData _TradersHelper => TradersData.Instance;
 
-        public static readonly TradersAvatarData _TradersAvatarHelper;
+        public static TradersAvatarData _TradersAvatarHelper => TradersAvatarData.Instance;
 
-        public static readonly ExperienceData _ExperienceHelper;
+        public static ExperienceData _ExperienceHelper => ExperienceData.Instance;
 
         /// <summary>
         ///     Quest Helper
         /// </summary>
-        public static readonly QuestHelper _QuestHelper;
+        public static QuestHelper _QuestHelper => QuestHelper.Instance;
 
         /// <summary>
         ///     Airdrop Helper
         /// </summary>
-        public static readonly AirdropHelper _AirdropHelper;
+        public static AirdropHelper _AirdropHelper => AirdropHelper.Instance;
 
-        public static readonly AirdropBoxData _AirdropBoxHelper;
+        public static AirdropBoxData _AirdropBoxHelper => AirdropBoxData.Instance;
 
-        public static readonly AirdropSynchronizableObjectData _AirdropSynchronizableObjectHelper;
+        public static AirdropSynchronizableObjectData _AirdropSynchronizableObjectHelper =>
+            AirdropSynchronizableObjectData.Instance;
 
-        public static readonly AirdropLogicClassData _AirdropLogicClassHelper;
+        public static AirdropLogicClassData _AirdropLogicClassHelper => AirdropLogicClassData.Instance;
 
         /// <summary>
         ///     EnvironmentUIRoot Helper
         /// </summary>
-        public static readonly EnvironmentUIRootHelper _EnvironmentUIRootHelper;
+        public static EnvironmentUIRootHelper _EnvironmentUIRootHelper => EnvironmentUIRootHelper.Instance;
 
         /// <summary>
         ///     AbstractGame Helper
         /// </summary>
-        public static readonly AbstractGameHelper _AbstractGameHelper;
+        public static AbstractGameHelper _AbstractGameHelper => AbstractGameHelper.Instance;
 
         /// <summary>
         ///     PoolManager Helper
         /// </summary>
-        public static readonly PoolManagerHelper _PoolManagerHelper;
+        public static PoolManagerHelper _PoolManagerHelper => PoolManagerHelper.Instance;
 
-        public static readonly JobPriorityData _JobPriorityHelper;
+        public static JobPriorityData _JobPriorityHelper => JobPriorityData.Instance;
 
         /// <summary>
         ///     Voice Helper
         /// </summary>
-        public static readonly VoiceHelper _VoiceHelper;
+        public static VoiceHelper _VoiceHelper => VoiceHelper.Instance;
 
         /// <summary>
         ///     EasyAssets Helper
         /// </summary>
-        public static readonly EasyAssetsHelper _EasyAssetsHelper;
+        public static EasyAssetsHelper _EasyAssetsHelper => EasyAssetsHelper.Instance;
 
-        public static readonly EasyAssetsHelper.EasyAssetsExtensionData _EasyAssetsExtensionHelper;
+        public static EasyAssetsHelper.EasyAssetsExtensionData _EasyAssetsExtensionHelper =>
+            EasyAssetsHelper.EasyAssetsExtensionData.Instance;
 
         /// <summary>
         ///     RequestHandler Helper
         /// </summary>
-        public static readonly RequestHandlerHelper _RequestHandlerHelper;
+        public static RequestHandlerHelper _RequestHandlerHelper => RequestHandlerHelper.Instance;
 
-        static EFTHelpers()
+        internal static void InitHooks()
         {
-            foreach (var fieldInfo in typeof(EFTHelpers).GetFields(BindingFlags.Static | RefTool.Public))
+            foreach (var propertyInfo in typeof(EFTHelpers).GetProperties(BindingFlags.Static | RefTool.Public))
             {
-                try
+                foreach (var hookMethodInfo in propertyInfo.PropertyType.GetMethods(RefTool.NonPublic))
                 {
-                    var instance = fieldInfo.FieldType.GetProperty("Instance", BindingFlags.Static | RefTool.Public)
-                        ?.GetValue(null);
+                    try
+                    {
+                        if (hookMethodInfo.GetCustomAttribute<EFTHelperHookAttribute>() == null)
+                            continue;
 
-                    fieldInfo.SetValue(null, instance);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex);
+                        var instance = propertyInfo.PropertyType
+                            .GetProperty("Instance", BindingFlags.Static | RefTool.Public)
+                            ?.GetValue(null);
+
+                        hookMethodInfo.Invoke(instance, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex);
+                    }
                 }
             }
-        }
-
-        internal static void Init()
-        {
-            //Nothing
         }
     }
 }

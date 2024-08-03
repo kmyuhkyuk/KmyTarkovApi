@@ -103,7 +103,11 @@ namespace EFTApi.Helpers
             Awake = RefHelper.HookRef.Create(gameWorldType, "Awake");
             Dispose = RefHelper.HookRef.Create(gameWorldType, "Dispose");
             OnGameStarted = RefHelper.HookRef.Create(gameWorldType, "OnGameStarted");
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Awake.Add(this, nameof(OnAwake));
             Dispose.Add(this, nameof(OnDispose));
         }

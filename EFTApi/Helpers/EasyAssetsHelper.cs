@@ -35,7 +35,11 @@ namespace EFTApi.Helpers
             var easyAssetsType = typeof(EasyAssets);
 
             Create = RefHelper.HookRef.Create(easyAssetsType, "Create");
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Create.Add(this, nameof(OnCreate));
         }
 

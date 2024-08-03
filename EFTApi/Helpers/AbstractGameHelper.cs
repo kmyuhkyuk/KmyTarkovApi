@@ -26,7 +26,11 @@ namespace EFTApi.Helpers
             var abstractGameType = typeof(AbstractGame);
 
             Constructor = RefHelper.HookRef.Create(abstractGameType.GetConstructors(AccessTools.all)[0]);
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Constructor.Add(this, nameof(OnConstructor));
         }
 

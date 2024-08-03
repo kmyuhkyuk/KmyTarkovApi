@@ -7,21 +7,18 @@ namespace EFTApi
     [BepInDependency("com.kmyuhkyuk.EFTReflection", "1.2.2")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
-        private void Awake()
+        private void Start()
         {
-            //Init EFTHelpers Constructor
-            EFTHelpers.Init();
+            EFTVersion.WriteVersionLog();
+
+            //Init EFTHelpers Hooks
+            EFTHelpers.InitHooks();
 
             //Player
             new GamePlayerOwnerPatchs().Enable();
 
             //GameWorld
             new TriggerWithIdPatchs().Enable();
-        }
-
-        private void Start()
-        {
-            EFTVersion.WriteVersionLog();
         }
     }
 }

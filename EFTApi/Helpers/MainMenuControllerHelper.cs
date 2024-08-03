@@ -36,7 +36,11 @@ namespace EFTApi.Helpers
 
             Execute = RefHelper.HookRef.Create(mainMenuControllerType, "Execute");
             Unsubscribe = RefHelper.HookRef.Create(mainMenuControllerType, "Unsubscribe");
+        }
 
+        [EFTHelperHook]
+        private void Hook()
+        {
             Execute.Add(this, nameof(OnExecute));
         }
 

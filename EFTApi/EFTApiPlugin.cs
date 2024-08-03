@@ -9,8 +9,8 @@ namespace EFTApi
     {
         private void Awake()
         {
-            //Init EFTHelpers
-            _ = EFTHelpers._PlayerHelper;
+            //Init EFTHelpers Constructor
+            EFTHelpers.Init();
         }
 
         private void Start()

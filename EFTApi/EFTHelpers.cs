@@ -164,5 +164,10 @@ namespace EFTApi
                 }
             }
         }
+
+        internal static void Init()
+        {
+            //Nothing
+        }
     }
 }

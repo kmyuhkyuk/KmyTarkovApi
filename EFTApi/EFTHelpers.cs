@@ -21,7 +21,7 @@ namespace EFTApi
 {
     [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
-    public class EFTHelperHookAttribute : Attribute
+    internal class EFTHelperHookAttribute : Attribute
     {
     }
 
@@ -162,11 +162,11 @@ namespace EFTApi
             {
                 foreach (var hookMethodInfo in propertyInfo.PropertyType.GetMethods(RefTool.NonPublic))
                 {
+                    if (hookMethodInfo.GetCustomAttribute<EFTHelperHookAttribute>() == null)
+                        continue;
+
                     try
                     {
-                        if (hookMethodInfo.GetCustomAttribute<EFTHelperHookAttribute>() == null)
-                            continue;
-
                         var instance = propertyInfo.PropertyType
                             .GetProperty("Instance", BindingFlags.Static | RefTool.Public)
                             ?.GetValue(null);

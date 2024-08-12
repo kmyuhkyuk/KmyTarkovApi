@@ -18,7 +18,12 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             floatValue.onEndEdit.AddListener(value =>
             {
-                var floatNum = Mathf.Clamp(float.Parse(value), min, max);
+                if (!float.TryParse(value, out var floatNum))
+                {
+                    floatNum = 0;
+                }
+
+                floatNum = Mathf.Clamp(floatNum, min, max);
 
                 onValueChanged(floatNum);
 

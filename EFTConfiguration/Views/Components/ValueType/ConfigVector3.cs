@@ -22,7 +22,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             x.onEndEdit.AddListener(value =>
             {
-                var xNum = float.Parse(value);
+                if (!float.TryParse(value, out var xNum))
+                {
+                    xNum = 0;
+                }
 
                 onValueChanged(new Vector3(xNum, float.Parse(y.text), float.Parse(z.text)));
 
@@ -32,7 +35,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             y.onEndEdit.AddListener(value =>
             {
-                var yNum = float.Parse(value);
+                if (!float.TryParse(value, out var yNum))
+                {
+                    yNum = 0;
+                }
 
                 onValueChanged(new Vector3(float.Parse(x.text), yNum, float.Parse(z.text)));
 
@@ -42,7 +48,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             z.onEndEdit.AddListener(value =>
             {
-                var zNum = float.Parse(value);
+                if (!float.TryParse(value, out var zNum))
+                {
+                    zNum = 0;
+                }
 
                 onValueChanged(new Vector3(float.Parse(x.text), float.Parse(y.text), zNum));
 

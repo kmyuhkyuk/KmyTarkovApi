@@ -19,7 +19,12 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             intValue.onEndEdit.AddListener(value =>
             {
-                var intNum = Mathf.Clamp(int.Parse(value), min, max);
+                if (!int.TryParse(value, out var intNum))
+                {
+                    intNum = 0;
+                }
+
+                intNum = Mathf.Clamp(intNum, min, max);
 
                 onValueChanged(intNum);
 

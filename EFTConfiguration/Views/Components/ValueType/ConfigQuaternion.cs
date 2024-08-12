@@ -24,7 +24,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             x.onEndEdit.AddListener(value =>
             {
-                var xNum = float.Parse(value);
+                if (!float.TryParse(value, out var xNum))
+                {
+                    xNum = 0;
+                }
 
                 onValueChanged(new Quaternion(xNum, float.Parse(y.text), float.Parse(z.text), float.Parse(w.text)));
 
@@ -34,7 +37,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             y.onEndEdit.AddListener(value =>
             {
-                var yNum = float.Parse(value);
+                if (!float.TryParse(value, out var yNum))
+                {
+                    yNum = 0;
+                }
 
                 onValueChanged(new Quaternion(float.Parse(x.text), yNum, float.Parse(z.text), float.Parse(w.text)));
 
@@ -44,7 +50,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             z.onEndEdit.AddListener(value =>
             {
-                var zNum = float.Parse(value);
+                if (!float.TryParse(value, out var zNum))
+                {
+                    zNum = 0;
+                }
 
                 onValueChanged(new Quaternion(float.Parse(x.text), float.Parse(y.text), zNum, float.Parse(w.text)));
 
@@ -54,7 +63,10 @@ namespace EFTConfiguration.Views.Components.ValueType
 
             w.onEndEdit.AddListener(value =>
             {
-                var wNum = float.Parse(value);
+                if (!float.TryParse(value, out var wNum))
+                {
+                    wNum = 0;
+                }
 
                 onValueChanged(new Quaternion(float.Parse(x.text), float.Parse(y.text), float.Parse(z.text), wNum));
 

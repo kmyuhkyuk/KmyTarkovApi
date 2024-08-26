@@ -48,7 +48,8 @@ namespace EFTConfiguration.Models
 
             var acceptableValueCustomList =
                 (AcceptableValueCustomList<string>)KeyLanguage.Description.AcceptableValues;
-            LocalizedHelper.LanguageAdd += () => acceptableValueCustomList.AcceptableValuesCustom = LocalizedHelper.Languages;
+            LocalizedHelper.LanguageAdd +=
+                () => acceptableValueCustomList.AcceptableValuesCustom = LocalizedHelper.Languages;
 
             LocalizedHelper.CurrentLanguage = KeyLanguage.Value;
             KeyLanguage.SettingChanged += (value, value2) =>

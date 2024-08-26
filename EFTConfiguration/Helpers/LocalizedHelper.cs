@@ -36,31 +36,32 @@ namespace EFTConfiguration.Helpers
 
         public static string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
 
-        private static readonly Dictionary<string, string> LanguagesLowerDictionary = new Dictionary<string, string>
-        {
-            { "Cz", "cz" },
-            { "De", "de" },
-            { "En", "en" },
-            { "Es", "es" },
-            { "Fr", "fr" },
-            { "Ge", "ge" },
-            { "Hu", "hu" },
-            { "It", "it" },
-            { "Jp", "jp" },
-            { "Ko", "ko" },
-            { "Nl", "nl" },
-            { "Pl", "pl" },
-            { "Pt", "pt" },
-            { "Ru", "ru" },
-            { "Sk", "sk" },
-            { "Sv", "sv" },
-            { "Tr", "tr" },
-            { "Zh", "zh" }
-        };
+        private static readonly Dictionary<string, string> LanguagesLowerDictionary =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Cz", "cz" },
+                { "De", "de" },
+                { "En", "en" },
+                { "Es", "es" },
+                { "Fr", "fr" },
+                { "Ge", "ge" },
+                { "Hu", "hu" },
+                { "It", "it" },
+                { "Jp", "jp" },
+                { "Ko", "ko" },
+                { "Nl", "nl" },
+                { "Pl", "pl" },
+                { "Pt", "pt" },
+                { "Ru", "ru" },
+                { "Sk", "sk" },
+                { "Sv", "sv" },
+                { "Tr", "tr" },
+                { "Zh", "zh" }
+            };
 
         public static void AddLanguage(string name)
         {
-            if (LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
+            if (LanguagesLowerDictionary.ContainsKey(name))
                 return;
 
             LanguagesLowerDictionary.Add(name, name.ToLower());

@@ -37,31 +37,32 @@ namespace EFTUtils
 
         public string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
 
-        protected virtual Dictionary<string, string> LanguagesLowerDictionary { get; } = new Dictionary<string, string>
-        {
-            { "Cz", "cz" },
-            { "De", "de" },
-            { "En", "en" },
-            { "Es", "es" },
-            { "Fr", "fr" },
-            { "Ge", "ge" },
-            { "Hu", "hu" },
-            { "It", "it" },
-            { "Jp", "jp" },
-            { "Ko", "ko" },
-            { "Nl", "nl" },
-            { "Pl", "pl" },
-            { "Pt", "pt" },
-            { "Ru", "ru" },
-            { "Sk", "sk" },
-            { "Sv", "sv" },
-            { "Tr", "tr" },
-            { "Zh", "zh" }
-        };
+        protected virtual Dictionary<string, string> LanguagesLowerDictionary { get; } =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Cz", "cz" },
+                { "De", "de" },
+                { "En", "en" },
+                { "Es", "es" },
+                { "Fr", "fr" },
+                { "Ge", "ge" },
+                { "Hu", "hu" },
+                { "It", "it" },
+                { "Jp", "jp" },
+                { "Ko", "ko" },
+                { "Nl", "nl" },
+                { "Pl", "pl" },
+                { "Pt", "pt" },
+                { "Ru", "ru" },
+                { "Sk", "sk" },
+                { "Sv", "sv" },
+                { "Tr", "tr" },
+                { "Zh", "zh" }
+            };
 
         public virtual void AddLanguage(string name)
         {
-            if (LanguagesLowerDictionary.Keys.Contains(name, StringComparer.OrdinalIgnoreCase))
+            if (LanguagesLowerDictionary.ContainsKey(name))
                 return;
 
             LanguagesLowerDictionary.Add(name, name.ToLower());

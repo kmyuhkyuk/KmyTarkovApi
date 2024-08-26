@@ -38,7 +38,7 @@ namespace EFTConfiguration.Views.Components.ValueType
             base.Init(modName, configNameKey, descriptionNameKey, isAdvanced, readOnly, defaultValue, onValueChanged,
                 hideReset, currentValue);
 
-            bind.onClick.AddListener(() => { StartCoroutine(Bind(onValueChanged)); });
+            bind.onClick.AddListener(() => StartCoroutine(Bind(onValueChanged)));
             bind.interactable = !readOnly;
 
             clear.onClick.AddListener(() =>

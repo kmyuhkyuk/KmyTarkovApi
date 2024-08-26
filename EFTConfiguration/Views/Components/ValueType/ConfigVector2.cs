@@ -25,8 +25,6 @@ namespace EFTConfiguration.Views.Components.ValueType
                     xNum = 0;
                 }
 
-                ;
-
                 onValueChanged(new Vector2(xNum, float.Parse(y.text)));
 
                 x.text = xNum.ToString("F2");

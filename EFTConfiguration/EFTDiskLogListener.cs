@@ -19,6 +19,10 @@ namespace EFTConfiguration
         //Modify from BepInEx.Core.Logging.DiskLogListener
         public EFTDiskLogListener(string localPath, bool appendLog = false)
         {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(localPath);
+
+            var extension = Path.GetExtension(localPath);
+
             var counter = 1;
 
             FileStream fileStream;
@@ -36,12 +40,12 @@ namespace EFTConfiguration
 
                 Logger.LogWarning($"Couldn't open log file '{localPath}' for writing, trying another...");
 
-                localPath = $"{Path.GetFileNameWithoutExtension(localPath)}.{counter++}.{Path.GetExtension(localPath)}";
+                localPath = $"{fileNameWithoutExtension}.{counter++}.{extension}";
             }
 
             _logWriter = TextWriter.Synchronized(new StreamWriter(fileStream, Utility.UTF8NoBom));
 
-            _flushTimer = new Timer(o => { _logWriter?.Flush(); }, null, 2000, 2000);
+            _flushTimer = new Timer(o => _logWriter?.Flush(), null, 2000, 2000);
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)

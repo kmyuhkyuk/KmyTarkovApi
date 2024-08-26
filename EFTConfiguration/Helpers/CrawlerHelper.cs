@@ -131,9 +131,9 @@ namespace EFTConfiguration.Helpers
 
         private static async Task<Sprite> LoadModIcon(string url, bool isLocal)
         {
-            var fileName = Path.GetFileNameWithoutExtension(url.Split('/').Last());
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(url.Split('/').Last());
 
-            var filePath = Path.Combine(CachePath, $"{fileName}.png");
+            var filePath = Path.Combine(CachePath, $"{fileNameWithoutExtension}.png");
 
             var texture = await GetAsyncTexture(isLocal ? filePath : url);
 

@@ -16,7 +16,7 @@ namespace EFTApi.Helpers
 
         private readonly Func<string, string, string> _refPutJson;
 
-        private readonly Action<string, string> _refBelow390PutJson;
+        private readonly Action<string, string> _refBelow382PutJson;
 
         private readonly Action<string, string, bool> _refBelow380PutJson;
 
@@ -30,7 +30,7 @@ namespace EFTApi.Helpers
                 ? EFTPlugins.AkiCommon.GetType("SPT.Common.Http.RequestHandler")
                 : EFTPlugins.AkiCommon.GetType("Aki.Common.Http.RequestHandler");
 
-            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.8.3"))
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.8.1"))
             {
                 _refPutJson = AccessTools.MethodDelegate<Func<string, string, string>>(
                     RefTool.GetEftMethod(requestHandlerType, BindingFlags.Static | RefTool.Public,
@@ -42,7 +42,7 @@ namespace EFTApi.Helpers
             }
             else if (EFTVersion.AkiVersion > EFTVersion.Parse("3.7.6"))
             {
-                _refBelow390PutJson = AccessTools.MethodDelegate<Action<string, string>>(
+                _refBelow382PutJson = AccessTools.MethodDelegate<Action<string, string>>(
                     RefTool.GetEftMethod(requestHandlerType, BindingFlags.Static | RefTool.Public,
                         x => x.Name == "PutJson" && x.GetParameters().Length == 2));
 
@@ -69,7 +69,7 @@ namespace EFTApi.Helpers
 
             if (EFTVersion.AkiVersion > EFTVersion.Parse("3.7.6"))
             {
-                _refBelow390PutJson(path, json);
+                _refBelow382PutJson(path, json);
             }
             else
             {

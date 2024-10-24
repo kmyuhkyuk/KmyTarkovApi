@@ -31,15 +31,9 @@ namespace EFTConfiguration.Helpers
         {
             Directory.CreateDirectory(CachePath);
 
-            if (!File.Exists(CacheFilePath))
-            {
-                IconURL = new ConcurrentDictionary<string, string>();
-            }
-            else
-            {
-                IconURL = JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(
-                    File.ReadAllText(CacheFilePath));
-            }
+            IconURL = File.Exists(CacheFilePath)
+                ? JsonConvert.DeserializeObject<ConcurrentDictionary<string, string>>(File.ReadAllText(CacheFilePath))
+                : new ConcurrentDictionary<string, string>();
         }
 
         public static async Task<HtmlDocument> CreateHtmlDocument(string url)

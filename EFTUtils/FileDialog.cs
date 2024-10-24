@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable NotAccessedField.Global
 // ReSharper disable UnusedMember.Global
 

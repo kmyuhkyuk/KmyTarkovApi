@@ -8,18 +8,18 @@ namespace EFTUtils
 {
     public static class ColorHelper
     {
-        private static readonly Dictionary<Color, string> SaveHexColors = new Dictionary<Color, string>();
+        private static readonly Dictionary<Color, string> HtmlColorDictionary = new Dictionary<Color, string>();
 
         public static string ColorToHtml(this Color color)
         {
-            if (SaveHexColors.TryGetValue(color, out var hexColor))
-                return hexColor;
+            if (HtmlColorDictionary.TryGetValue(color, out var htmlColor))
+                return htmlColor;
 
-            hexColor = $"#{ColorUtility.ToHtmlStringRGBA(color)}";
+            htmlColor = $"#{ColorUtility.ToHtmlStringRGBA(color)}";
 
-            SaveHexColors.Add(color, hexColor);
+            HtmlColorDictionary.Add(color, htmlColor);
 
-            return hexColor;
+            return htmlColor;
         }
     }
 }

@@ -47,36 +47,29 @@ namespace EFTConfiguration
 
         [SerializeField] public GameObject unknownCustom;
 
-        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
-        public GameObject[] AllGameObject
+        public GameObject[] AllGameObject => new[]
         {
-            get
-            {
-                return new[]
-                {
-                    eftConfiguration,
-                    pluginInfo,
-                    config,
-                    header,
-                    toggle,
-                    vector2,
-                    vector3,
-                    vector4,
-                    quaternion,
-                    @int,
-                    intSlider,
-                    @float,
-                    floatSlider,
-                    color,
-                    @string,
-                    stringDropdown,
-                    @enum,
-                    keyboardShortcut,
-                    stringAction,
-                    unknown,
-                    unknownCustom
-                };
-            }
-        }
+            eftConfiguration,
+            pluginInfo,
+            config,
+            header,
+            toggle,
+            vector2,
+            vector3,
+            vector4,
+            quaternion,
+            @int,
+            intSlider,
+            @float,
+            floatSlider,
+            color,
+            @string,
+            stringDropdown,
+            @enum,
+            keyboardShortcut,
+            stringAction,
+            unknown,
+            unknownCustom
+        };
     }
 }

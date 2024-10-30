@@ -75,11 +75,7 @@ namespace EFTReflection.Patching
 
             var hasHook = HookDictionary.TryGetValue(originalMethod, out var typeDictionary);
 
-            if (hasHook && typeDictionary.TryGetValue(hookDeclaringType, out var harmony))
-            {
-                Patch(harmony, originalMethod, hookMethod, patchType);
-            }
-            else
+            if (!hasHook || !typeDictionary.TryGetValue(hookDeclaringType, out var harmony))
             {
                 harmony =
                     new Harmony(
@@ -87,17 +83,21 @@ namespace EFTReflection.Patching
 
                 Patch(harmony, originalMethod, hookMethod, patchType);
 
-                if (hasHook)
-                {
-                    typeDictionary.Add(hookDeclaringType, harmony);
-                }
-                else
+                if (!hasHook)
                 {
                     HookDictionary.Add(originalMethod, new Dictionary<Type, Harmony>
                     {
                         { hookDeclaringType, harmony }
                     });
                 }
+                else
+                {
+                    typeDictionary.Add(hookDeclaringType, harmony);
+                }
+            }
+            else
+            {
+                Patch(harmony, originalMethod, hookMethod, patchType);
             }
         }
 

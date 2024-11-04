@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using static EFTApi.Helpers.AirdropHelper;
 using static EFTApi.Helpers.GameWorldHelper;
 using static EFTApi.Helpers.GameWorldHelper.ExfiltrationControllerData;
+using static EFTApi.Helpers.MongoIDHelper;
 using static EFTApi.Helpers.PlayerHelper;
 using static EFTApi.Helpers.PoolManagerHelper;
 using static EFTApi.Helpers.SessionHelper;
@@ -93,6 +94,8 @@ namespace EFTApi
 
         public static InventoryControllerData _InventoryControllerHelper => InventoryControllerData.Instance;
 
+        public static SearchControllerData _SearchControllerHelper => SearchControllerData.Instance;
+
         /// <summary>
         ///     Session Helper
         /// </summary>
@@ -155,6 +158,15 @@ namespace EFTApi
         ///     RequestHandler Helper
         /// </summary>
         public static RequestHandlerHelper _RequestHandlerHelper => RequestHandlerHelper.Instance;
+
+        /// <summary>
+        ///     MongoID Helper
+        /// </summary>
+        public static MongoIDHelper _MongoIDHelper => MongoIDHelper.Instance;
+
+        public static ItemMongoIDData _ItemMongoIDHelper => ItemMongoIDData.Instance;
+
+        public static ConditionMongoIDData _ConditionMongoIDHelper => ConditionMongoIDData.Instance;
 
         internal static void InitHooks()
         {

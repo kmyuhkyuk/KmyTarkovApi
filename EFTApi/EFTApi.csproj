@@ -95,6 +95,7 @@
     <Compile Include="Helpers\EnvironmentUIRootHelper.cs" />
     <Compile Include="Helpers\BattleUIScreenHelper.cs" />
     <Compile Include="Helpers\GameWorldHelper.cs" />
+    <Compile Include="Helpers\MongoIDHelper.cs" />
     <Compile Include="Helpers\LevelSettingsHelper.cs" />
     <Compile Include="Helpers\MainMenuControllerHelper.cs" />
     <Compile Include="Helpers\PlayerHelper.cs" />

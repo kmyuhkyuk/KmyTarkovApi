@@ -70,7 +70,7 @@ namespace EFTReflection.Patching
 
             if (!hookMethod.IsStatic)
             {
-                throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} not is static");
+                throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} is not Static");
             }
 
             var hasHook = HookDictionary.TryGetValue(originalMethod, out var typeDictionary);
@@ -316,7 +316,7 @@ namespace EFTReflection.Patching
 
             if (!hookMethod.IsStatic)
             {
-                throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} not is static");
+                throw new Exception($"{hookDeclaringType.Name}_{hookMethod.Name} is not Static");
             }
 
             if (HookDictionary.TryGetValue(originalMethod, out var typeDictionary) &&

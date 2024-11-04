@@ -116,7 +116,6 @@ namespace EFTReflection
 
             if (!fieldInfo.IsStatic)
             {
-                var delegateInIsObject = delegateInstanceType == typeof(object);
                 var inIsValueType = declaringType.IsValueType;
 
                 if (!inIsValueType)
@@ -126,11 +125,6 @@ namespace EFTReflection
                 else
                 {
                     ilGen.Emit(OpCodes.Ldarga_S, 0);
-                }
-
-                if (delegateInIsObject)
-                {
-                    ilGen.Emit(!inIsValueType ? OpCodes.Castclass : OpCodes.Unbox_Any, declaringType);
                 }
 
                 ilGen.Emit(OpCodes.Ldarg_1);

@@ -218,7 +218,7 @@ namespace EFTReflection
             }
 
             var asyncAttribute = methodBase.GetCustomAttribute<AsyncStateMachineAttribute>() ??
-                                 throw new Exception($"{methodBase.Name} not is async type");
+                                 throw new Exception($"{methodBase.Name} is not Async Method");
 
             return asyncAttribute.StateMachineType;
         }
@@ -249,11 +249,11 @@ namespace EFTReflection
         {
             if (!type.IsValueType)
             {
-                throw new Exception($"{type.Name} not is Struct");
+                throw new Exception($"{type.Name} is not Struct");
             }
 
             return type.GetMethod("MoveNext", AccessTools.allDeclared) ??
-                   throw new Exception($"{type.Name} not have MoveNext Method");
+                   throw new Exception($"{type.Name} not exist MoveNext Method");
         }
 
         #endregion

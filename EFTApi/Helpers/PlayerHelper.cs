@@ -51,6 +51,8 @@ namespace EFTApi.Helpers
 
         public InventoryControllerData InventoryControllerHelper => InventoryControllerData.Instance;
 
+        public SearchControllerData SearchControllerHelper => SearchControllerData.Instance;
+
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -86,7 +88,7 @@ namespace EFTApi.Helpers
         /// <summary>
         ///     InfoClass.Settings
         /// </summary>
-        public readonly RefHelper.FieldRef<InfoClass, object> RefSettings;
+        public readonly RefHelper.IRef<InfoClass, object> RefSettings;
 
         /// <summary>
         ///     InfoClass.Settings.Role
@@ -110,9 +112,17 @@ namespace EFTApi.Helpers
         {
             var playerType = typeof(Player);
 
-            RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
-            RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.FieldType, "Role");
-            RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.FieldType, "Experience");
+            if (EFTVersion.AkiVersion > EFTVersion.Parse("3.9.8"))
+            {
+                RefSettings = RefHelper.PropertyRef<InfoClass, object>.Create("Settings");
+            }
+            else
+            {
+                RefSettings = RefHelper.FieldRef<InfoClass, object>.Create("Settings");
+            }
+
+            RefRole = RefHelper.FieldRef<object, WildSpawnType>.Create(RefSettings.RefType, "Role");
+            RefExperience = RefHelper.FieldRef<object, int>.Create(RefSettings.RefType, "Experience");
             RefSkills = RefHelper.PropertyRef<Player, object>.Create("Skills");
 
             Init = RefHelper.HookRef.Create(playerType, "Init");
@@ -328,23 +338,25 @@ namespace EFTApi.Helpers
                 }
             }
 
-            public HashSet<string> EquipmentItemHashSet
+            public HashSet<object> EquipmentItemHashSet
             {
                 get
                 {
+                    var itemMongoIDHelper = MongoIDHelper.ItemMongoIDData.Instance;
+
                     var equipmentGrids = EquipmentGrids;
 
                     if (equipmentGrids == null)
                         return null;
 
-                    var hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    var hashSet = new HashSet<object>();
 
                     // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                     foreach (var grid in equipmentGrids)
                     {
                         foreach (var item in RefItems.GetValue(grid))
                         {
-                            hashSet.Add(item.TemplateId);
+                            hashSet.Add(itemMongoIDHelper.RefTemplateId.GetValue(item));
                         }
                     }
 
@@ -352,7 +364,6 @@ namespace EFTApi.Helpers
                 }
             }
 
-            //List is always not is null
             public List<object> QuestRaidItemsGrids
             {
                 get
@@ -397,23 +408,25 @@ namespace EFTApi.Helpers
                 }
             }
 
-            public HashSet<string> QuestRaidItemHashSet
+            public HashSet<object> QuestRaidItemHashSet
             {
                 get
                 {
+                    var itemMongoIDHelper = MongoIDHelper.ItemMongoIDData.Instance;
+
                     var questRaidItemsGrids = QuestRaidItemsGrids;
 
                     if (questRaidItemsGrids == null)
                         return null;
 
-                    var hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    var hashSet = new HashSet<object>();
 
                     // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                     foreach (var grid in questRaidItemsGrids)
                     {
                         foreach (var item in RefItems.GetValue(grid))
                         {
-                            hashSet.Add(item.TemplateId);
+                            hashSet.Add(itemMongoIDHelper.RefTemplateId.GetValue(item));
                         }
                     }
 
@@ -601,34 +614,68 @@ namespace EFTApi.Helpers
             /// <summary>
             ///     DamageInfo.Player
             /// </summary>
-            public readonly RefHelper.FieldRef<DamageInfo, object> RefPlayer;
-
-            /// <summary>
-            ///     DamageInfo.BleedBlock
-            /// </summary>
-            [CanBeNull] public readonly RefHelper.FieldRef<DamageInfo, bool> RefBleedBlock;
+            public readonly RefHelper.FieldRef<object, object> RefPlayer;
 
             /// <summary>
             ///     DamageInfo.Player.iPlayer
             /// </summary>
             [CanBeNull] public readonly RefHelper.PropertyRef<object, object> RefIPlayer;
 
+            /// <summary>
+            ///     DamageInfo.Damage
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, float> RefDamage;
+
+            /// <summary>
+            ///     DamageInfo.Direction
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, Vector3> RefDirection;
+
+            /// <summary>
+            ///     DamageInfo.HitPoint
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, Vector3> RefHitPoint;
+
+            /// <summary>
+            ///     DamageInfo.DidBodyDamage
+            /// </summary>
+            public readonly RefHelper.FieldRef<object, float> RefDidBodyDamage;
+
+            /// <summary>
+            ///     DamageInfo.Weapon
+            /// </summary>
+            public RefHelper.FieldRef<object, Item> RefWeapon;
+
+            /// <summary>
+            ///     DamageInfo.BleedBlock
+            /// </summary>
+            [CanBeNull] public readonly RefHelper.FieldRef<object, bool> RefBleedBlock;
+
             private DamageInfoData()
             {
-                RefPlayer = RefHelper.FieldRef<DamageInfo, object>.Create("Player");
+                var damageInfoType = EFTVersion.AkiVersion > EFTVersion.Parse("3.9.8")
+                    ? RefTool.GetEftType(x => x.Name == "DamageInfoStruct")
+                    : RefTool.GetEftType(x => x.Name == "DamageInfo");
 
-                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
-                {
-                    RefBleedBlock = RefHelper.FieldRef<DamageInfo, bool>.Create("BleedBlock");
-                }
+                RefPlayer = RefHelper.FieldRef<object, object>.Create(damageInfoType, "Player");
 
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8"))
                 {
                     RefIPlayer = RefHelper.PropertyRef<object, object>.Create(RefPlayer.FieldType, "iPlayer");
                 }
+
+                RefDamage = RefHelper.FieldRef<object, float>.Create(damageInfoType, "Damage");
+                RefDirection = RefHelper.FieldRef<object, Vector3>.Create(damageInfoType, "Direction");
+                RefHitPoint = RefHelper.FieldRef<object, Vector3>.Create(damageInfoType, "HitPoint");
+                RefDidBodyDamage = RefHelper.FieldRef<object, float>.Create(damageInfoType, "DidBodyDamage");
+
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
+                {
+                    RefBleedBlock = RefHelper.FieldRef<object, bool>.Create(damageInfoType, "BleedBlock");
+                }
             }
 
-            public Player GetPlayer(DamageInfo damageInfo)
+            public Player GetPlayer(object damageInfo)
             {
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.5.8"))
                     return (Player)RefIPlayer?.GetValue(RefPlayer.GetValue(damageInfo));
@@ -740,19 +787,29 @@ namespace EFTApi.Helpers
             /// </summary>
             public readonly RefHelper.PropertyRef<object, bool> RefIsAlive;
 
+            /// <summary>
+            ///     Player.ActiveHealthController.Hydration
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, ValueStruct> RefActiveHydration;
+
+            /// <summary>
+            ///     Player.ActiveHealthController.Energy
+            /// </summary>
+            public readonly RefHelper.PropertyRef<object, ValueStruct> RefActiveEnergy;
+
             private readonly Action<object, float, EBodyPart> _refDoWoundRelapse;
 
             private readonly Action<object, EBodyPart, float> _refBluntContusion;
 
             private readonly TryApplySideEffectsDelegate _refTryApplySideEffects;
 
-            public delegate bool TryApplySideEffectsDelegate(object instance, DamageInfo damage, EBodyPart bodyPart,
+            public delegate bool TryApplySideEffectsDelegate(object instance, object damage, EBodyPart bodyPart,
                 out SideEffectComponent sideEffectComponent);
 
             /// <summary>
             ///     Fika.Core.Coop.ClientClasses.CoopClientHealthController.ApplyDamage
             /// </summary>
-            private readonly Func<object, EBodyPart, float, DamageInfo, float> _refCoopApplyDamage;
+            private readonly Func<object, EBodyPart, float, object, float> _refCoopApplyDamage;
 
             /// <summary>
             ///     Fika.Core.Coop.ObservedClasses.ObservedHealthController.Store
@@ -761,9 +818,19 @@ namespace EFTApi.Helpers
 
             private readonly Type _coopHealthControllerType;
 
-            public ValueStruct Hydration => RefHydration.GetValue(HealthController);
+            private readonly Type _activeHealthControllerType;
 
-            public ValueStruct Energy => RefEnergy.GetValue(HealthController);
+            public bool IsActiveHealthController => HealthController != null &&
+                                                    _activeHealthControllerType.IsAssignableFrom(
+                                                        HealthController.GetType());
+
+            public ValueStruct Hydration => IsActiveHealthController
+                ? RefActiveHydration.GetValue(HealthController)
+                : RefHydration.GetValue(HealthController);
+
+            public ValueStruct Energy => IsActiveHealthController
+                ? RefActiveEnergy.GetValue(HealthController)
+                : RefEnergy.GetValue(HealthController);
 
             public float HealthRate => RefHealthRate.GetValue(HealthController);
 
@@ -780,22 +847,27 @@ namespace EFTApi.Helpers
                         RefTool.Public,
                         x => x.Name == "GetBodyPartHealth"));
 
-                var activeHealthControllerType = RefTool.GetEftType(x =>
+                _activeHealthControllerType = RefTool.GetEftType(x =>
                     x.GetMethod("SetDamageCoeff", BindingFlags.DeclaredOnly | RefTool.Public) != null);
 
                 _refDoWoundRelapse =
                     RefHelper.ObjectMethodDelegate<Action<object, float, EBodyPart>>(
-                        activeHealthControllerType.GetMethod("DoWoundRelapse", RefTool.Public));
+                        _activeHealthControllerType.GetMethod("DoWoundRelapse", RefTool.Public));
                 _refBluntContusion = RefHelper.ObjectMethodDelegate<Action<object, EBodyPart, float>>(
-                    activeHealthControllerType.GetMethod("BluntContusion", RefTool.Public));
+                    _activeHealthControllerType.GetMethod("BluntContusion", RefTool.Public));
                 _refTryApplySideEffects = RefHelper.ObjectMethodDelegate<TryApplySideEffectsDelegate>(
-                    activeHealthControllerType.GetMethod("TryApplySideEffects", RefTool.Public));
+                    _activeHealthControllerType.GetMethod("TryApplySideEffects", RefTool.Public));
 
                 RefHealthController = RefHelper.PropertyRef<Player, object>.Create("HealthController");
+
+                var healthControllerType =
+                    RefTool.GetEftType(x => x.GetMethod("RecalculateRegeneration", RefTool.Public) != null);
+
                 RefHydration =
-                    RefHelper.PropertyRef<object, ValueStruct>.Create(RefHealthController.PropertyType, "Hydration");
-                RefEnergy = RefHelper.PropertyRef<object, ValueStruct>.Create(RefHealthController.PropertyType,
+                    RefHelper.PropertyRef<object, ValueStruct>.Create(healthControllerType, "Hydration");
+                RefEnergy = RefHelper.PropertyRef<object, ValueStruct>.Create(healthControllerType,
                     "Energy");
+
                 RefHealthRate =
                     RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "HealthRate");
                 RefHydrationRate =
@@ -803,6 +875,11 @@ namespace EFTApi.Helpers
                 RefEnergyRate =
                     RefHelper.PropertyRef<object, float>.Create(RefHealthController.PropertyType, "EnergyRate");
                 RefIsAlive = RefHelper.PropertyRef<object, bool>.Create(RefHealthController.PropertyType, "IsAlive");
+
+                RefActiveHydration =
+                    RefHelper.PropertyRef<object, ValueStruct>.Create(_activeHealthControllerType, "Hydration");
+                RefActiveEnergy = RefHelper.PropertyRef<object, ValueStruct>.Create(_activeHealthControllerType,
+                    "Energy");
 
                 if (!EFTVersion.IsFika)
                     return;
@@ -817,7 +894,7 @@ namespace EFTApi.Helpers
                         .GetMethod("Store", RefTool.Public));
 
                 _refCoopApplyDamage =
-                    RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, DamageInfo, float>>(
+                    RefHelper.ObjectMethodDelegate<Func<object, EBodyPart, float, object, float>>(
                         _coopHealthControllerType.GetMethod("ApplyDamage", RefTool.Public));
             }
 
@@ -836,13 +913,13 @@ namespace EFTApi.Helpers
                 _refBluntContusion(instance, bodyPartType, absorbed);
             }
 
-            public bool TryApplySideEffects(object instance, DamageInfo damage, EBodyPart bodyPart,
+            public bool TryApplySideEffects(object instance, object damage, EBodyPart bodyPart,
                 out SideEffectComponent sideEffectComponent)
             {
                 return _refTryApplySideEffects(instance, damage, bodyPart, out sideEffectComponent);
             }
 
-            public float CoopApplyDamage(object instance, EBodyPart bodyPart, float damage, DamageInfo damageInfo)
+            public float CoopApplyDamage(object instance, EBodyPart bodyPart, float damage, object damageInfo)
             {
                 return _refCoopApplyDamage(instance, bodyPart, damage, damageInfo);
             }
@@ -943,6 +1020,43 @@ namespace EFTApi.Helpers
             private InventoryControllerData()
             {
                 RefInventoryController = RefHelper.FieldRef<Player, object>.Create("_inventoryController");
+            }
+        }
+
+        public class SearchControllerData
+        {
+            private static readonly Lazy<SearchControllerData> Lazy =
+                new Lazy<SearchControllerData>(() => new SearchControllerData());
+
+            public static SearchControllerData Instance => Lazy.Value;
+
+            /// <summary>
+            ///     Player.SearchController
+            /// </summary>
+            [CanBeNull] public readonly RefHelper.PropertyRef<Player, object> RefSearchController;
+
+            public object SearchController => RefSearchController?.GetValue(PlayerHelper.Instance.Player);
+
+            private readonly Func<object, Item, bool> _refIsSearched;
+
+            private SearchControllerData()
+            {
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.9.8"))
+                {
+                    RefSearchController = RefHelper.PropertyRef<Player, object>.Create("SearchController");
+
+                    var searchControllerType = RefTool.GetEftType(x =>
+                        x.IsInterface && x.GetMethod("IsSearched", RefTool.Public) != null);
+
+                    _refIsSearched =
+                        RefHelper.ObjectMethodDelegate<Func<object, Item, bool>>(
+                            searchControllerType.GetMethod("IsSearched", RefTool.Public));
+                }
+            }
+
+            public bool GetIsSearched(object instance, Item item)
+            {
+                return _refIsSearched(instance, item);
             }
         }
     }

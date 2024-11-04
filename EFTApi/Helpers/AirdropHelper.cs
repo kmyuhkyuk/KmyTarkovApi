@@ -41,7 +41,8 @@ namespace EFTApi.Helpers
 
             private AirdropBoxData()
             {
-                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1") &&
+                    EFTVersion.AkiVersion < EFTVersion.Parse("3.10.0"))
                 {
                     var airdropBoxType = EFTVersion.AkiVersion > EFTVersion.Parse("3.8.3")
                         ? RefTool.GetPluginType(EFTPlugins.AkiCustom, "SPT.Custom.Airdrops.AirdropBox")

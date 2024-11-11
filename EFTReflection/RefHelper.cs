@@ -46,7 +46,6 @@ namespace EFTReflection
 
             if (!fieldInfo.IsStatic)
             {
-                var declaringInIsObject = delegateInstanceType == typeof(object);
                 var inIsValueType = declaringType.IsValueType;
 
                 if (!inIsValueType)
@@ -56,11 +55,6 @@ namespace EFTReflection
                 else
                 {
                     ilGen.Emit(OpCodes.Ldarga_S, 0);
-                }
-
-                if (declaringInIsObject)
-                {
-                    ilGen.Emit(!inIsValueType ? OpCodes.Castclass : OpCodes.Unbox_Any, declaringType);
                 }
 
                 ilGen.Emit(OpCodes.Ldfld, fieldInfo);
@@ -471,6 +465,8 @@ namespace EFTReflection
 
             private T _instance;
 
+            private bool _useReflection;
+
             private bool _useHarmony;
 
             public Type DeclaringType { get; private set; }
@@ -554,22 +550,38 @@ namespace EFTReflection
                     _instance = (T)instance;
                 }
 
-                if (typeof(TF) == typeof(object) || typeof(TF).IsValueType ||
-                    DeclaringType != null && DeclaringType.IsValueType)
+                var declaringIsValueType = DeclaringType != null && DeclaringType.IsValueType;
+
+                if (typeof(T) == typeof(object) && declaringIsValueType)
+                {
+                    _useReflection = true;
+                    _useHarmony = false;
+                }
+                else if (typeof(TF) == typeof(object) || typeof(TF).IsValueType || declaringIsValueType)
                 {
                     _refGetValue = ObjectFieldGetAccess<T, TF>(fieldInfo);
                     _refSetValue = ObjectFieldSetAccess<T, TF>(fieldInfo);
+                    _useReflection = false;
                     _useHarmony = false;
                 }
                 else
                 {
                     _harmonyFieldRef = AccessTools.FieldRefAccess<T, TF>(fieldInfo);
+                    _useReflection = false;
                     _useHarmony = true;
                 }
             }
 
             public TF GetValue(T instance)
             {
+                if (_useReflection)
+                {
+                    if (instance == null)
+                        return default;
+
+                    return (TF)_fieldInfo.GetValue(instance);
+                }
+
                 if (_useHarmony)
                 {
                     if (_harmonyFieldRef == null)
@@ -602,7 +614,14 @@ namespace EFTReflection
 
             public void SetValue(T instance, TF value)
             {
-                if (_useHarmony)
+                if (_useReflection)
+                {
+                    if (instance == null)
+                        return;
+
+                    _fieldInfo.SetValue(instance, value);
+                }
+                else if (_useHarmony)
                 {
                     if (_harmonyFieldRef == null)
                     {

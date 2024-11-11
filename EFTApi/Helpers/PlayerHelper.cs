@@ -53,6 +53,8 @@ namespace EFTApi.Helpers
 
         public SearchControllerData SearchControllerHelper => SearchControllerData.Instance;
 
+        public InfoClassData InfoClassHelper => InfoClassData.Instance;
+
         /// <summary>
         ///     Init Action
         /// </summary>
@@ -668,6 +670,7 @@ namespace EFTApi.Helpers
                 RefDirection = RefHelper.FieldRef<object, Vector3>.Create(damageInfoType, "Direction");
                 RefHitPoint = RefHelper.FieldRef<object, Vector3>.Create(damageInfoType, "HitPoint");
                 RefDidBodyDamage = RefHelper.FieldRef<object, float>.Create(damageInfoType, "DidBodyDamage");
+                RefWeapon = RefHelper.FieldRef<object, Item>.Create(damageInfoType, "Weapon");
 
                 if (EFTVersion.AkiVersion > EFTVersion.Parse("3.4.1"))
                 {
@@ -1057,6 +1060,28 @@ namespace EFTApi.Helpers
             public bool GetIsSearched(object instance, Item item)
             {
                 return _refIsSearched(instance, item);
+            }
+        }
+
+        public class InfoClassData
+        {
+            private static readonly Lazy<InfoClassData> Lazy =
+                new Lazy<InfoClassData>(() => new InfoClassData());
+
+            public static InfoClassData Instance => Lazy.Value;
+
+            public RefHelper.IRef<InfoClass, EPlayerSide> RefSide;
+
+            private InfoClassData()
+            {
+                if (EFTVersion.AkiVersion > EFTVersion.Parse("3.9.8"))
+                {
+                    RefSide = RefHelper.PropertyRef<InfoClass, EPlayerSide>.Create("Side");
+                }
+                else
+                {
+                    RefSide = RefHelper.FieldRef<InfoClass, EPlayerSide>.Create("Side");
+                }
             }
         }
     }

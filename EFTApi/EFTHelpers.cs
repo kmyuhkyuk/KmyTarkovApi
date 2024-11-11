@@ -96,6 +96,8 @@ namespace EFTApi
 
         public static SearchControllerData _SearchControllerHelper => SearchControllerData.Instance;
 
+        public static InfoClassData _InfoClassHelper => InfoClassData.Instance;
+
         /// <summary>
         ///     Session Helper
         /// </summary>

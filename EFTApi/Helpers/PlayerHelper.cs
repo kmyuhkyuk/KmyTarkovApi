@@ -824,8 +824,7 @@ namespace EFTApi.Helpers
             private readonly Type _activeHealthControllerType;
 
             public bool IsActiveHealthController => HealthController != null &&
-                                                    _activeHealthControllerType.IsAssignableFrom(
-                                                        HealthController.GetType());
+                                                    _activeHealthControllerType.IsInstanceOfType(HealthController);
 
             public ValueStruct Hydration => IsActiveHealthController
                 ? RefActiveHydration.GetValue(HealthController)

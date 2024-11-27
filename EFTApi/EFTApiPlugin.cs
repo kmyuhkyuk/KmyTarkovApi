@@ -3,8 +3,8 @@ using EFTApi.Patches;
 
 namespace EFTApi
 {
-    [BepInPlugin("com.kmyuhkyuk.EFTApi", "EFTApi", "1.2.2")]
-    [BepInDependency("com.kmyuhkyuk.EFTReflection", "1.2.2")]
+    [BepInPlugin("com.kmyuhkyuk.EFTApi", "EFTApi", "1.3.0")]
+    [BepInDependency("com.kmyuhkyuk.EFTReflection", "1.3.0")]
     public class EFTApiPlugin : BaseUnityPlugin
     {
         private void Start()

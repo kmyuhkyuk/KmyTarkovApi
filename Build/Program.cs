@@ -27,9 +27,9 @@ namespace Build
 
             const string versionName = "1.3.0";
 
-            var releaseName = $"{modDirectoryName}-(Release_{versionName}).7z";
+            var releaseName = $"{modDirectoryName}(Release_{versionName}).7z";
 
-            var previewName = $"{modDirectoryName}-(Preview).7z";
+            var previewName = $"{modDirectoryName}(Preview).7z";
 
             var releasePreview = new[]
             {

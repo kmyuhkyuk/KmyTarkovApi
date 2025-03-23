@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("KmyTarkovUtils")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("https://hub.sp-tarkov.com/files/file/1215-eft-api")]
+[assembly: AssemblyCompany("https://hub.sp-tarkov.com/files/file/1215-kmy-tarkov-api")]
 [assembly: AssemblyProduct("KmyTarkovUtils")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]

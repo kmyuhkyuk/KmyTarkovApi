@@ -92,21 +92,21 @@
       <Project>{4281a4ae-6efb-4ebb-8ed3-12d950147827}</Project>
       <Name>ConfigurationTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EFTApi\EFTApi.csproj">
+    <ProjectReference Include="..\KmyTarkovApi\KmyTarkovApi.csproj">
       <Project>{87c57988-0732-4c2d-af35-b075b2112667}</Project>
-      <Name>EFTApi</Name>
+      <Name>KmyTarkovApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EFTConfiguration\EFTConfiguration.csproj">
+    <ProjectReference Include="..\KmyTarkovConfiguration\KmyTarkovConfiguration.csproj">
       <Project>{279303ee-9c6c-4fcf-b5a4-9c8ab69fff3e}</Project>
-      <Name>EFTConfiguration</Name>
+      <Name>KmyTarkovConfiguration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EFTReflection\EFTReflection.csproj">
+    <ProjectReference Include="..\KmyTarkovReflection\KmyTarkovReflection.csproj">
       <Project>{dc861862-6289-4bde-afae-2ab0991d12a7}</Project>
-      <Name>EFTReflection</Name>
+      <Name>KmyTarkovReflection</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EFTUtils\EFTUtils.csproj">
+    <ProjectReference Include="..\KmyTarkovUtils\KmyTarkovUtils.csproj">
       <Project>{e04cfa65-4251-468e-a5c4-f7611542cda5}</Project>
-      <Name>EFTUtils</Name>
+      <Name>KmyTarkovUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

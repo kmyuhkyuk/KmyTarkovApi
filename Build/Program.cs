@@ -17,7 +17,7 @@ namespace Build
             var sha = Copy.GetTipSha(args.ElementAtOrDefault(1));
 
             const string modPath =
-                @"R:\Battlestate Games\Client.0.15.5.1.33420\BepInEx\plugins\kmyuhkyuk-EFTApi";
+                @"R:\Battlestate Games\Client.0.16.1.3.35392\BepInEx\plugins\kmyuhkyuk-KmyTarkovApi";
 
             var modDirectoryName = new DirectoryInfo(modPath).Name;
 
@@ -25,7 +25,7 @@ namespace Build
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 
-            const string versionName = "1.3.0";
+            const string versionName = "1.4.0";
 
             var releaseName = $"{modDirectoryName}(Release_{versionName}).7z";
 
@@ -44,10 +44,10 @@ namespace Build
 
                 Copy.CopyAssembly(arg, releasePreview, baseDirectory, currentPath, new[]
                 {
-                    "EFTApi",
-                    "EFTUtils",
-                    "EFTReflection",
-                    "EFTConfiguration",
+                    "KmyTarkovApi",
+                    "KmyTarkovUtils",
+                    "KmyTarkovReflection",
+                    "KmyTarkovConfiguration",
                     "HtmlAgilityPack",
                     "Crc32.NET",
                     "ConfigurationTest"
@@ -62,10 +62,10 @@ namespace Build
 
                 Copy.CopyAssembly(arg, releasePreview, currentPath, modPath, new[]
                 {
-                    "EFTApi",
-                    "EFTUtils",
-                    "EFTReflection",
-                    "EFTConfiguration"
+                    "KmyTarkovApi",
+                    "KmyTarkovUtils",
+                    "KmyTarkovReflection",
+                    "KmyTarkovConfiguration"
                 }, sha);
 
                 Copy.GenerateSevenZip(arg, "Release", modPath, releaseName, @"BepInEx\plugins", new[]
@@ -86,11 +86,11 @@ namespace Build
 
                 //Unity
 
-                const string unityEditorPath = @"C:\Users\24516\Documents\EFTConfiguration\Assets\Managed";
+                const string unityEditorPath = @"C:\Users\24516\Documents\KmyTarkovConfiguration\Assets\Managed";
 
                 Copy.CopyAssembly(arg, "UNITY_EDITOR", baseDirectory, unityEditorPath, new[]
                 {
-                    "EFTConfiguration"
+                    "KmyTarkovConfiguration"
                 });
             }
             catch (Exception ex)

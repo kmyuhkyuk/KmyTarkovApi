@@ -2,15 +2,15 @@
 using System.Diagnostics.CodeAnalysis;
 using BepInEx;
 using BepInEx.Configuration;
-using EFTConfiguration.Attributes;
+using KmyTarkovConfiguration.Attributes;
 using UnityEngine;
 
 // ReSharper disable UnusedMember.Local
 
 namespace ConfigurationTest
 {
-    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "1.3.0")]
-    [BepInDependency("com.kmyuhkyuk.EFTConfiguration", "1.3.0")]
+    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "1.4.0")]
+    [BepInDependency("com.kmyuhkyuk.KmyTarkovConfiguration", "1.4.0")]
     public class ConfigurationTestPlugin : BaseUnityPlugin
     {
         private bool _testLoopThrow;

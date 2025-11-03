@@ -28,7 +28,8 @@ namespace KmyTarkovConfiguration.Models
 
         public readonly string ModName;
 
-        public readonly GameObject EFTConfigurationPublic = new GameObject("KmyTarkovConfigurationPublic", typeof(Canvas),
+        public readonly GameObject EFTConfigurationPublic = new GameObject("KmyTarkovConfigurationPublic",
+            typeof(Canvas),
             typeof(CanvasScaler), typeof(GraphicRaycaster));
 
         public readonly string ModPath = Path.Combine(Paths.PluginPath, "kmyuhkyuk-KmyTarkovApi");
@@ -56,7 +57,8 @@ namespace KmyTarkovConfiguration.Models
 
             Object.DontDestroyOnLoad(EFTConfigurationPublic);
 
-            var assetBundle = AssetBundle.LoadFromFile(Path.Combine(ModPath, "bundles", "kmytarkovconfiguration.bundle"));
+            var assetBundle =
+                AssetBundle.LoadFromFile(Path.Combine(ModPath, "bundles", "kmytarkovconfiguration.bundle"));
             if (assetBundle == null)
             {
                 Logger.LogError($"{nameof(EFTConfigurationModel)}: Failed to load AssetBundle!");

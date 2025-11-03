@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace ConfigurationTest
 {
-    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "1.4.0")]
-    [BepInDependency("com.kmyuhkyuk.KmyTarkovConfiguration", "1.4.0")]
+    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "1.4.1")]
+    [BepInDependency("com.kmyuhkyuk.KmyTarkovConfiguration", "1.4.1")]
     public class ConfigurationTestPlugin : BaseUnityPlugin
     {
         private bool _testLoopThrow;

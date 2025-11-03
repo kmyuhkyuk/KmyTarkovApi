@@ -40,10 +40,10 @@ namespace KmyTarkovConfiguration.Models
             KeyDescriptionPositionOffset = configFile.Bind<Vector2>(mainSettings, "Description Position Offset",
                 new Vector2(0, -25), new ConfigDescription("Description position offset from Mouse position"));
             KeyLanguage = configFile.Bind<string>(mainSettings, "Language",
-                "Game Language",
+                "Default",
                 new ConfigDescription(
                     "Preferred language, if not available will tried English, if still not available than return original text",
-                    new AcceptableValueCustomList<string>(new[] { "Game Language" }
+                    new AcceptableValueCustomList<string>(new[] { "Default" }
                         .Concat(LocalizedHelper.LanguageNames)
                         .ToArray())));
             KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
@@ -54,7 +54,7 @@ namespace KmyTarkovConfiguration.Models
                 (AcceptableValueCustomList<string>)KeyLanguage.Description.AcceptableValues;
             LocalizedHelper.LanguageAdd +=
                 () => acceptableValueCustomList.AcceptableValuesCustom =
-                    new[] { "Game Language" }.Concat(LocalizedHelper.LanguageNames).ToArray();
+                    new[] { "Default" }.Concat(LocalizedHelper.LanguageNames).ToArray();
 
             var localeManagerClass = Traverse.Create(typeof(LocaleManagerClass)).Property("LocaleManagerClass")
                 .GetValue<LocaleManagerClass>();
@@ -68,7 +68,7 @@ namespace KmyTarkovConfiguration.Models
 
         private void SwitchLanguage(string language)
         {
-            if (KeyLanguage.Value == "Game Language")
+            if (KeyLanguage.Value == "Default")
             {
                 SwitchLanguageFromGame(language);
             }

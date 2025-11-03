@@ -126,6 +126,11 @@ namespace KmyTarkovApi
         public static EasyAssetsHelper.EasyAssetsExtensionData _EasyAssetsExtensionHelper =>
             EasyAssetsHelper.EasyAssetsExtensionData.Instance;
 
+        /// <summary>
+        ///     LocaleManagerClass Helper
+        /// </summary>
+        public static LocaleManagerClassHelper _LocaleManagerClassHelper => LocaleManagerClassHelper.Instance;
+
         internal static void InitHooks()
         {
             foreach (var propertyInfo in typeof(EFTHelpers).GetProperties(BindingFlags.Static | RefTool.Public))

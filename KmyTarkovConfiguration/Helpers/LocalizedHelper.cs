@@ -25,7 +25,7 @@ namespace KmyTarkovConfiguration.Helpers
             }
         }
 
-        public static string CurrentLanguageLower => LanguagesLowerDictionary[CurrentLanguage];
+        public static string CurrentLanguageLower => LanguageNamesLowerDictionary[CurrentLanguage];
 
         internal static readonly Dictionary<string, Dictionary<string, Dictionary<string, string>>> LanguageDictionary =
             new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
@@ -34,9 +34,9 @@ namespace KmyTarkovConfiguration.Helpers
 
         public static event Action LanguageAdd;
 
-        public static string[] Languages => LanguagesLowerDictionary.Keys.ToArray();
+        public static string[] LanguageNames => LanguageNamesLowerDictionary.Keys.ToArray();
 
-        private static readonly Dictionary<string, string> LanguagesLowerDictionary =
+        private static readonly Dictionary<string, string> LanguageNamesLowerDictionary =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Cz", "cz" },
@@ -59,12 +59,18 @@ namespace KmyTarkovConfiguration.Helpers
                 { "Zh", "zh" }
             };
 
+        public static IReadOnlyDictionary<string, string> LanguageNamesDictionary =>
+            LanguageNamesLowerDictionary.ToDictionary(x => x.Value, x => x.Key);
+
+        public static IReadOnlyDictionary<string, string> LanguageNameLowercaseNamesDictionary =>
+            LanguageNamesLowerDictionary;
+
         public static void AddLanguage(string name)
         {
-            if (LanguagesLowerDictionary.ContainsKey(name))
+            if (LanguageNamesLowerDictionary.ContainsKey(name))
                 return;
 
-            LanguagesLowerDictionary.Add(name, name.ToLower());
+            LanguageNamesLowerDictionary.Add(name, name.ToLower());
 
             LanguageAdd?.Invoke();
         }

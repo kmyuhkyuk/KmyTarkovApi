@@ -27,7 +27,7 @@ namespace KmyTarkovConfiguration
 
             FileStream fileStream;
 
-            while (!Utility.TryOpenFileStream(Path.Combine(Paths.BepInExRootPath, localPath),
+            while (!Utility.TryOpenFileStream(Path.Combine(BepInEx.Paths.BepInExRootPath, localPath),
                        appendLog ? FileMode.Append : FileMode.Create, out fileStream, share: FileShare.Read,
                        access: FileAccess.Write))
             {

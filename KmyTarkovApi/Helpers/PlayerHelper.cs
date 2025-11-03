@@ -11,7 +11,6 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using KmyTarkovReflection;
 using UnityEngine;
-using static EFT.Quests.ConditionCounterCreator;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberCanBeMadeStatic.Global
@@ -41,6 +40,8 @@ namespace KmyTarkovApi.Helpers
 
         public AbstractQuestControllerClassData AbstractQuestControllerClassHelper =>
             AbstractQuestControllerClassData.Instance;
+
+        public ConditionCounterCreatorData ConditionCounterCreatorHelper => ConditionCounterCreatorData.Instance;
 
         public ConditionCounterTemplateData ConditionCounterTemplateHelper => ConditionCounterTemplateData.Instance;
 
@@ -359,6 +360,10 @@ namespace KmyTarkovApi.Helpers
 
             public IHealthController HealthController => PlayerHelper.Instance.Player?.HealthController;
 
+            public readonly RefHelper.PropertyRef<IHealthController, ValueStruct> RefHydration;
+
+            public readonly RefHelper.PropertyRef<IHealthController, ValueStruct> RefEnergy;
+
             private readonly Func<IHealthController, EBodyPart, bool, ValueStruct> _refGetBodyPartHealth;
 
             /// <summary>
@@ -378,6 +383,14 @@ namespace KmyTarkovApi.Helpers
 
             private HealthControllerData()
             {
+                var healthControllerBaseInterfaceType = typeof(IHealthController).GetInterfaces()[0];
+
+                RefHydration =
+                    RefHelper.PropertyRef<IHealthController, ValueStruct>.Create(healthControllerBaseInterfaceType,
+                        "Hydration");
+                RefEnergy = RefHelper.PropertyRef<IHealthController, ValueStruct>.Create(
+                    healthControllerBaseInterfaceType, "Energy");
+
                 var activeHealthControllerBaseType = typeof(ActiveHealthController).BaseType;
 
                 _refGetBodyPartHealth =
@@ -439,7 +452,11 @@ namespace KmyTarkovApi.Helpers
             public static AbstractQuestControllerClassData Instance => Lazy.Value;
 
             public AbstractQuestControllerClass AbstractQuestControllerClass =>
-                PlayerHelper.Instance.Player?.AbstractQuestControllerClass;
+                RefAbstractQuestControllerClass.GetValue(PlayerHelper.Instance.Player);
+
+            public IEnumerable<QuestClass> Quests => RefQuests.GetValue(AbstractQuestControllerClass);
+
+            public readonly RefHelper.PropertyRef<Player, AbstractQuestControllerClass> RefAbstractQuestControllerClass;
 
             public readonly RefHelper.PropertyRef<AbstractQuestControllerClass, IEnumerable<QuestClass>> RefQuests;
 
@@ -447,6 +464,9 @@ namespace KmyTarkovApi.Helpers
 
             private AbstractQuestControllerClassData()
             {
+                RefAbstractQuestControllerClass =
+                    RefHelper.PropertyRef<Player, AbstractQuestControllerClass>.Create("AbstractQuestControllerClass");
+
                 RefQuests =
                     RefHelper.PropertyRef<AbstractQuestControllerClass, IEnumerable<QuestClass>>.Create("Quests");
 
@@ -457,6 +477,27 @@ namespace KmyTarkovApi.Helpers
             }
         }
 
+        public class ConditionCounterCreatorData
+        {
+            private static readonly Lazy<ConditionCounterCreatorData> Lazy =
+                new Lazy<ConditionCounterCreatorData>(() => new ConditionCounterCreatorData());
+
+            public static ConditionCounterCreatorData Instance => Lazy.Value;
+
+            public readonly
+                RefHelper.FieldRef<ConditionCounterCreator, ConditionCounterCreator.ConditionCounterTemplate>
+                RefTemplateConditions;
+
+            private ConditionCounterCreatorData()
+            {
+                RefTemplateConditions =
+                    RefHelper.FieldRef<ConditionCounterCreator, ConditionCounterCreator.ConditionCounterTemplate>
+                        .Create(EFTVersion.SPTVersion > EFTVersion.Parse("3.11.4")
+                            ? "TemplateConditions"
+                            : "_templateConditions");
+            }
+        }
+
         public class ConditionCounterTemplateData
         {
             private static readonly Lazy<ConditionCounterTemplateData> Lazy =
@@ -464,12 +505,14 @@ namespace KmyTarkovApi.Helpers
 
             public static ConditionCounterTemplateData Instance => Lazy.Value;
 
-            public readonly RefHelper.FieldRef<ConditionCounterTemplate, IEnumerable<Condition>> RefConditions;
+            public readonly RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, IEnumerable<Condition>>
+                RefConditions;
 
             private ConditionCounterTemplateData()
             {
                 RefConditions =
-                    RefHelper.FieldRef<ConditionCounterTemplate, IEnumerable<Condition>>.Create("Conditions");
+                    RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, IEnumerable<Condition>>.Create(
+                        "Conditions");
             }
         }
 

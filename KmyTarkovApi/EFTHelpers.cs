@@ -73,6 +73,9 @@ namespace KmyTarkovApi
         public static AbstractQuestControllerClassData _AbstractQuestControllerClassHelper =>
             AbstractQuestControllerClassData.Instance;
 
+        public static ConditionCounterCreatorData _ConditionCounterCreatorHelper =>
+            ConditionCounterCreatorData.Instance;
+
         public static ConditionCounterTemplateData _ConditionCounterTemplateHelper =>
             ConditionCounterTemplateData.Instance;
 

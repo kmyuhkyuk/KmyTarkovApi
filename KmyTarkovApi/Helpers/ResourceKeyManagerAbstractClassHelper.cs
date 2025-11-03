@@ -19,7 +19,8 @@ namespace KmyTarkovApi.Helpers
         private ResourceKeyManagerAbstractClassHelper()
         {
             RefVoiceDictionary =
-                RefHelper.FieldRef<ResourceKeyManagerAbstractClass, Dictionary<string, string>>.Create("dictionary_0");
+                RefHelper.FieldRef<ResourceKeyManagerAbstractClass, Dictionary<string, string>>.Create(
+                    EFTVersion.SPTVersion > EFTVersion.Parse("3.11.4") ? "Dictionary_0" : "dictionary_0");
         }
     }
 }

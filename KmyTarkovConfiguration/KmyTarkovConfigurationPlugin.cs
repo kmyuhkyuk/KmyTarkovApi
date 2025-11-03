@@ -17,12 +17,12 @@ namespace KmyTarkovConfiguration
             BepInEx.Logging.Logger.Listeners.Add(new EFTDiskLogListener("FullLogOutput.log"));
 
             SettingsModel.Create(Config);
-
-            EFTConfigurationModel.Create("KmyTarkovConfiguration", Info).LoadConfiguration();
         }
 
         private void Start()
         {
+            EFTConfigurationModel.Create("KmyTarkovConfiguration", Info).LoadConfiguration();
+
             Harmony.CreateAndPatchAll(typeof(CursorLockStatePatch));
             Harmony.CreateAndPatchAll(typeof(CursorVisiblePatch));
         }

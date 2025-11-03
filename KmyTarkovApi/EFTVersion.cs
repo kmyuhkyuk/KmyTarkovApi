@@ -22,7 +22,7 @@ namespace KmyTarkovApi
         public static readonly Version GameVersion;
 
         /// <summary>
-        ///     Current Aki Version
+        ///     Current SPT Version
         /// </summary>
         public static readonly Version SPTVersion;
 

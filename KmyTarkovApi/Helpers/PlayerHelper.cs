@@ -64,7 +64,7 @@ namespace KmyTarkovApi.Helpers
         private readonly Func<Player, EBodyPartColliderType, bool> _refGetBleedBlock;
 
         /// <summary>
-        ///     Fika.Core.Coop.Players.ObservedCoopPlayer.ApplyShot
+        ///     Fika.Core.Main.Players.ObservedPlayer.ApplyShot
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopApplyShot;
 
@@ -73,7 +73,7 @@ namespace KmyTarkovApi.Helpers
         public readonly RefHelper.HookRef OnPhraseTold;
 
         /// <summary>
-        ///     Fika.Core.Coop.Players.ObservedCoopPlayer.OnPhraseTold
+        ///     Fika.Core.Main.Players.ObservedPlayer.OnPhraseTold
         /// </summary>
         [CanBeNull] public readonly RefHelper.HookRef ObservedCoopOnPhraseTold;
 
@@ -100,7 +100,7 @@ namespace KmyTarkovApi.Helpers
             if (EFTVersion.IsFika)
             {
                 var observedCoopPlayerType = RefTool.GetPluginType(EFTPlugins.FikaCore,
-                    "Fika.Core.Coop.Players.ObservedCoopPlayer");
+                    "Fika.Core.Main.Players.ObservedPlayer");
 
                 ObservedCoopApplyShot = RefHelper.HookRef.Create(observedCoopPlayerType, "ApplyShot");
                 ObservedCoopOnPhraseTold = RefHelper.HookRef.Create(observedCoopPlayerType, "OnPhraseTold");
@@ -367,13 +367,13 @@ namespace KmyTarkovApi.Helpers
             private readonly Func<IHealthController, EBodyPart, bool, ValueStruct> _refGetBodyPartHealth;
 
             /// <summary>
-            ///     Fika.Core.Coop.ClientClasses.CoopClientHealthController.ApplyDamage
+            ///     Fika.Core.Main.ClientClasses.ClientHealthController.ApplyDamage
             /// </summary>
             private readonly Func<ActiveHealthController, EBodyPart, float, DamageInfoStruct, float>
                 _refCoopApplyDamage;
 
             /// <summary>
-            ///     Fika.Core.Coop.ObservedClasses.ObservedHealthController.Store
+            ///     Fika.Core.Main.ObservedClasses.ObservedHealthController.Store
             /// </summary>
             private readonly
                 Func<NetworkHealthControllerAbstractClass, Profile.ProfileHealthClass, Profile.ProfileHealthClass>
@@ -401,14 +401,14 @@ namespace KmyTarkovApi.Helpers
                     return;
 
                 _coopHealthControllerType = RefTool.GetPluginType(EFTPlugins.FikaCore,
-                    "Fika.Core.Coop.ClientClasses.CoopClientHealthController");
+                    "Fika.Core.Main.ClientClasses.ClientHealthController");
 
                 _refObservedCoopStore =
                     RefHelper
                         .ObjectMethodDelegate<Func<NetworkHealthControllerAbstractClass, Profile.ProfileHealthClass,
                             Profile.ProfileHealthClass>>(RefTool
                             .GetPluginType(EFTPlugins.FikaCore,
-                                "Fika.Core.Coop.ObservedClasses.ObservedHealthController")
+                                "Fika.Core.Main.ObservedClasses.ObservedHealthController")
                             .GetMethod("Store", RefTool.Public));
 
                 _refCoopApplyDamage =

@@ -32,7 +32,7 @@ namespace KmyTarkovConfiguration.Models
             typeof(Canvas),
             typeof(CanvasScaler), typeof(GraphicRaycaster));
 
-        public readonly string ModPath = Path.Combine(Paths.PluginPath, "kmyuhkyuk-KmyTarkovApi");
+        public readonly string ModPath = Path.Combine(BepInEx.Paths.PluginPath, "kmyuhkyuk-KmyTarkovApi");
 
         public readonly PluginInfo Info;
 

@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\EasyAssetsHelper.cs" />
+    <Compile Include="Helpers\LocaleManagerClassHelper.cs" />
     <Compile Include="KmyTarkovApiPlugin.cs" />
     <Compile Include="EFTGlobal.cs" />
     <Compile Include="EFTHelpers.cs" />

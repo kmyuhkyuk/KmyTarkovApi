@@ -1,7 +1,9 @@
 ﻿#if !UNITY_EDITOR
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using BepInEx.Configuration;
+using HarmonyLib;
 using KmyTarkovConfiguration.AcceptableValue;
 using KmyTarkovConfiguration.Helpers;
 using UnityEngine;
@@ -38,10 +40,12 @@ namespace KmyTarkovConfiguration.Models
             KeyDescriptionPositionOffset = configFile.Bind<Vector2>(mainSettings, "Description Position Offset",
                 new Vector2(0, -25), new ConfigDescription("Description position offset from Mouse position"));
             KeyLanguage = configFile.Bind<string>(mainSettings, "Language",
-                "En",
+                "Game Language",
                 new ConfigDescription(
                     "Preferred language, if not available will tried English, if still not available than return original text",
-                    new AcceptableValueCustomList<string>(LocalizedHelper.Languages)));
+                    new AcceptableValueCustomList<string>(new[] { "Game Language" }
+                        .Concat(LocalizedHelper.LanguageNames)
+                        .ToArray())));
             KeySearch = configFile.Bind<string>(mainSettings, "Search", string.Empty);
             KeyAdvanced = configFile.Bind<bool>(mainSettings, "Advanced", false);
             KeySortingOrder = configFile.Bind<int>(mainSettings, "Sorting Order", 29997);
@@ -49,11 +53,42 @@ namespace KmyTarkovConfiguration.Models
             var acceptableValueCustomList =
                 (AcceptableValueCustomList<string>)KeyLanguage.Description.AcceptableValues;
             LocalizedHelper.LanguageAdd +=
-                () => acceptableValueCustomList.AcceptableValuesCustom = LocalizedHelper.Languages;
+                () => acceptableValueCustomList.AcceptableValuesCustom =
+                    new[] { "Game Language" }.Concat(LocalizedHelper.LanguageNames).ToArray();
 
-            LocalizedHelper.CurrentLanguage = KeyLanguage.Value;
-            KeyLanguage.SettingChanged += (value, value2) =>
+            var localeManagerClass = Traverse.Create(typeof(LocaleManagerClass)).Property("LocaleManagerClass")
+                .GetValue<LocaleManagerClass>();
+
+            SwitchLanguage(localeManagerClass.String_0);
+
+            KeyLanguage.SettingChanged += (value, value2) => SwitchLanguage(localeManagerClass.String_0);
+
+            localeManagerClass.AddLocaleUpdateListener(() => SwitchLanguageFromGame(localeManagerClass.String_0));
+        }
+
+        private void SwitchLanguage(string language)
+        {
+            if (KeyLanguage.Value == "Game Language")
+            {
+                SwitchLanguageFromGame(language);
+            }
+            else
+            {
                 LocalizedHelper.CurrentLanguage = KeyLanguage.Value;
+            }
+        }
+
+        private static void SwitchLanguageFromGame(string gameLanguage)
+        {
+            switch (gameLanguage)
+            {
+                case "ch":
+                    LocalizedHelper.CurrentLanguage = "Zh";
+                    break;
+                default:
+                    LocalizedHelper.CurrentLanguage = LocalizedHelper.LanguageNamesDictionary[gameLanguage];
+                    break;
+            }
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Global

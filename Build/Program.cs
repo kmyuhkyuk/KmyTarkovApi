@@ -25,7 +25,7 @@ namespace Build
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 
-            const string versionName = "1.4.1";
+            const string versionName = "1.5.0";
 
             var releaseName = $"{modDirectoryName}(Release_{versionName}).7z";
 

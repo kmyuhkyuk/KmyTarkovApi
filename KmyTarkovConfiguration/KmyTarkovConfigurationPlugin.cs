@@ -1,4 +1,4 @@
-﻿#if !UNITY_EDITOR
+#if !UNITY_EDITOR
 
 using BepInEx;
 using HarmonyLib;
@@ -8,7 +8,7 @@ using KmyTarkovConfiguration.Patches;
 
 namespace KmyTarkovConfiguration
 {
-    [BepInPlugin("com.kmyuhkyuk.KmyTarkovConfiguration", "KmyTarkovConfiguration", "1.5.0")]
+    [BepInPlugin("com.kmyuhkyuk.KmyTarkovConfiguration", "KmyTarkovConfiguration", "2.0.0")]
     [EFTConfigurationPluginAttributes("https://hub.sp-tarkov.com/files/file/1215-kmy-tarkov-api")]
     public class KmyTarkovConfigurationPlugin : BaseUnityPlugin
     {

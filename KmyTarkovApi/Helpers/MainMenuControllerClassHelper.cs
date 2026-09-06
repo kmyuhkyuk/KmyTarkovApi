@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EFT;
 using KmyTarkovReflection;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -14,7 +15,7 @@ namespace KmyTarkovApi.Helpers
 
         public static MainMenuControllerClassHelper Instance => Lazy.Value;
 
-        public MainMenuControllerClass MainMenuControllerClass { get; private set; }
+        public MainMenuShowOperation MainMenuControllerClass { get; private set; }
 
         /// <summary>
         ///     Init Action
@@ -28,7 +29,7 @@ namespace KmyTarkovApi.Helpers
 
         private MainMenuControllerClassHelper()
         {
-            var mainMenuControllerClassType = typeof(MainMenuControllerClass);
+            var mainMenuControllerClassType = typeof(MainMenuShowOperation);
 
             Execute = RefHelper.HookRef.Create(mainMenuControllerClassType, "Execute");
             Unsubscribe = RefHelper.HookRef.Create(mainMenuControllerClassType, "Unsubscribe");
@@ -40,7 +41,7 @@ namespace KmyTarkovApi.Helpers
             Execute.Add(this, nameof(OnExecute));
         }
 
-        private static async void OnExecute(Task<MainMenuControllerClass> __result)
+        private static async void OnExecute(Task<MainMenuShowOperation> __result)
         {
             Instance.MainMenuControllerClass = await __result;
         }

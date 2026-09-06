@@ -14,7 +14,7 @@ namespace KmyTarkovApi
         /// <summary>
         ///     Current Session
         /// </summary>
-        public static ISession Session => SessionHelper.Instance.Session;
+        public static IEftSession Session => SessionHelper.Instance.Session;
 
         /// <summary>
         ///     Current LevelSettings
@@ -55,7 +55,7 @@ namespace KmyTarkovApi
         /// <summary>
         ///     Current UnderbarrelWeapon
         /// </summary>
-        public static LauncherItemClass UnderbarrelWeapon => PlayerHelper.WeaponData.Instance.UnderbarrelWeapon;
+        public static Launcher UnderbarrelWeapon => PlayerHelper.WeaponData.Instance.UnderbarrelWeapon;
 
         /// <summary>
         ///     Current GamePlayerOwner
@@ -65,7 +65,7 @@ namespace KmyTarkovApi
         /// <summary>
         ///     Current MainMenuController
         /// </summary>
-        public static MainMenuControllerClass MainMenuControllerClass =>
+        public static MainMenuShowOperation MainMenuControllerClass =>
             MainMenuControllerClassHelper.Instance.MainMenuControllerClass;
 
         /// <summary>

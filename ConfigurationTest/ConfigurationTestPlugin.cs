@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using BepInEx;
 using BepInEx.Configuration;
@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace ConfigurationTest
 {
-    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "1.5.0")]
-    [BepInDependency("com.kmyuhkyuk.KmyTarkovConfiguration", "1.5.0")]
+    [BepInPlugin("com.kmyuhkyuk.ConfigurationTest", "ConfigurationTest", "2.0.0")]
+    [BepInDependency("com.kmyuhkyuk.KmyTarkovConfiguration", "2.0.0")]
     public class ConfigurationTestPlugin : BaseUnityPlugin
     {
         private bool _testLoopThrow;

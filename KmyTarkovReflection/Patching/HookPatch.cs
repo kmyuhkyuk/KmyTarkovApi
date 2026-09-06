@@ -153,7 +153,7 @@ namespace KmyTarkovReflection.Patching
             var name = $"DTFType_{delegateMethodDeclaringType.Name}_{hookMethod.Name}";
             var assemblyName = new AssemblyName(name);
             var assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+                AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
             var moduleBuilder = assemblyBuilder.DefineDynamicModule("module");
 
             var typeBuilder = moduleBuilder.DefineType(name,

@@ -3,7 +3,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BepInEx.Configuration;
-using HarmonyLib;
+using EFT;
 using KmyTarkovConfiguration.AcceptableValue;
 using KmyTarkovConfiguration.Helpers;
 using UnityEngine;
@@ -56,14 +56,13 @@ namespace KmyTarkovConfiguration.Models
                 () => acceptableValueCustomList.AcceptableValuesCustom =
                     new[] { "Default" }.Concat(LocalizedHelper.LanguageNames).ToArray();
 
-            var localeManagerClass = Traverse.Create(typeof(LocaleManagerClass)).Property("LocaleManagerClass")
-                .GetValue<LocaleManagerClass>();
+            var localeManagerClass = LocalizationManager.Instance;
 
-            SwitchLanguage(localeManagerClass.String_0);
+            SwitchLanguage(localeManagerClass.Culture);
 
-            KeyLanguage.SettingChanged += (value, value2) => SwitchLanguage(localeManagerClass.String_0);
+            KeyLanguage.SettingChanged += (value, value2) => SwitchLanguage(localeManagerClass.Culture);
 
-            localeManagerClass.AddLocaleUpdateListener(() => SwitchLanguageFromGame(localeManagerClass.String_0));
+            localeManagerClass.AddLocaleUpdateListener(() => SwitchLanguageFromGame(localeManagerClass.Culture));
         }
 
         private void SwitchLanguage(string language)

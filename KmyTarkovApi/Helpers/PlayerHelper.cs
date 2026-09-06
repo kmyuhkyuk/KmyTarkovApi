@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using EFT;
+using EFT.Ballistics;
 using EFT.HealthSystem;
 using EFT.InventoryLogic;
 using EFT.Quests;
@@ -38,8 +39,8 @@ namespace KmyTarkovApi.Helpers
 
         public HealthControllerData HealthControllerHelper => HealthControllerData.Instance;
 
-        public AbstractQuestControllerClassData AbstractQuestControllerClassHelper =>
-            AbstractQuestControllerClassData.Instance;
+        public QuestControllerData AbstractQuestControllerClassHelper =>
+            QuestControllerData.Instance;
 
         public ConditionCounterCreatorData ConditionCounterCreatorHelper => ConditionCounterCreatorData.Instance;
 
@@ -173,7 +174,7 @@ namespace KmyTarkovApi.Helpers
 
             public Inventory Inventory => PlayerHelper.Instance.Player?.Inventory;
 
-            public List<StashGridClass> EquipmentGrids
+            public List<Grid> EquipmentGrids
             {
                 get
                 {
@@ -182,7 +183,7 @@ namespace KmyTarkovApi.Helpers
                     if (equipmentSlots == null)
                         return null;
 
-                    var list = new List<StashGridClass>();
+                    var list = new List<Grid>();
 
                     foreach (var slot in new[]
                                  { equipmentSlots[6], equipmentSlots[7], equipmentSlots[8], equipmentSlots[10] })
@@ -247,7 +248,7 @@ namespace KmyTarkovApi.Helpers
                 }
             }
 
-            public List<StashGridClass> QuestRaidItemsGrids
+            public List<Grid> QuestRaidItemsGrids
             {
                 get
                 {
@@ -256,7 +257,7 @@ namespace KmyTarkovApi.Helpers
                     if (questRaidItems == null)
                         return null;
 
-                    var list = new List<StashGridClass>();
+                    var list = new List<Grid>();
 
                     // ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (var grid in questRaidItems.Grids)
@@ -328,7 +329,7 @@ namespace KmyTarkovApi.Helpers
 
             public Weapon Weapon => FirearmControllerData.Instance.FirearmController?.Item;
 
-            public LauncherItemClass UnderbarrelWeapon =>
+            public Launcher UnderbarrelWeapon =>
                 FirearmControllerData.Instance.FirearmController?.UnderbarrelWeapon;
 
             public Animator WeaponAnimator =>
@@ -346,7 +347,8 @@ namespace KmyTarkovApi.Helpers
             {
                 RefAnimator = RefHelper.PropertyRef<object, Animator>.Create(
                     RefTool.GetEftType(x =>
-                        x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null),
+                        x.GetMethod("CreateAnimatorStateInfoWrapper", RefTool.Public | BindingFlags.Static) != null &&
+                        x.GetProperty("Animator") != null),
                     "Animator");
             }
         }
@@ -369,14 +371,14 @@ namespace KmyTarkovApi.Helpers
             /// <summary>
             ///     Fika.Core.Main.ClientClasses.ClientHealthController.ApplyDamage
             /// </summary>
-            private readonly Func<ActiveHealthController, EBodyPart, float, DamageInfoStruct, float>
+            private readonly Func<ActiveHealthController, EBodyPart, float, DamageInfo, float>
                 _refCoopApplyDamage;
 
             /// <summary>
             ///     Fika.Core.Main.ObservedClasses.ObservedHealthController.Store
             /// </summary>
             private readonly
-                Func<NetworkHealthControllerAbstractClass, Profile.ProfileHealthClass, Profile.ProfileHealthClass>
+                Func<NetworkHealthController, Profile.HealthInfo, Profile.HealthInfo>
                 _refObservedCoopStore;
 
             private readonly Type _coopHealthControllerType;
@@ -405,15 +407,15 @@ namespace KmyTarkovApi.Helpers
 
                 _refObservedCoopStore =
                     RefHelper
-                        .ObjectMethodDelegate<Func<NetworkHealthControllerAbstractClass, Profile.ProfileHealthClass,
-                            Profile.ProfileHealthClass>>(RefTool
+                        .ObjectMethodDelegate<Func<NetworkHealthController, Profile.HealthInfo,
+                            Profile.HealthInfo>>(RefTool
                             .GetPluginType(EFTPlugins.FikaCore,
                                 "Fika.Core.Main.ObservedClasses.ObservedHealthController")
                             .GetMethod("Store", RefTool.Public));
 
                 _refCoopApplyDamage =
                     RefHelper
-                        .ObjectMethodDelegate<Func<ActiveHealthController, EBodyPart, float, DamageInfoStruct, float>>(
+                        .ObjectMethodDelegate<Func<ActiveHealthController, EBodyPart, float, DamageInfo, float>>(
                             _coopHealthControllerType.GetMethod("ApplyDamage", RefTool.Public));
             }
 
@@ -423,12 +425,12 @@ namespace KmyTarkovApi.Helpers
             }
 
             public float CoopApplyDamage(ActiveHealthController instance, EBodyPart bodyPart, float damage,
-                DamageInfoStruct damageInfo)
+                DamageInfo damageInfo)
             {
                 return _refCoopApplyDamage(instance, bodyPart, damage, damageInfo);
             }
 
-            public ActiveHealthController CoopHealthControllerCreate(Profile.ProfileHealthClass healthInfo,
+            public ActiveHealthController CoopHealthControllerCreate(Profile.HealthInfo healthInfo,
                 Player player, InventoryController inventoryController,
                 SkillManager skillManager, bool aiHealth)
             {
@@ -437,40 +439,40 @@ namespace KmyTarkovApi.Helpers
                     skillManager, aiHealth);
             }
 
-            public Profile.ProfileHealthClass ObservedCoopStore(NetworkHealthControllerAbstractClass instance,
-                Profile.ProfileHealthClass healthInfo = null)
+            public Profile.HealthInfo ObservedCoopStore(NetworkHealthController instance,
+                Profile.HealthInfo healthInfo = null)
             {
                 return _refObservedCoopStore(instance, healthInfo);
             }
         }
 
-        public class AbstractQuestControllerClassData
+        public class QuestControllerData
         {
-            private static readonly Lazy<AbstractQuestControllerClassData> Lazy =
-                new Lazy<AbstractQuestControllerClassData>(() => new AbstractQuestControllerClassData());
+            private static readonly Lazy<QuestControllerData> Lazy =
+                new Lazy<QuestControllerData>(() => new QuestControllerData());
 
-            public static AbstractQuestControllerClassData Instance => Lazy.Value;
+            public static QuestControllerData Instance => Lazy.Value;
 
-            public AbstractQuestControllerClass AbstractQuestControllerClass =>
+            public QuestController AbstractQuestControllerClass =>
                 RefAbstractQuestControllerClass.GetValue(PlayerHelper.Instance.Player);
 
-            public IEnumerable<QuestClass> Quests => RefQuests.GetValue(AbstractQuestControllerClass);
+            public QuestBook Quests => RefQuests.GetValue(AbstractQuestControllerClass);
 
-            public readonly RefHelper.PropertyRef<Player, AbstractQuestControllerClass> RefAbstractQuestControllerClass;
+            public readonly RefHelper.PropertyRef<Player, QuestController> RefAbstractQuestControllerClass;
 
-            public readonly RefHelper.PropertyRef<AbstractQuestControllerClass, IEnumerable<QuestClass>> RefQuests;
+            public readonly RefHelper.PropertyRef<QuestController, QuestBook> RefQuests;
 
             public readonly RefHelper.HookRef OnConditionValueChanged;
 
-            private AbstractQuestControllerClassData()
+            private QuestControllerData()
             {
                 RefAbstractQuestControllerClass =
-                    RefHelper.PropertyRef<Player, AbstractQuestControllerClass>.Create("AbstractQuestControllerClass");
+                    RefHelper.PropertyRef<Player, QuestController>.Create("QuestController");
 
                 RefQuests =
-                    RefHelper.PropertyRef<AbstractQuestControllerClass, IEnumerable<QuestClass>>.Create("Quests");
+                    RefHelper.PropertyRef<QuestController, QuestBook>.Create("Quests");
 
-                var abstractQuestControllerClassBaseType = typeof(AbstractQuestControllerClass).BaseType;
+                var abstractQuestControllerClassBaseType = typeof(QuestController).BaseType;
 
                 OnConditionValueChanged =
                     RefHelper.HookRef.Create(abstractQuestControllerClassBaseType, "OnConditionValueChanged");
@@ -493,7 +495,7 @@ namespace KmyTarkovApi.Helpers
                 RefTemplateConditions =
                     RefHelper.FieldRef<ConditionCounterCreator, ConditionCounterCreator.ConditionCounterTemplate>
                         .Create(EFTVersion.SPTVersion > EFTVersion.Parse("3.11.4")
-                            ? "TemplateConditions"
+                            ? "_templateConditions"
                             : "_templateConditions");
             }
         }
@@ -505,13 +507,13 @@ namespace KmyTarkovApi.Helpers
 
             public static ConditionCounterTemplateData Instance => Lazy.Value;
 
-            public readonly RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, IEnumerable<Condition>>
+            public readonly RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, ConditionCollection>
                 RefConditions;
 
             private ConditionCounterTemplateData()
             {
                 RefConditions =
-                    RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, IEnumerable<Condition>>.Create(
+                    RefHelper.FieldRef<ConditionCounterCreator.ConditionCounterTemplate, ConditionCollection>.Create(
                         "Conditions");
             }
         }

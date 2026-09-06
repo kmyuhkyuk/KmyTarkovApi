@@ -14,7 +14,7 @@ namespace KmyTarkovConfiguration
 
         private readonly TextWriter _logWriter;
 
-        private readonly Timer _flushTimer;
+        private readonly System.Threading.Timer _flushTimer;
 
         //Modify from BepInEx.Core.Logging.DiskLogListener
         public EFTDiskLogListener(string localPath, bool appendLog = false)
@@ -45,7 +45,7 @@ namespace KmyTarkovConfiguration
 
             _logWriter = TextWriter.Synchronized(new StreamWriter(fileStream, Utility.UTF8NoBom));
 
-            _flushTimer = new Timer(o => _logWriter?.Flush(), null, 2000, 2000);
+            _flushTimer = new System.Threading.Timer(o => _logWriter?.Flush(), null, 2000, 2000);
         }
 
         public void LogEvent(object sender, LogEventArgs eventArgs)

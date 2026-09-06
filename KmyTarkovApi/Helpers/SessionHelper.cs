@@ -19,7 +19,7 @@ namespace KmyTarkovApi.Helpers
 
         public static SessionHelper Instance => Lazy.Value;
 
-        public ISession Session { get; private set; }
+        public IEftSession Session { get; private set; }
 
         public TraderSettingsData TraderSettingsHelper => TraderSettingsData.Instance;
 
@@ -116,7 +116,7 @@ namespace KmyTarkovApi.Helpers
 
             public float BotHeadShotMult => RefBotHeadShotMult.GetValue(Kill);
 
-            public readonly RefHelper.FieldRef<BackendConfigSettingsClass, object> RefExperience;
+            public readonly RefHelper.FieldRef<GlobalConfiguration, object> RefExperience;
 
             public readonly RefHelper.FieldRef<object, object> RefKill;
 
@@ -132,7 +132,7 @@ namespace KmyTarkovApi.Helpers
 
             private ExperienceData()
             {
-                RefExperience = RefHelper.FieldRef<BackendConfigSettingsClass, object>.Create("Experience");
+                RefExperience = RefHelper.FieldRef<GlobalConfiguration, object>.Create("Experience");
                 RefKill = RefHelper.FieldRef<object, object>.Create(RefExperience.FieldType, "Kill");
                 RefVictimLevelExp = RefHelper.FieldRef<object, int>.Create(RefKill.FieldType, "VictimLevelExp");
                 RefVictimBotLevelExp = RefHelper.FieldRef<object, int>.Create(RefKill.FieldType, "VictimBotLevelExp");

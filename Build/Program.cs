@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Build
 
             var currentPath = Path.Combine(baseDirectory, "../Current");
 
-            const string versionName = "1.5.0";
+            const string versionName = "2.0.0";
 
             var releaseName = $"{modDirectoryName}(Release_{versionName}).7z";
 

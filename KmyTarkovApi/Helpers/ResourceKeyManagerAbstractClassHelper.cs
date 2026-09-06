@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using KmyTarkovReflection;
+using Comfort.Common;
 
 namespace KmyTarkovApi.Helpers
 {
@@ -11,16 +11,7 @@ namespace KmyTarkovApi.Helpers
 
         public static ResourceKeyManagerAbstractClassHelper Instance => Lazy.Value;
 
-        public readonly RefHelper.FieldRef<ResourceKeyManagerAbstractClass, Dictionary<string, string>>
-            RefVoiceDictionary;
-
-        public Dictionary<string, string> VoiceDictionary => RefVoiceDictionary.GetValue(null);
-
-        private ResourceKeyManagerAbstractClassHelper()
-        {
-            RefVoiceDictionary =
-                RefHelper.FieldRef<ResourceKeyManagerAbstractClass, Dictionary<string, string>>.Create(
-                    EFTVersion.SPTVersion > EFTVersion.Parse("3.11.4") ? "Dictionary_0" : "dictionary_0");
-        }
+        public Dictionary<string, Voice> VoiceDictionary =>
+            Singleton<PlayerVoiceLoader>.Instantiated ? Singleton<PlayerVoiceLoader>.Instance._voices : null;
     }
 }

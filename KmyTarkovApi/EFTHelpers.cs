@@ -70,8 +70,8 @@ namespace KmyTarkovApi
 
         public static HealthControllerData _HealthControllerHelper => HealthControllerData.Instance;
 
-        public static AbstractQuestControllerClassData _AbstractQuestControllerClassHelper =>
-            AbstractQuestControllerClassData.Instance;
+        public static QuestControllerData _AbstractQuestControllerClassHelper =>
+            QuestControllerData.Instance;
 
         public static ConditionCounterCreatorData _ConditionCounterCreatorHelper =>
             ConditionCounterCreatorData.Instance;
